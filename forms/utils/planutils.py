@@ -18,8 +18,7 @@ INVALID_IDX = -1
 
 
 class Ref:
-    def __init__(self, row: int, col: int,
-                 last_row=INVALID_IDX, last_col=INVALID_IDX):
+    def __init__(self, row: int, col: int, last_row=INVALID_IDX, last_col=INVALID_IDX):
         if row <= INVALID_IDX or col <= INVALID_IDX:
             raise InvalidIndexException(f"Invalid index ({row}, {col})")
         self.row = row
@@ -34,4 +33,4 @@ class Ref:
         else:
             self.last_col = last_col
 
-        self.is_cell = (self.row == self.last_row and self.col == self.last_col)
+        self.is_cell = self.row == self.last_row and self.col == self.last_col
