@@ -1,3 +1,5 @@
 numpy>=1.16.5
 pandas
 black==22.3.0
+xlsxwriter
+jpype1

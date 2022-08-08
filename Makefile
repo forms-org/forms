@@ -2,4 +2,6 @@ init:
 	pip install -r requirements.txt
 test:
 	black --check .
-.PHONY: init test
+reformat:
+	black .
+.PHONY: init test reformat

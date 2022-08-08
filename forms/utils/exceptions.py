@@ -15,3 +15,11 @@
 
 class InvalidIndexException(Exception):
     """Exception raised for invalid reference index."""
+
+
+class InvalidArithmeticInputException(Exception):
+    """Exception raised for invalid arithmetic input"""
+
+
+class FunctionNotSupportedException(Exception):
+    """Exception raised for not supported function"""
