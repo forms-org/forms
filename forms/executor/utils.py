@@ -30,8 +30,8 @@ col_axis = 1
 
 class ExecutionConfig:
     def __init__(self, cores: int = 1, axis: int = 0, num_of_formulae: int = 0):
-        self.cores = (cores,)
-        self.axis = (axis,)
+        self.cores = cores
+        self.axis = axis
         self.num_of_formulae = num_of_formulae
 
 
