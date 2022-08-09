@@ -11,3 +11,11 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+# Register APIs
+from ._version import __version__, version_info
+from forms.core.forms import compute_formula, config
+from forms.core.config import forms_config, FormSConfig
+
+from forms.parser.parser import parse_formula
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode

@@ -12,15 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import pandas as pd
-
-from forms.planner.plannode import PlanNode
-from forms.core.config import FormSConfig
+import forms
 
 
-class PlanExecutor:
-    def __init__(self, forms_config: FormSConfig):
-        self.forms_config = forms_config
-
-    def execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
-        return df
+def test_config():
+    forms.config(2, "NotSimple")
+    assert forms.forms_config.cores == 2
+    assert forms.forms_config.scheduler == "NotSimple"

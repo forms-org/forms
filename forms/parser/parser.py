@@ -17,8 +17,9 @@ import xlsxwriter
 import jpype
 import jpype.imports
 
-from forms.planner.plannode import PlanNode, RefNode, LiteralNode, FunctionNode
-from forms.planner.utils import Ref, RefType, from_function_str
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode
+from forms.utils.reference import Ref, RefType
+from forms.utils.functions import from_function_str
 
 workbook_parser_jars = "workbook_parser_jars"
 workbook_name = "workbook.xlsx"
@@ -41,7 +42,6 @@ def parse_formula(formula_string: str) -> PlanNode:
 
     # Import of Java classes must happen *after* jpype.startJVM() is called
     from org.dataspread.sheetanalyzer import SheetAnalyzer
-    import org.dataspread.sheetanalyzer.parser.Node
 
     sheet = SheetAnalyzer.createSheetAnalyzer(workbook_name)
     root = sheet.getFormulaTree()

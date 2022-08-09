@@ -14,7 +14,7 @@
 
 
 from enum import Enum, auto
-from forms.utils.exceptions import InvalidIndexException, FunctionNotSupportedException
+from forms.utils.exceptions import InvalidIndexException
 
 # Reference-related definitions
 INVALID_IDX = -1
@@ -55,30 +55,3 @@ class RefDirection(Enum):
     UP = auto()
     DOWN = auto()
     NODIR = auto()
-
-
-# Function-related definitions
-class Function(Enum):
-    SUM = "sum"
-    COUNT = "count"
-    AVG = "average"
-    MIN = "min"
-    MAX = "max"
-    PLUS = "+"
-    MINUS = "-"
-    Multiply = "*"
-    Divide = "/"
-
-
-def from_function_str(function_str: str) -> Function:
-    for function in Function:
-        if function.value == function_str.lower():
-            return function
-    raise FunctionNotSupportedException(f"Function {function_str} Not Supported")
-
-
-arithmetic_functions = {Function.PLUS, Function.MINUS, Function.Multiply, Function.Divide}
-
-
-def is_arithmetic_function(function: Function):
-    return function in arithmetic_functions

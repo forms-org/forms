@@ -21,4 +21,4 @@ class PlanRewriter:
         self.forms_config = form_config
 
     def rewrite_plan(self, root: PlanNode) -> PlanNode:
-        return self.root
+        return root

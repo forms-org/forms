@@ -18,18 +18,21 @@ from forms.core.config import forms_config
 
 from forms.parser.parser import parse_formula
 from forms.planner.planrewriter import PlanRewriter
-from forms.executer.pandasexecutor.planexecutor import PlanExecutor
+from forms.executor.pandasexecutor.planexecutor import DFPlanExecutor
 
 
 def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
     root = parse_formula(formula_str)
+    root.validate()
+    root.populate_ref_info()
 
     plan_rewriter = PlanRewriter(forms_config)
     root = plan_rewriter.rewrite_plan(root)
 
-    plan_executor = PlanExecutor(forms_config)
-    return plan_executor.execute_formula_plan(df, root)
+    plan_executor = DFPlanExecutor(forms_config)
+    return plan_executor.df_execute_formula_plan(df, root)
 
 
-def config(parallelism=1):
-    forms_config.parallelism = parallelism
+def config(cores=1, scheduler="simple"):
+    forms_config.cores = cores
+    forms_config.scheduler = scheduler

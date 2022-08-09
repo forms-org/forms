@@ -23,3 +23,7 @@ class InvalidArithmeticInputException(Exception):
 
 class FunctionNotSupportedException(Exception):
     """Exception raised for not supported function"""
+
+
+class SchedulerNotSupportedException(Exception):
+    """Exception raised for not supported scheduler"""

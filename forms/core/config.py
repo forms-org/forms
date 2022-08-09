@@ -15,7 +15,8 @@
 
 class FormSConfig:
     def __init__(self):
-        self.parallelism = 1
+        self.cores = None
+        self.scheduler = None
 
 
 forms_config = FormSConfig()

@@ -13,7 +13,8 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.planner.utils import Ref, RefType, RefDirection, Function, is_arithmetic_function
+from forms.utils.reference import Ref, RefType, RefDirection
+from forms.utils.functions import Function, is_arithmetic_function
 from forms.utils.exceptions import InvalidArithmeticInputException
 
 
@@ -23,12 +24,6 @@ class PlanNode(ABC):
         self.children = None
         self.out_ref_type = None
         self.out_ref_dir = None
-
-    def set_parent(self, parent):
-        self.parent = parent
-
-    def set_children(self, children):
-        self.children = children
 
     @abstractmethod
     def populate_ref_info(self):
@@ -96,6 +91,5 @@ class FunctionNode(PlanNode):
 
 def is_reference_range(node: PlanNode) -> bool:
     if isinstance(node, RefNode):
-        ref_node = RefNode(node)
-        return not ref_node.ref.is_cell
+        return not node.ref.is_cell
     return False
