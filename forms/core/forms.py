@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import pandas as pd
+import traceback
+import sys
 
 from forms.core.config import forms_config
 
@@ -22,17 +24,29 @@ from forms.executor.pandasexecutor.planexecutor import DFPlanExecutor
 
 
 def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
-    root = parse_formula(formula_str)
-    root.validate()
-    root.populate_ref_info()
+    try:
+        root = parse_formula(formula_str)
+        root.validate()
+        root.populate_ref_info()
 
-    plan_rewriter = PlanRewriter(forms_config)
-    root = plan_rewriter.rewrite_plan(root)
+        plan_rewriter = PlanRewriter(forms_config)
+        root = plan_rewriter.rewrite_plan(root)
 
-    plan_executor = DFPlanExecutor(forms_config)
-    return plan_executor.df_execute_formula_plan(df, root)
+        plan_executor = DFPlanExecutor(forms_config)
+        return plan_executor.df_execute_formula_plan(df, root)
+    except:
+        traceback.print_exception(*sys.exc_info())
 
 
-def config(cores=1, scheduler="simple"):
+def config(
+    cores=forms_config.cores,
+    scheduler=forms_config.scheduler,
+    enable_rewriting=forms_config.enable_rewriting,
+    enable_rf_fr_opt=forms_config.enable_fr_rf_opt,
+    enable_multi_threading=forms_config.enable_multi_threading,
+):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
+    forms_config.enable_rewriting = enable_rewriting
+    forms_config.enable_fr_rf_opt = enable_rf_fr_opt
+    forms_config.enable_multi_threading = enable_multi_threading
