@@ -44,7 +44,9 @@ class PlanExecutor(ABC):
         future_result_dict = {}
         while not scheduler.is_finished():
             next_subtree, physical_subtree_list = scheduler.next_subtree()
-            future_result_dict[next_subtree] = executor.map(self.execute_one_subtree, physical_subtree_list)
+            future_result_dict[next_subtree] = executor.map(
+                self.execute_one_subtree, physical_subtree_list
+            )
 
             finished_exec_subtrees = [
                 exec_subtree
