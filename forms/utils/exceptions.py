@@ -12,18 +12,21 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+class FormSException(Exception):
+    """Base exception for FormS"""
 
-class InvalidIndexException(Exception):
+
+class InvalidIndexException(FormSException):
     """Exception raised for invalid reference index."""
 
 
-class InvalidArithmeticInputException(Exception):
+class InvalidArithmeticInputException(FormSException):
     """Exception raised for invalid arithmetic input"""
 
 
-class FunctionNotSupportedException(Exception):
+class FunctionNotSupportedException(FormSException):
     """Exception raised for not supported function"""
 
 
-class SchedulerNotSupportedException(Exception):
+class SchedulerNotSupportedException(FormSException):
     """Exception raised for not supported scheduler"""

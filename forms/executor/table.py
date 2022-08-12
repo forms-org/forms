@@ -18,10 +18,6 @@ from abc import ABC, abstractmethod
 
 class Table(ABC):
     @abstractmethod
-    def is_empty(self) -> bool:
-        pass
-
-    @abstractmethod
     def get_num_of_rows(self) -> int:
         pass
 
@@ -34,9 +30,6 @@ class DFTable(Table):
     def __init__(self, df: pd.DataFrame = None):
         self.df = df
 
-    def is_empty(self) -> bool:
-        return self.df is None
-
     def get_num_of_rows(self) -> int:
         return self.df.shape[0]
 
@@ -45,9 +38,6 @@ class DFTable(Table):
 
 
 class RelTable(Table):
-    def is_empty(self) -> bool:
-        return True
-
     def get_num_of_rows(self) -> int:
         return -1
 

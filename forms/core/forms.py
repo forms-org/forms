@@ -22,6 +22,8 @@ from forms.parser.parser import parse_formula
 from forms.planner.planrewriter import PlanRewriter
 from forms.executor.pandasexecutor.planexecutor import DFPlanExecutor
 
+from forms.utils.exceptions import FormSException
+
 
 def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
     try:
@@ -34,7 +36,7 @@ def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
 
         plan_executor = DFPlanExecutor(forms_config)
         return plan_executor.df_execute_formula_plan(df, root)
-    except:
+    except FormSException:
         traceback.print_exception(*sys.exc_info())
 
 
@@ -43,10 +45,8 @@ def config(
     scheduler=forms_config.scheduler,
     enable_rewriting=forms_config.enable_rewriting,
     enable_rf_fr_opt=forms_config.enable_fr_rf_opt,
-    enable_multi_threading=forms_config.enable_multi_threading,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
     forms_config.enable_rewriting = enable_rewriting
     forms_config.enable_fr_rf_opt = enable_rf_fr_opt
-    forms_config.enable_multi_threading = enable_multi_threading

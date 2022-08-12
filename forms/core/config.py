@@ -19,7 +19,6 @@ class FormSConfig:
         self.scheduler = "simple"
         self.enable_rewriting = False
         self.enable_fr_rf_opt = False
-        self.enable_multi_threading = False
 
 
 forms_config = FormSConfig()

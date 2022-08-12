@@ -18,7 +18,7 @@ from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
-from forms.executor.pandasexecutor.functionexecutor import function_to_executor_dict
+from forms.executor.pandasexecutor.functionexecutor import find_function_executor
 
 
 class DFPlanExecutor(PlanExecutor):
@@ -30,19 +30,11 @@ class DFPlanExecutor(PlanExecutor):
 
         return res_table.df
 
-    def execute_one_subtree(self, physical_subtree_list: list, axis: int) -> Table:
-        df_list = [
-            self.execute_on_one_core(physical_subtree).df for physical_subtree in physical_subtree_list
-        ]
-        res_df = pd.concat(df_list, axis=axis)
-        return DFTable(res_df)
-
-    def execute_on_one_core(self, physical_subtree: FunctionExecutionNode) -> DFTable:
-
+    def execute_one_subtree(self, physical_subtree: FunctionExecutionNode) -> Table:
         new_children = []
         for child in physical_subtree.children:
             if isinstance(child, FunctionExecutionNode):
-                df_table = self.execute_on_one_core(child)
+                df_table = self.execute_one_subtree(child)
                 ref_node = create_intermediate_ref_node(df_table, child)
                 new_children.append(ref_node)
             else:
@@ -52,5 +44,10 @@ class DFPlanExecutor(PlanExecutor):
             new_child.parent = physical_subtree
         physical_subtree.children = new_children
 
-        function_executor = function_to_executor_dict(physical_subtree.function)
+        function_executor = find_function_executor(physical_subtree.function)
         return function_executor(physical_subtree)
+
+    def collect_results(self, futures, axis: int) -> Table:
+        df_list = [future.result() for future in futures]
+        res_df = pd.concat(df_list, axis)
+        return DFTable(res_df)
