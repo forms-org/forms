@@ -44,9 +44,9 @@ def config(
     cores=forms_config.cores,
     scheduler=forms_config.scheduler,
     enable_rewriting=forms_config.enable_rewriting,
-    enable_rf_fr_opt=forms_config.enable_fr_rf_opt,
+    enable_physical_opt=forms_config.enable_physical_opt,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
     forms_config.enable_rewriting = enable_rewriting
-    forms_config.enable_fr_rf_opt = enable_rf_fr_opt
+    forms_config.enable_physical_opt = enable_physical_opt

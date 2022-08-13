@@ -11,14 +11,14 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+from forms.planner.rewritingrule import RewritingRule
+from forms.planner.plannode import PlanNode
 
 
-class FormSConfig:
-    def __init__(self):
-        self.cores = 1
-        self.scheduler = "simple"
-        self.enable_rewriting = False
-        self.enable_physical_opt = False
+class FactorOutPhysicalRule(RewritingRule):
+    @staticmethod
+    def rewrite(plan_node: PlanNode) -> PlanNode:
+        pass
 
 
-forms_config = FormSConfig()
+full_physical_rule_list = [FactorOutPhysicalRule]
