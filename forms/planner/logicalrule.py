@@ -39,7 +39,9 @@ class PlusToSumRule(RewritingRule):
 # Factor-out rules are adopted to optimize FF/FR/RF cases
 def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     new_child = child
-    if isinstance(child, RefNode) and (child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT):
+    if isinstance(child, RefNode) and (
+        child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT
+    ):
         if parent.function in distributive_functions:
             new_child = parent.replicate_node()
             link_parent_to_children(new_child, [child])
@@ -69,11 +71,17 @@ class AlgebraicFactorOutRule(RewritingRule):
 def factor_in(child: PlanNode, parent: FunctionNode) -> list:
     new_children = [child]
     if isinstance(child, FunctionNode):
-        if parent.function in distributive_functions and child.function == parent.function and \
-                all([grandchild.out_ref_type == RefType.RR for grandchild in child.children]):
+        if (
+            parent.function in distributive_functions
+            and child.function == parent.function
+            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+        ):
             new_children = child.children
-        elif parent.function == Function.AVG and child.function == Function.SUM and \
-                all([grandchild.out_ref_type == RefType.RR for grandchild in child.children]):
+        elif (
+            parent.function == Function.AVG
+            and child.function == Function.SUM
+            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+        ):
             new_children = child.children
     return new_children
 
@@ -83,8 +91,11 @@ class DistFactorInRule(RewritingRule):
     def rewrite(plan_node: PlanNode) -> PlanNode:
         if isinstance(plan_node, FunctionNode):
             while True:
-                new_children = [new_child for child in plan_node.children
-                                for new_child in factor_in(child, plan_node)]
+                new_children = [
+                    new_child
+                    for child in plan_node.children
+                    for new_child in factor_in(child, plan_node)
+                ]
                 if same_list(new_children, plan_node.children):
                     break
                 link_parent_to_children(plan_node, new_children)
