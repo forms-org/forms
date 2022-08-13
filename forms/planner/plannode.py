@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 from forms.utils.reference import Ref, RefType, RefDirection
-from forms.utils.functions import Function, is_arithmetic_function
+from forms.utils.functions import Function, arithmetic_functions
 from forms.utils.exceptions import InvalidArithmeticInputException
 from forms.utils.treenode import TreeNode
 
@@ -33,6 +33,10 @@ class PlanNode(ABC, TreeNode):
     def validate(self):
         pass
 
+    @abstractmethod
+    def replicate_node(self):
+        pass
+
 
 class RefNode(PlanNode):
     def __init__(self, ref: Ref, ref_type: RefType, ref_dir=RefDirection.DOWN):
@@ -46,6 +50,9 @@ class RefNode(PlanNode):
 
     def validate(self):
         pass
+
+    def replicate_node(self):
+        return RefNode(self.ref, self.out_ref_type, self.out_ref_dir)
 
 
 class LiteralNode(PlanNode):
@@ -61,6 +68,9 @@ class LiteralNode(PlanNode):
 
     def validate(self):
         pass
+
+    def replicate_node(self):
+        return LiteralNode(self.literal)
 
 
 class FunctionNode(PlanNode):
@@ -82,11 +92,16 @@ class FunctionNode(PlanNode):
     def validate(self):
         for child in self.children:
             child.validate()
-        if is_arithmetic_function(self.function):
+        if self.function in arithmetic_functions:
             if any(is_reference_range(child) for child in self.children):
                 raise InvalidArithmeticInputException(
                     "Not supporting range" "input for arithmetic functions"
                 )
+
+    def replicate_node(self):
+        function_node = FunctionNode(self.function)
+        function_node.out_ref_type = self.out_ref_type
+        function_node.out_ref_dir = self.out_ref_dir
 
 
 def is_reference_range(node: PlanNode) -> bool:

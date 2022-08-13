@@ -11,14 +11,9 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-from forms.planner.logicalrule import RewritingRule
-from forms.planner.plannode import PlanNode
 
 
-class FactorOutPhysicalRule(RewritingRule):
-    @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
-        return plan_node
-
-
-full_physical_rule_list = [FactorOutPhysicalRule]
+def same_list(list_a: list, list_b: list) -> bool:
+    if len(list_a) != len(list_b):
+        return False
+    return list_a == list_b
