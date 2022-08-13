@@ -43,10 +43,10 @@ def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
 def config(
     cores=forms_config.cores,
     scheduler=forms_config.scheduler,
-    enable_rewriting=forms_config.enable_rewriting,
+    enable_logical_rewriting=forms_config.enable_logical_rewriting,
     enable_physical_opt=forms_config.enable_physical_opt,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
-    forms_config.enable_rewriting = enable_rewriting
+    forms_config.enable_logical_rewriting = enable_logical_rewriting
     forms_config.enable_physical_opt = enable_physical_opt

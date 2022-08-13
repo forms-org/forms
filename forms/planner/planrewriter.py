@@ -13,17 +13,16 @@
 #  limitations under the License.
 
 from forms.planner.plannode import PlanNode
-from forms.planner.rewritingrule import RewritingRule, full_rewriting_rule_list, factor_out_rule_list
-from forms.planner.physicalrule import FactorOutPhysicalRule
+from forms.planner.logicalrule import RewritingRule, full_rewriting_rule_list
+from forms.planner.physicalrule import full_physical_rule_list
 from forms.core.config import FormSConfig
+from forms.utils.treenode import link_parent_to_children
 
 
 def apply_one_rule(plan_tree: PlanNode, rule: RewritingRule) -> PlanNode:
     new_plan_tree = rule.rewrite(plan_tree)
     new_children = [rule.rewrite(child) for child in new_plan_tree.children]
-    new_plan_tree.children = new_children
-    for new_child in new_children:
-        new_child.parent = new_plan_tree
+    link_parent_to_children(new_plan_tree, new_children)
     return new_plan_tree
 
 
@@ -33,8 +32,12 @@ class PlanRewriter:
 
     def rewrite_plan(self, root: PlanNode) -> PlanNode:
         plan_tree = root
-        if self.forms_config.enable_rewriting:
+        if self.forms_config.enable_logical_rewriting:
             for rule in full_rewriting_rule_list:
+                plan_tree = apply_one_rule(plan_tree, rule)
+
+        if self.forms_config.enable_physical_opt:
+            for rule in full_physical_rule_list:
                 plan_tree = apply_one_rule(plan_tree, rule)
 
         return plan_tree

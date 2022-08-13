@@ -20,6 +20,7 @@ import jpype.imports
 from forms.planner.plannode import PlanNode, RefNode, FunctionNode
 from forms.utils.reference import Ref, RefType
 from forms.utils.functions import from_function_str
+from forms.utils.treenode import link_parent_to_children
 
 workbook_parser_jars = "workbook_parser_jars"
 workbook_name = "workbook.xlsx"
@@ -71,7 +72,5 @@ def parse_subtree(node) -> PlanNode:
         function = from_function_str(node.value)
         parent = FunctionNode(function)
         children = [parse_subtree(child) for child in node.children]
-        parent.children = children
-        for child in children:
-            child.parent = parent
+        link_parent_to_children(parent, children)
         return parent

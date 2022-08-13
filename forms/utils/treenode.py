@@ -17,3 +17,9 @@ class TreeNode:
     def __init__(self):
         self.parent = None
         self.children = None
+
+
+def link_parent_to_children(parent: TreeNode, children: list):
+    parent.children = children
+    for child in children:
+        child.parent = parent

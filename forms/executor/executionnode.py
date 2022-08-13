@@ -15,7 +15,7 @@
 from forms.planner.plannode import *
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionContext
-from forms.utils.treenode import TreeNode
+from forms.utils.treenode import TreeNode, link_parent_to_children
 
 from abc import ABC, abstractmethod
 
@@ -44,9 +44,7 @@ class FunctionExecutionNode(ExecutionNode):
     def replicate_subtree(self):
         parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_dir)
         children = [child.replicate_subtree() for child in self.children]
-        parent.children = children
-        for child in children:
-            child.parent = parent
+        link_parent_to_children(parent, children)
         return parent
 
     def set_exec_context(self, exec_context: ExecutionContext):
@@ -86,9 +84,7 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
     elif isinstance(plan_node, FunctionNode):
         parent = FunctionExecutionNode(plan_node.function, plan_node.out_ref_type, plan_node.out_ref_dir)
         children = [from_plan_to_execution_tree(child, table) for child in plan_node.children]
-        parent.children = children
-        for child in children:
-            child.parent = parent
+        link_parent_to_children(parent, children)
         return parent
     assert False
 
