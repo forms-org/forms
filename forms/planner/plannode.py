@@ -16,12 +16,12 @@ from abc import ABC, abstractmethod
 from forms.utils.reference import Ref, RefType, RefDirection
 from forms.utils.functions import Function, is_arithmetic_function
 from forms.utils.exceptions import InvalidArithmeticInputException
+from forms.utils.treenode import TreeNode
 
 
-class PlanNode(ABC):
+class PlanNode(ABC, TreeNode):
     def __init__(self):
-        self.parent = None
-        self.children = None
+        super().__init__()
         self.out_ref_type = None
         self.out_ref_dir = None
 

@@ -15,14 +15,14 @@
 from forms.planner.plannode import *
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionContext
+from forms.utils.treenode import TreeNode
 
 from abc import ABC, abstractmethod
 
 
-class ExecutionNode(ABC):
+class ExecutionNode(ABC, TreeNode):
     def __init__(self, out_ref_type: RefType, out_ref_dir: RefDirection):
-        self.parent = None
-        self.children = None
+        super().__init__()
         self.out_ref_type = out_ref_type
         self.out_ref_dir = out_ref_dir
 
