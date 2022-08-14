@@ -13,43 +13,74 @@
 #  limitations under the License.
 
 import pandas as pd
+import numpy as np
+from forms.executor.table import *
 from forms.executor.executionnode import *
 from forms.utils.functions import *
 
 
-def max_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def max_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def min_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def min_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def count_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def count_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def sum_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def sum_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    values = []
+    for child in physical_subtree.children:
+        if isinstance(child, RefExecutionNode):
+            ref = child.ref
+            df = child.table.df
+            out_ref_type = child.out_ref_type
+            out_ref_dir = child.out_ref_dir
+            start_idx = child.exec_context.start_formula_idx
+            end_idx = child.exec_context.end_formula_idx
+            n_formula = end_idx - start_idx
+            # now we assume out_ref_dir == RefDirection.DOWN by default
+            if out_ref_dir == RefDirection.DOWN:
+                df = df.iloc[:, ref.col : ref.last_col + 1]
+                h = ref.last_row - ref.row + 1
+                if out_ref_type == RefType.RR:
+                    df = df.iloc[start_idx + ref.row : end_idx + ref.last_row]
+                    value = df.rolling(h).sum().dropna().sum(axis=1)
+                elif out_ref_type == RefType.FF:
+                    value = np.array(df.iloc[ref.row : ref.last_row + 1]).sum()
+                    value = np.full(n_formula, value)
+                elif out_ref_type == RefType.FR:
+                    df = df.iloc[ref.row : end_idx + ref.last_row]
+                    value = df.expanding(h + start_idx).sum().dropna().sum(axis=1)
+                elif out_ref_type == RefType.RF:
+                    df = df.iloc[ref.row + start_idx : ref.last_row]
+                    value = df.iloc[::-1].expanding(h - end_idx).sum().dropna().iloc[::-1].sum(axis=1)
+                if out_ref_type != RefType.FF and n_formula > len(value):
+                    value = np.append(value, np.full(n_formula - len(value), np.nan))
+            values.append(value)
+    return DFTable(pd.DataFrame(sum(values)))
+
+
+def average_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def average_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def plus_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def minus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def minus_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def multiply_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 
-def multiply_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
-    pass
-
-
-def divide_df_executor(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def divide_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     pass
 
 

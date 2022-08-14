@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 import glob
+import os
 import xlsxwriter
 import jpype
 import jpype.imports
@@ -21,7 +22,6 @@ from forms.planner.plannode import PlanNode, RefNode, FunctionNode
 from forms.utils.reference import Ref, RefType
 from forms.utils.functions import from_function_str
 
-workbook_parser_jars = "workbook_parser_jars"
 workbook_name = "workbook.xlsx"
 formula_position = "A1"
 
@@ -37,7 +37,8 @@ def parse_formula(formula_string: str) -> PlanNode:
     worksheet.write(formula_position, formula_string)
     workbook.close()
 
-    jars = glob.glob("/*.jar")
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    jars = glob.glob(root_dir + "/**/*.jar", recursive=True)
     jpype.startJVM(classpath=":".join(jars))
 
     # Import of Java classes must happen *after* jpype.startJVM() is called

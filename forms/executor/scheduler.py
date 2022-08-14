@@ -64,6 +64,6 @@ scheduler_class_dict = {Scheduler.SIMPLE.name.lower(): SimpleScheduler}
 
 
 def create_scheduler_by_name(s_name: str, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
-    if s_name in scheduler_class_dict:
-        scheduler_class_dict[s_name](exec_config, execution_tree)
+    if s_name in scheduler_class_dict.keys():
+        return scheduler_class_dict[s_name](exec_config, execution_tree)
     raise SchedulerNotSupportedException(f"Scheduler {s_name} is not supported")

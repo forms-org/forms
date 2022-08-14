@@ -40,8 +40,11 @@ class DFPlanExecutor(PlanExecutor):
             else:
                 new_children.append(child)
 
+        if physical_subtree.exec_context is None:
+            physical_subtree.set_exec_context(physical_subtree.parent.exec_context)
         for new_child in new_children:
             new_child.parent = physical_subtree
+            new_child.set_exec_context(physical_subtree.exec_context)
         physical_subtree.children = new_children
 
         function_executor = find_function_executor(physical_subtree.function)

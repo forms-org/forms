@@ -63,7 +63,7 @@ class RefExecutionNode(ExecutionNode):
         return RefExecutionNode(self.ref, self.table, self.out_ref_type, self.out_ref_dir)
 
     def set_exec_context(self, exec_context: ExecutionContext):
-        pass
+        self.exec_context = exec_context
 
 
 class LitExecutionNode(ExecutionNode):
@@ -80,7 +80,7 @@ class LitExecutionNode(ExecutionNode):
 
 def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionNode:
     if isinstance(plan_node, RefNode):
-        return RefExecutionNode(plan_node.ref, plan_node.out_ref_type, plan_node.out_ref_dir)
+        return RefExecutionNode(plan_node.ref, table, plan_node.out_ref_type, plan_node.out_ref_dir)
     elif isinstance(plan_node, LiteralNode):
         return LitExecutionNode(plan_node.literal, plan_node.out_ref_type, plan_node.out_ref_dir)
     elif isinstance(plan_node, FunctionNode):
@@ -95,4 +95,13 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
 
 def create_intermediate_ref_node(table: Table, exec_subtree: ExecutionNode) -> RefExecutionNode:
     ref = Ref(0, 0)
-    return RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_dir)
+    ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_dir)
+    ref_node.set_exec_context(
+        ExecutionContext(
+            0,
+            table.get_num_of_columns()
+            if ref_node.out_ref_dir in [RefDirection.LEFT, RefDirection.RIGHT]
+            else table.get_num_of_rows(),
+        )
+    )
+    return ref_node

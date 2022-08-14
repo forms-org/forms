@@ -27,12 +27,12 @@ class PlanExecutor(ABC):
     def build_exec_config(self, table: Table, ref_dir: RefDirection) -> ExecutionConfig:
         exec_config = ExecutionConfig()
         exec_config.cores = self.forms_config.cores
-        if ref_dir == RefDirection.UP or ref_dir == RefDirection.DOWN:
-            exec_config.num_of_formulae = table.get_num_of_rows()
-            exec_config.axis = row_axis
-        else:
+        if ref_dir == RefDirection.LEFT or ref_dir == RefDirection.RIGHT:
             exec_config.num_of_formulae = table.get_num_of_columns()
             exec_config.axis = col_axis
+        else:
+            exec_config.num_of_formulae = table.get_num_of_rows()
+            exec_config.axis = row_axis
         return exec_config
 
     def execute_formula_plan(self, table: Table, formula_plan: PlanNode) -> Table:
