@@ -40,22 +40,29 @@ def parse_formula(formula_string: str) -> PlanNode:
 
     root_dir = os.path.dirname(os.path.abspath(__file__))
     jars = glob.glob(root_dir + "/**/*.jar", recursive=True)
-    jpype.startJVM(classpath=":".join(jars))
+    if not jpype.isJVMStarted():
+        jpype.startJVM(classpath=":".join(jars))
 
     # Import of Java classes must happen *after* jpype.startJVM() is called
     from org.dataspread.sheetanalyzer import SheetAnalyzer
 
     sheet = SheetAnalyzer.createSheetAnalyzer(workbook_name)
     root = sheet.getFormulaTree()
-    return parse_subtree(root)
+    parsed_root = parse_subtree(root)
+
+    return parsed_root
+
+
+def shut_down_jvm():
+    jpype.shutdownJVM()
 
 
 def parse_subtree(node) -> PlanNode:
     if node.isLeafNode:
-        row = node.rowStart
-        col = node.colStart
-        last_row = node.rowEnd
-        last_col = node.colEnd
+        row = int(node.rowStart)
+        col = int(node.colStart)
+        last_row = int(node.rowEnd)
+        last_col = int(node.colEnd)
         is_first_relative = node.startRelative
         is_last_relative = node.endRelative
 

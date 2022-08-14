@@ -12,15 +12,37 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import forms
 from forms.parser.parser import *
+from forms.utils.functions import Function
+from forms.utils.reference import Ref
 
 
-def test_parser():
-    forms.config(2, "simple")
+def test_parser_single_formula_and_reference():
     root = parse_formula("=SUM(A1:B1)")
     assert type(root) == FunctionNode
+    assert root.function == Function.SUM
+
     children = root.children
-    assert len(children) == 1
     child = children[0]
+    expected_ref = Ref(0, 0, 0, 1)
+
+    assert len(children) == 1
     assert type(child) == RefNode
+    assert child.ref == expected_ref
+
+
+def test_parser_multiple_formula_and_reference():
+    root = parse_formula("=SUM(SUM(A1:B1), A2:B2)")
+    assert root.function == Function.SUM
+
+    left_child = root.children[0]
+    right_child = root.children[1]
+
+    expected_right_ref = Ref(1, 0, 1, 1)
+    assert right_child.ref == expected_right_ref
+    assert left_child.function == Function.SUM
+
+    grand_child = left_child.children[0]
+
+    expected_left_ref = Ref(0, 0, 0, 1)
+    grand_child.ref == expected_left_ref

@@ -40,6 +40,19 @@ class Ref:
 
         self.is_cell = self.row == self.last_row and self.col == self.last_col
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Ref):
+            return False
+        if (
+            self.row == other.row
+            and self.col == other.col
+            and self.last_row == other.last_row
+            and self.last_col == other.last_col
+        ):
+            return True
+        else:
+            return False
+
 
 class RefType(Enum):
     RR = auto()
