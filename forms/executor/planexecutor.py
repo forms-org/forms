@@ -14,7 +14,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 
-from forms.executor.utils import row_axis, col_axis
+from forms.executor.utils import axis_along_row, axis_along_column
 from forms.executor.scheduler import *
 from forms.planner.plannode import PlanNode
 from forms.core.config import FormSConfig
@@ -29,10 +29,10 @@ class PlanExecutor(ABC):
         exec_config.cores = self.forms_config.cores
         if ref_dir == RefDirection.LEFT or ref_dir == RefDirection.RIGHT:
             exec_config.num_of_formulae = table.get_num_of_columns()
-            exec_config.axis = col_axis
+            exec_config.axis = axis_along_column
         else:
             exec_config.num_of_formulae = table.get_num_of_rows()
-            exec_config.axis = row_axis
+            exec_config.axis = axis_along_row
         return exec_config
 
     def execute_formula_plan(self, table: Table, formula_plan: PlanNode) -> Table:

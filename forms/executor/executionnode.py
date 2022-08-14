@@ -25,6 +25,7 @@ class ExecutionNode(ABC, TreeNode):
         super().__init__()
         self.out_ref_type = out_ref_type
         self.out_ref_dir = out_ref_dir
+        self.exec_context = None
 
     @abstractmethod
     def replicate_subtree(self):
@@ -39,7 +40,6 @@ class FunctionExecutionNode(ExecutionNode):
     def __init__(self, function: Function, out_ref_type: RefType, out_ref_dir: RefDirection):
         super().__init__(out_ref_type, out_ref_dir)
         self.function = function
-        self.exec_context = None
 
     def replicate_subtree(self):
         parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_dir)
@@ -49,6 +49,8 @@ class FunctionExecutionNode(ExecutionNode):
 
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
+        for child in self.children:
+            child.set_exec_context(exec_context)
 
 
 class RefExecutionNode(ExecutionNode):
@@ -92,12 +94,5 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
 def create_intermediate_ref_node(table: Table, exec_subtree: ExecutionNode) -> RefExecutionNode:
     ref = Ref(0, 0)
     ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_dir)
-    ref_node.set_exec_context(
-        ExecutionContext(
-            0,
-            table.get_num_of_columns()
-            if ref_node.out_ref_dir in [RefDirection.LEFT, RefDirection.RIGHT]
-            else table.get_num_of_rows(),
-        )
-    )
+    ref_node.set_exec_context(exec_subtree.exec_context)
     return ref_node

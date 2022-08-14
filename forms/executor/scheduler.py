@@ -45,7 +45,11 @@ class SimpleScheduler(BaseScheduler):
         num_of_formulae = self.exec_config.num_of_formulae
         exec_subtree_list = [self.execution_tree.replicate_subtree() for _ in range(cores)]
         exec_context_list = [
-            ExecutionContext(int(i * num_of_formulae / cores), int((i + 1) * num_of_formulae / cores))
+            ExecutionContext(
+                int(i * num_of_formulae / cores),
+                int((i + 1) * num_of_formulae / cores),
+                self.exec_config.axis,
+            )
             for i in range(cores)
         ]
         for i in range(cores):

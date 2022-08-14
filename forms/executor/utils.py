@@ -12,18 +12,19 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-row_axis = 0
-col_axis = 1
+axis_along_row = 0
+axis_along_column = 1
 
 
 class ExecutionConfig:
-    def __init__(self, cores: int = 1, axis: int = 0, num_of_formulae: int = 0):
+    def __init__(self, cores: int = 1, axis: int = axis_along_row, num_of_formulae: int = 0):
         self.cores = cores
         self.axis = axis
         self.num_of_formulae = num_of_formulae
 
 
 class ExecutionContext:
-    def __init__(self, start_formula_idx: int, end_formula_idx: int):
+    def __init__(self, start_formula_idx: int, end_formula_idx: int, axis: int = axis_along_row):
         self.start_formula_idx = start_formula_idx
         self.end_formula_idx = end_formula_idx
+        self.axis = axis
