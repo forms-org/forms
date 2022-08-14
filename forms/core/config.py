@@ -17,8 +17,8 @@ class FormSConfig:
     def __init__(self):
         self.cores = 1
         self.scheduler = "simple"
-        self.enable_rewriting = False
-        self.enable_fr_rf_opt = False
+        self.enable_logical_rewriting = False
+        self.enable_physical_opt = False
 
 
 forms_config = FormSConfig()

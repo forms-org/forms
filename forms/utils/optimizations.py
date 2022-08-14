@@ -12,14 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-class TreeNode:
-    def __init__(self):
-        self.parent = None
-        self.children = None
+from enum import Enum, auto
 
 
-def link_parent_to_children(parent: TreeNode, children: list):
-    parent.children = children
-    for child in children:
-        child.parent = parent
+class FRRFOptimization(Enum):
+    NOOPT = auto()
+    PHASEONE = auto()
+    PHASETWO = auto()

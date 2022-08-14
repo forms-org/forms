@@ -13,13 +13,7 @@
 #  limitations under the License.
 
 
-class TreeNode:
-    def __init__(self):
-        self.parent = None
-        self.children = None
-
-
-def link_parent_to_children(parent: TreeNode, children: list):
-    parent.children = children
-    for child in children:
-        child.parent = parent
+def same_list(list_a: list, list_b: list) -> bool:
+    if len(list_a) != len(list_b):
+        return False
+    return list_a == list_b

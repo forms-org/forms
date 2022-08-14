@@ -56,11 +56,11 @@ class SimpleScheduler(BaseScheduler):
         self.execution_tree = create_intermediate_ref_node(result_table, execution_subtree)
 
 
-class Scheduler(Enum):
+class Schedulers(Enum):
     SIMPLE = auto()
 
 
-scheduler_class_dict = {Scheduler.SIMPLE.name.lower(): SimpleScheduler}
+scheduler_class_dict = {Schedulers.SIMPLE.name.lower(): SimpleScheduler}
 
 
 def create_scheduler_by_name(s_name: str, exec_config: ExecutionConfig, execution_tree: ExecutionNode):

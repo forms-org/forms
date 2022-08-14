@@ -38,7 +38,5 @@ def from_function_str(function_str: str) -> Function:
 
 
 arithmetic_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
-
-
-def is_arithmetic_function(function: Function):
-    return function in arithmetic_functions
+distributive_functions = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT}
+algebraic_functions = {Function.AVG}
