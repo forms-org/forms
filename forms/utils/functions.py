@@ -32,7 +32,7 @@ class Function(Enum):
 
 def from_function_str(function_str: str) -> Function:
     for function in Function:
-        if function.value == function_str.lower():
+        if function.value == function_str.toLowerCase():
             return function
     raise FunctionNotSupportedException(f"Function {function_str} Not Supported")
 
