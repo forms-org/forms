@@ -17,6 +17,7 @@ from forms.utils.reference import Ref, RefType, RefDirection
 from forms.utils.functions import Function, arithmetic_functions
 from forms.utils.exceptions import InvalidArithmeticInputException
 from forms.utils.treenode import TreeNode
+from forms.utils.optimizations import FRRFOptimization
 
 
 class PlanNode(ABC, TreeNode):
@@ -77,6 +78,7 @@ class FunctionNode(PlanNode):
     def __init__(self, function: Function):
         super().__init__()
         self.function = function
+        self.fr_rf_optimization = FRRFOptimization.NOOPT
 
     def populate_ref_info(self):
         for child in self.children:
