@@ -12,8 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from abc import ABC, abstractmethod
+
 from enum import Enum, auto
-from forms.executor.executionnode import *
+from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create_intermediate_ref_node
+from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
 from forms.utils.exceptions import SchedulerNotSupportedException
 
@@ -40,21 +43,28 @@ class BaseScheduler(ABC):
 
 
 class SimpleScheduler(BaseScheduler):
+    def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
+        super().__init__(exec_config, execution_tree)
+        self.scheduled = False
+
     def next_subtree(self) -> (ExecutionNode, list):
-        cores = self.exec_config.cores
-        num_of_formulae = self.exec_config.num_of_formulae
-        exec_subtree_list = [self.execution_tree.replicate_subtree() for _ in range(cores)]
-        exec_context_list = [
-            ExecutionContext(
-                int(i * num_of_formulae / cores),
-                int((i + 1) * num_of_formulae / cores),
-                self.exec_config.axis,
-            )
-            for i in range(cores)
-        ]
-        for i in range(cores):
-            exec_subtree_list[i].set_exec_context(exec_context_list[i])
-        return self.execution_tree, exec_subtree_list
+        if not self.scheduled:
+            cores = self.exec_config.cores
+            num_of_formulae = self.exec_config.num_of_formulae
+            exec_subtree_list = [self.execution_tree.replicate_subtree() for _ in range(cores)]
+            exec_context_list = [
+                ExecutionContext(
+                    int(i * num_of_formulae / cores),
+                    int((i + 1) * num_of_formulae / cores),
+                    self.exec_config.axis,
+                )
+                for i in range(cores)
+            ]
+            for i in range(cores):
+                exec_subtree_list[i].set_exec_context(exec_context_list[i])
+            self.scheduled = True
+            return self.execution_tree, exec_subtree_list
+        return None, None
 
     def finish_subtree(self, execution_subtree: ExecutionNode, result_table: Table):
         self.execution_tree = create_intermediate_ref_node(result_table, execution_subtree)

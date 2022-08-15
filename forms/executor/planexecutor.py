@@ -13,16 +13,20 @@
 #  limitations under the License.
 
 from concurrent.futures import ThreadPoolExecutor
+from time import sleep
 
+from forms.executor.executionnode import from_plan_to_execution_tree
 from forms.executor.utils import axis_along_row, axis_along_column
 from forms.executor.scheduler import *
 from forms.planner.plannode import PlanNode
 from forms.core.config import FormSConfig
+from forms.utils.reference import RefDirection
 
 
 class PlanExecutor(ABC):
     def __init__(self, forms_config: FormSConfig):
         self.forms_config = forms_config
+        self.schedule_interval = 0.01  # seconds
 
     def build_exec_config(self, table: Table, ref_dir: RefDirection) -> ExecutionConfig:
         exec_config = ExecutionConfig()
@@ -44,9 +48,11 @@ class PlanExecutor(ABC):
         future_result_dict = {}
         while not scheduler.is_finished():
             next_subtree, physical_subtree_list = scheduler.next_subtree()
-            future_result_dict[next_subtree] = executor.map(
-                self.execute_one_subtree, physical_subtree_list
-            )
+            if next_subtree is not None:
+                future_result_dict[next_subtree] = [
+                    executor.submit(self.execute_one_subtree, physical_subtree)
+                    for physical_subtree in physical_subtree_list
+                ]
 
             finished_exec_subtrees = [
                 exec_subtree
@@ -54,9 +60,11 @@ class PlanExecutor(ABC):
                 if all([future.done() for future in future_result_dict[exec_subtree]])
             ]
             for exec_subtree in finished_exec_subtrees:
-                result = self.collect_results(future_result_dict[exec_subtree])
+                result = self.collect_results(future_result_dict[exec_subtree], exec_config.axis)
                 scheduler.finish_subtree(exec_subtree, result)
                 del future_result_dict[exec_subtree]
+
+            sleep(self.schedule_interval)
 
         executor.shutdown()
         return scheduler.get_results()

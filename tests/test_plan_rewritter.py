@@ -30,20 +30,21 @@ def execute_before_and_after_one_test():
     yield
 
 
-def test_plus_to_sum_rewriter():
-    root = parse_formula("=A1 + B1")
-    plan_rewriter = PlanRewriter(forms_config)
-    root = plan_rewriter.rewrite_plan(root)
-
-    assert type(root) == FunctionNode
-    assert root.function == Function.SUM
-
-
 def gen_one_test_case(formula: str) -> PlanNode:
     root = parse_formula(formula)
+    root.validate()
+    root.populate_ref_info()
+
     plan_rewriter = PlanRewriter(forms_config)
     root = plan_rewriter.rewrite_plan(root)
     return root
+
+
+def test_plus_to_sum_rewriter():
+    root = gen_one_test_case("=A1 + B1")
+
+    assert type(root) == FunctionNode
+    assert root.function == Function.SUM
 
 
 def test_dist_factor_out_rewriter():

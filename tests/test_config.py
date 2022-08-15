@@ -12,10 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import forms
+from forms.core.forms import config
+from forms.core.config import forms_config
 
 
 def test_config():
-    forms.config(2, "NotSimple")
-    assert forms.forms_config.cores == 2
-    assert forms.forms_config.scheduler == "NotSimple"
+    config(2, "NotSimple")
+    assert forms_config.cores == 2
+    assert forms_config.scheduler == "NotSimple"

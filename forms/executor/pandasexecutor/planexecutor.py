@@ -40,19 +40,12 @@ class DFPlanExecutor(PlanExecutor):
                 new_children.append(ref_node)
             else:
                 new_children.append(child)
-
-        # if physical_subtree.exec_context is None:
-        #     physical_subtree.set_exec_context(physical_subtree.parent.exec_context)
-        # for new_child in new_children:
-        #     new_child.parent = physical_subtree
-        #     new_child.set_exec_context(physical_subtree.exec_context)
-        # physical_subtree.children = new_children
         link_parent_to_children(physical_subtree, new_children)
 
         function_executor = find_function_executor(physical_subtree.function)
         return function_executor(physical_subtree)
 
     def collect_results(self, futures, axis: int) -> Table:
-        df_list = [future.result() for future in futures]
-        res_df = pd.concat(df_list, axis)
+        df_list = [future.result().df for future in futures]
+        res_df = pd.concat(df_list, axis=axis)
         return DFTable(res_df)

@@ -12,11 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from forms.executor.scheduler import Schedulers
+
 
 class FormSConfig:
     def __init__(self):
         self.cores = 1
-        self.scheduler = "simple"
+        self.scheduler = Schedulers.SIMPLE.name
         self.enable_logical_rewriting = False
         self.enable_physical_opt = False
 
