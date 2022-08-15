@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from forms.planner.plannode import PlanNode
+from forms.planner.plannode import PlanNode, FunctionNode
 from forms.planner.logicalrule import RewritingRule, full_rewriting_rule_list
 from forms.planner.physicalrule import full_physical_rule_list
 from forms.core.config import FormSConfig
@@ -20,8 +20,13 @@ from forms.utils.treenode import link_parent_to_children
 
 
 def apply_one_rule(plan_tree: PlanNode, rule: RewritingRule) -> PlanNode:
+    if not isinstance(plan_tree, FunctionNode):
+        return plan_tree
     new_plan_tree = rule.rewrite(plan_tree)
-    new_children = [rule.rewrite(child) for child in new_plan_tree.children]
+    new_children = [
+        rule.rewrite(child) if isinstance(child, FunctionNode) else child
+        for child in new_plan_tree.children
+    ]
     link_parent_to_children(new_plan_tree, new_children)
     return new_plan_tree
 

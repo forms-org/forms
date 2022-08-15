@@ -63,8 +63,8 @@ def parse_subtree(node) -> PlanNode:
         col = int(node.colStart)
         last_row = int(node.rowEnd)
         last_col = int(node.colEnd)
-        is_first_relative = node.startRelative
-        is_last_relative = node.endRelative
+        is_first_relative = bool(node.startRelative)
+        is_last_relative = bool(node.endRelative)
 
         ref = Ref(row, col, last_row, last_col)
         if is_first_relative and is_last_relative:
@@ -77,7 +77,7 @@ def parse_subtree(node) -> PlanNode:
             ref_type = RefType.FF
         return RefNode(ref, ref_type)
     else:
-        function = from_function_str(node.value)
+        function = from_function_str(str(node.value))
         parent = FunctionNode(function)
         children = [parse_subtree(child) for child in node.children]
         link_parent_to_children(parent, children)

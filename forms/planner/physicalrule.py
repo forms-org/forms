@@ -21,10 +21,14 @@ from forms.utils.treenode import link_parent_to_children
 
 class FactorOutPhysicalRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: FunctionNode) -> PlanNode:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
         new_plan_node = plan_node
         if plan_node.function in distributive_functions or plan_node.function in algebraic_functions:
-            if len(plan_node.children) == 1 and isinstance(plan_node.children[0], RefNode):
+            if (
+                plan_node.fr_rf_optimization == FRRFOptimization.NOOPT
+                and len(plan_node.children) == 1
+                and isinstance(plan_node.children[0], RefNode)
+            ):
                 if (
                     plan_node.children[0].out_ref_type == RefType.RF
                     or plan_node.children[0].out_ref_type == RefType.FR

@@ -24,14 +24,14 @@ from forms.utils.generic import same_list
 class RewritingRule(ABC):
     @staticmethod
     @abstractmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
         pass
 
 
 class PlusToSumRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
-        if isinstance(plan_node, FunctionNode) and plan_node.function == Function.PLUS:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        if plan_node.function == Function.PLUS:
             plan_node.function = Function.SUM
         return plan_node
 
@@ -54,8 +54,8 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
 
 class DistFactorOutRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
-        if isinstance(plan_node, FunctionNode) and len(plan_node.children) > 1:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        if len(plan_node.children) > 1:
             new_children = [factor_out(child, plan_node) for child in plan_node.children]
             link_parent_to_children(plan_node, new_children)
         return plan_node
@@ -63,7 +63,7 @@ class DistFactorOutRule(RewritingRule):
 
 class AlgebraicFactorOutRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
         return DistFactorOutRule.rewrite(plan_node)
 
 
@@ -88,23 +88,20 @@ def factor_in(child: PlanNode, parent: FunctionNode) -> list:
 
 class DistFactorInRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
-        if isinstance(plan_node, FunctionNode):
-            while True:
-                new_children = [
-                    new_child
-                    for child in plan_node.children
-                    for new_child in factor_in(child, plan_node)
-                ]
-                if same_list(new_children, plan_node.children):
-                    break
-                link_parent_to_children(plan_node, new_children)
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        while True:
+            new_children = [
+                new_child for child in plan_node.children for new_child in factor_in(child, plan_node)
+            ]
+            if same_list(new_children, plan_node.children):
+                break
+            link_parent_to_children(plan_node, new_children)
         return plan_node
 
 
 class AlgebraicFactorInRule(RewritingRule):
     @staticmethod
-    def rewrite(plan_node: PlanNode) -> PlanNode:
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
         return DistFactorInRule.rewrite(plan_node)
 
 

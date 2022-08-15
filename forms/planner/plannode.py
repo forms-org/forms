@@ -104,6 +104,7 @@ class FunctionNode(PlanNode):
         function_node = FunctionNode(self.function)
         function_node.out_ref_type = self.out_ref_type
         function_node.out_ref_dir = self.out_ref_dir
+        return function_node
 
 
 def is_reference_range(node: PlanNode) -> bool:
