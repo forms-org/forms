@@ -18,7 +18,7 @@ from forms.executor.scheduler import Schedulers
 class FormSConfig:
     def __init__(self):
         self.cores = 1
-        self.scheduler = Schedulers.SIMPLE.name
+        self.scheduler = Schedulers.SIMPLE.name.lower()
         self.enable_logical_rewriting = False
         self.enable_physical_opt = False
 
