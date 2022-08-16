@@ -18,7 +18,7 @@ import xlsxwriter
 import jpype
 import jpype.imports
 
-from forms.planner.plannode import PlanNode, RefNode, FunctionNode
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
 from forms.utils.reference import Ref, RefType
 from forms.utils.functions import from_function_str
 from forms.utils.treenode import link_parent_to_children
@@ -59,23 +59,26 @@ def shut_down_jvm():
 
 def parse_subtree(node) -> PlanNode:
     if node.isLeafNode:
-        row = int(node.rowStart)
-        col = int(node.colStart)
-        last_row = int(node.rowEnd)
-        last_col = int(node.colEnd)
-        is_first_relative = bool(node.startRelative)
-        is_last_relative = bool(node.endRelative)
+        if node.isRef:
+            row = node.rowStart
+            col = node.colStart
+            last_row = node.rowEnd
+            last_col = node.colEnd
+            is_first_relative = node.startRelative
+            is_last_relative = node.endRelative
 
-        ref = Ref(row, col, last_row, last_col)
-        if is_first_relative and is_last_relative:
-            ref_type = RefType.RR
-        elif is_first_relative and not is_last_relative:
-            ref_type = RefType.RF
-        elif not is_first_relative and is_last_relative:
-            ref_type = RefType.FR
+            ref = Ref(row, col, last_row, last_col)
+            if is_first_relative and is_last_relative:
+                ref_type = RefType.RR
+            elif is_first_relative and not is_last_relative:
+                ref_type = RefType.RF
+            elif not is_first_relative and is_last_relative:
+                ref_type = RefType.FR
+            else:
+                ref_type = RefType.FF
+            return RefNode(ref, ref_type)
         else:
-            ref_type = RefType.FF
-        return RefNode(ref, ref_type)
+            return LiteralNode(node.value)
     else:
         function = from_function_str(str(node.value))
         parent = FunctionNode(function)

@@ -33,6 +33,7 @@ def count_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 def sum_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = []
+    literal = 0
     for child in physical_subtree.children:
         if isinstance(child, RefExecutionNode):
             ref = child.ref
@@ -60,7 +61,9 @@ def sum_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
                 if out_ref_type != RefType.FF and n_formula > len(value):
                     value = np.append(value, np.full(n_formula - len(value), np.nan))
             values.append(value)
-    return DFTable(pd.DataFrame(sum(values)))
+        elif isinstance(child, LitExecutionNode):
+            literal += child.literal
+    return DFTable(pd.DataFrame(sum(values)) + literal)
 
 
 def average_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
