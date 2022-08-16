@@ -94,5 +94,13 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
 def create_intermediate_ref_node(table: Table, exec_subtree: ExecutionNode) -> RefExecutionNode:
     ref = Ref(0, 0)
     ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_dir)
-    ref_node.set_exec_context(exec_subtree.exec_context)
+    ref_node.set_exec_context(
+        ExecutionContext(
+            0,
+            table.get_num_of_rows()
+            if exec_subtree.exec_context.axis == 0
+            else table.get_num_of_columns(),
+            axis=exec_subtree.exec_context.axis,
+        )
+    )
     return ref_node

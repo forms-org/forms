@@ -38,12 +38,11 @@ def sum_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
             ref = child.ref
             df = child.table.df
             out_ref_type = child.out_ref_type
-            out_ref_dir = child.out_ref_dir
             start_idx = child.exec_context.start_formula_idx
             end_idx = child.exec_context.end_formula_idx
             n_formula = end_idx - start_idx
-            # now we assume out_ref_dir == RefDirection.DOWN by default
-            if out_ref_dir == RefDirection.DOWN:
+            axis = child.exec_context.axis
+            if axis == 0:
                 df = df.iloc[:, ref.col : ref.last_col + 1]
                 h = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.RR:
