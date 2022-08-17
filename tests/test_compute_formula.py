@@ -91,7 +91,7 @@ def test_compute_max():
 
 def test_compute_min():
     global df
-    computed_df = forms.compute_formula(df, "=MIN(A1:B3, 3)")
+    computed_df = forms.compute_formula(df, "=MIN(A1:B3, A$1, A1:A$100, 3)")
     expected_df = pd.DataFrame(np.full(100, 1))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
@@ -99,15 +99,15 @@ def test_compute_min():
 
 def test_compute_count():
     global df
-    computed_df = forms.compute_formula(df, "=COUNT(A1:B3)")
-    expected_df = pd.DataFrame(np.full(100, 6))
+    computed_df = forms.compute_formula(df, "=COUNT(A1:B3,B1:B2)")
+    expected_df = pd.DataFrame(np.full(100, 8))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
 
 
 def test_compute_average():
     global df
-    computed_df = forms.compute_formula(df, "=AVERAGE(A1:B3,1,1,1,1)")
+    computed_df = forms.compute_formula(df, "=AVERAGE(A1:B3,A$1,A1:A$100,A$1:A1,1,1,1)")
     expected_df = pd.DataFrame(np.full(100, 1))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
