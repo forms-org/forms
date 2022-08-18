@@ -60,12 +60,12 @@ def shut_down_jvm():
 def parse_subtree(node) -> PlanNode:
     if node.isLeafNode:
         if node.isRef:
-            row = node.rowStart
-            col = node.colStart
-            last_row = node.rowEnd
-            last_col = node.colEnd
-            is_first_relative = node.startRelative
-            is_last_relative = node.endRelative
+            row = int(node.rowStart)
+            col = int(node.colStart)
+            last_row = int(node.rowEnd)
+            last_col = int(node.colEnd)
+            is_first_relative = bool(node.startRelative)
+            is_last_relative = bool(node.endRelative)
 
             ref = Ref(row, col, last_row, last_col)
             if is_first_relative and is_last_relative:
