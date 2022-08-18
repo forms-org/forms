@@ -33,7 +33,7 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
             end_idx = child.exec_context.end_formula_idx
             n_formula = end_idx - start_idx
             axis = child.exec_context.axis
-            if axis == 0:
+            if axis == axis_along_row:
                 df = df.iloc[:, ref.col : ref.last_col + 1]
                 h = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.RR:
@@ -66,13 +66,13 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
             else:
                 literal = func1((literal, child.literal))
     if function == Function.MAX:
-        return DFTable(pd.DataFrame(np.max(values, initial=literal, axis=0)))
+        return construct_dftable(np.max(values, initial=literal, axis=0))
     elif function == Function.MIN:
-        return DFTable(pd.DataFrame(np.min(values, initial=literal, axis=0)))
+        return construct_dftable(np.min(values, initial=literal, axis=0))
     elif function == Function.SUM:
-        return DFTable(pd.DataFrame(sum(values)) + literal)
+        return construct_dftable(sum(values) + literal)
     elif function == Function.COUNT:
-        return DFTable(pd.DataFrame(sum(values)) + literal)
+        return construct_dftable(sum(values) + literal)
 
 
 def max_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -109,7 +109,7 @@ def binary_df_executor(physical_subtree: FunctionExecutionNode, function: Functi
             end_idx = child.exec_context.end_formula_idx
             n_formula = end_idx - start_idx
             axis = child.exec_context.axis
-            if axis == 0:
+            if axis == axis_along_row:
                 df = df.iloc[:, ref.col : ref.last_col + 1]
                 if out_ref_type == RefType.RR:
                     value = df.iloc[start_idx + ref.row : end_idx + ref.row]
@@ -124,13 +124,13 @@ def binary_df_executor(physical_subtree: FunctionExecutionNode, function: Functi
         elif isinstance(child, LitExecutionNode):
             values.append(child.literal)
     if function == Function.PLUS:
-        return DFTable(pd.DataFrame(values[0] + values[1]))
+        return construct_dftable(values[0] + values[1])
     elif function == Function.MINUS:
-        return DFTable(pd.DataFrame(values[0] - values[1]))
+        return construct_dftable(values[0] - values[1])
     elif function == Function.MULTIPLY:
-        return DFTable(pd.DataFrame(values[0] * values[1]))
+        return construct_dftable(values[0] * values[1])
     elif function == Function.DIVIDE:
-        return DFTable(pd.DataFrame(values[0] / values[1]))
+        return construct_dftable(values[0] / values[1])
 
 
 def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -172,3 +172,7 @@ function_to_parameters_dict = {
 
 def find_function_executor(function: Function):
     return function_to_executor_dict[function]
+
+
+def construct_dftable(array):
+    return DFTable(pd.DataFrame(array))
