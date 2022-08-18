@@ -78,7 +78,7 @@ def parse_subtree(node) -> PlanNode:
                 ref_type = RefType.FF
             return RefNode(ref, ref_type)
         else:
-            return LiteralNode(node.value)
+            return LiteralNode(float(node.value))
     else:
         function = from_function_str(str(node.value))
         parent = FunctionNode(function)
