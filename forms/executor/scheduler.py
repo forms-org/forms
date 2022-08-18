@@ -63,6 +63,7 @@ class SimpleScheduler(BaseScheduler):
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
             self.scheduled = True
+            self.execution_tree.set_exec_context(ExecutionContext(None, None, self.exec_config.axis))
             return self.execution_tree, exec_subtree_list
         return None, None
 

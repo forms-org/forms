@@ -73,18 +73,15 @@ def test_execute_sum_complex_formula():
     parent = FunctionExecutionNode(Function.SUM, RefType.RR, RefDirection.DOWN)
     child1 = RefExecutionNode(Ref(0, 0), table, RefType.FF, RefDirection.DOWN)
     child2 = RefExecutionNode(Ref(0, 0, 2, 1), table, RefType.RR, RefDirection.DOWN)
-    parent.children = [child2]
-    child1.set_exec_context(ExecutionContext(50, 100))
-    child2.set_exec_context(ExecutionContext(50, 100))
+    link_parent_to_children(root, [parent, child1])
+    link_parent_to_children(parent, [child2])
+    root.set_exec_context(ExecutionContext(50, 100, 0))
     sub_result = sum_df_executor(parent)
     real_result = pd.DataFrame(np.full(48, 6.0))
     assert np.array_equal(sub_result.df.iloc[0:48].values, real_result.values)
 
     ref_node = create_intermediate_ref_node(sub_result, parent)
-    root.children = [child1, ref_node]
-    child1.parent = root
-    child2.parent = ref_node
-    ref_node.set_exec_context(ExecutionContext(0, 50))
+    link_parent_to_children(root, [ref_node, child1])
     result = sum_df_executor(root)
 
     real_result = pd.DataFrame(np.full(48, 7.0))
