@@ -20,7 +20,7 @@ import forms as fs
 
 
 def test_multicore(cores: int):
-    df = pd.DataFrame(np.random.randint(0, 100, size=(1000000, 5)))
+    df = pd.DataFrame(np.random.randint(0, 100, size=(10000000, 5)))
     formula = "=SUM(A1:C2)"
     fs.config(cores=cores)
     print(cores)

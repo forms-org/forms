@@ -14,7 +14,9 @@
 
 import pandas as pd
 
-from dask.distributed import Client, get_client
+from time import time
+
+from dask.distributed import Client
 from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
@@ -43,11 +45,16 @@ class DFPlanExecutor(PlanExecutor):
     def __init__(self, forms_config: FormSConfig):
         super().__init__(forms_config)
         self.client = Client(processes=True, n_workers=self.forms_config.cores)
+        self.broadcast = True
         self.execute_one_subtree = execute_one_subtree
 
     def df_execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
-        df_table = DFTable(df, self.client.scatter(df))
+        start = time()
+        df_table = DFTable(df, self.client.scatter(df, broadcast=self.broadcast))
+        print(f"Scattering cost: {time() - start}")
+        start = time()
         res_table = super().execute_formula_plan(df_table, formula_plan)
+        print(f"Execution time: {time() - start}")
 
         assert isinstance(res_table, DFTable)
 
@@ -60,7 +67,7 @@ class DFPlanExecutor(PlanExecutor):
 
     def scatter_results(self, table: Table):
         if table is not None:
-            df_future = self.client.scatter(table.get_table_content())
+            df_future = self.client.scatter(table.get_table_content(), broadcast=self.broadcast)
             table.df_future = df_future
 
     def clean_up(self):
