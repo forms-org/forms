@@ -25,16 +25,34 @@ class Table(ABC):
     def get_num_of_columns(self) -> int:
         pass
 
+    @abstractmethod
+    def get_table_content(self):
+        pass
+
+    @abstractmethod
+    def gen_table_for_execution(self):
+        pass
+
 
 class DFTable(Table):
-    def __init__(self, df: pd.DataFrame = None):
+    def __init__(self, df: pd.DataFrame = None, df_future=None):
+        assert df is not None or df_future is not None
         self.df = df
+        self.df_future = df_future
 
     def get_num_of_rows(self) -> int:
-        return self.df.shape[0]
+        return self.get_table_content().shape[0]
 
     def get_num_of_columns(self) -> int:
-        return self.df.shape[1]
+        return self.get_table_content().shape[1]
+
+    def get_table_content(self) -> pd.DataFrame:
+        if self.df is None:
+            self.df = self.df_future.result()
+        return self.df
+
+    def gen_table_for_execution(self) -> Table:
+        return DFTable(None, df_future=self.df_future)
 
 
 class RelTable(Table):
@@ -42,4 +60,10 @@ class RelTable(Table):
         return -1
 
     def get_num_of_columns(self) -> int:
+        pass
+
+    def get_table_content(self):
+        pass
+
+    def gen_table_for_execution(self) -> Table:
         pass

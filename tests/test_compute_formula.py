@@ -18,7 +18,7 @@ from forms import forms_config
 from forms.executor.pandasexecutor.functionexecutor import *
 from forms.executor.scheduler import Schedulers
 
-table = None
+df = None
 
 
 @pytest.fixture(autouse=True)

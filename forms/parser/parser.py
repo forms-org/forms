@@ -23,7 +23,8 @@ from forms.utils.reference import Ref, RefType
 from forms.utils.functions import from_function_str
 from forms.utils.treenode import link_parent_to_children
 
-workbook_name = "workbook.xlsx"
+dir_path = os.path.dirname(os.path.realpath(__file__))
+workbook_name = os.path.join(dir_path, "workbook.xlsx")
 formula_position = "A1"
 
 

@@ -16,6 +16,7 @@ import pytest
 import pandas as pd
 import numpy as np
 
+import forms
 from forms.parser.parser import parse_formula
 from forms.planner.planrewriter import PlanRewriter
 from forms.core.config import forms_config
@@ -39,30 +40,17 @@ def execute_before_and_after_one_test():
     yield
 
 
-def compute_one_formula(formula: str) -> pd.DataFrame:
-    global df
-    root = parse_formula(formula)
-    root.validate()
-    root.populate_ref_info()
-
-    plan_rewriter = PlanRewriter(forms_config)
-    root = plan_rewriter.rewrite_plan(root)
-
-    plan_executor = DFPlanExecutor(forms_config)
-    return plan_executor.df_execute_formula_plan(df, root)
-
-
 def test_one_worker():
     forms_config.cores = 1
-    computed_df = compute_one_formula("=SUM(A1:B3)")
-    expected_df = pd.DataFrame(np.full(100, 6.0))
+    computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
+    expected_df = pd.DataFrame(np.full(100, 12.0))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
 
 
 def test_multiple_workers():
     forms_config.cores = 4
-    computed_df = compute_one_formula("=SUM(A1:B3)")
-    expected_df = pd.DataFrame(np.full(100, 6.0))
+    computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
+    expected_df = pd.DataFrame(np.full(100, 12.0))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)

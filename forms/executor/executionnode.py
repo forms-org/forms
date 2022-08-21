@@ -28,7 +28,7 @@ class ExecutionNode(ABC, TreeNode):
         self.exec_context = None
 
     @abstractmethod
-    def replicate_subtree(self):
+    def gen_exec_subtree(self):
         pass
 
     @abstractmethod
@@ -41,9 +41,9 @@ class FunctionExecutionNode(ExecutionNode):
         super().__init__(out_ref_type, out_ref_dir)
         self.function = function
 
-    def replicate_subtree(self):
+    def gen_exec_subtree(self):
         parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_dir)
-        children = [child.replicate_subtree() for child in self.children]
+        children = [child.gen_exec_subtree() for child in self.children]
         link_parent_to_children(parent, children)
         return parent
 
@@ -59,8 +59,10 @@ class RefExecutionNode(ExecutionNode):
         self.table = table
         self.ref = ref
 
-    def replicate_subtree(self):
-        return RefExecutionNode(self.ref, self.table, self.out_ref_type, self.out_ref_dir)
+    def gen_exec_subtree(self):
+        return RefExecutionNode(
+            self.ref, self.table.gen_table_for_execution(), self.out_ref_type, self.out_ref_dir
+        )
 
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
@@ -71,7 +73,7 @@ class LitExecutionNode(ExecutionNode):
         super().__init__(out_ref_type, out_ref_dir)
         self.literal = literal
 
-    def replicate_subtree(self):
+    def gen_exec_subtree(self):
         return LitExecutionNode(self.literal, self.out_ref_type, self.out_ref_dir)
 
     def set_exec_context(self, exec_context: ExecutionContext):

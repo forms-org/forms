@@ -5,3 +5,4 @@ xlsxwriter
 jpype1
 pytest>=5.3.1
 pytest-cov>=2.8.1
+dask

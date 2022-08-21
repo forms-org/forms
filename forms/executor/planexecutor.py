@@ -12,7 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from concurrent.futures import ThreadPoolExecutor
 from time import sleep
 
 from forms.executor.executionnode import from_plan_to_execution_tree
@@ -27,6 +26,8 @@ class PlanExecutor(ABC):
     def __init__(self, forms_config: FormSConfig):
         self.forms_config = forms_config
         self.schedule_interval = 0.01  # seconds
+        self.client = None
+        self.execute_one_subtree = None
 
     def build_exec_config(self, table: Table, ref_dir: RefDirection) -> ExecutionConfig:
         exec_config = ExecutionConfig()
@@ -43,14 +44,13 @@ class PlanExecutor(ABC):
         exec_tree = from_plan_to_execution_tree(formula_plan, table)
         exec_config = self.build_exec_config(table, formula_plan.out_ref_dir)
         scheduler = create_scheduler_by_name(self.forms_config.scheduler, exec_config, exec_tree)
-        executor = ThreadPoolExecutor(self.forms_config.cores)
 
         future_result_dict = {}
         while not scheduler.is_finished():
             next_subtree, physical_subtree_list = scheduler.next_subtree()
             if next_subtree is not None:
                 future_result_dict[next_subtree] = [
-                    executor.submit(self.execute_one_subtree, physical_subtree)
+                    self.client.submit(self.execute_one_subtree, physical_subtree)
                     for physical_subtree in physical_subtree_list
                 ]
 
@@ -60,19 +60,26 @@ class PlanExecutor(ABC):
                 if all([future.done() for future in future_result_dict[exec_subtree]])
             ]
             for exec_subtree in finished_exec_subtrees:
-                result = self.collect_results(future_result_dict[exec_subtree], exec_config.axis)
-                scheduler.finish_subtree(exec_subtree, result)
+                intermediate_result = self.collect_results(
+                    future_result_dict[exec_subtree], exec_config.axis
+                )
+                scheduler.finish_subtree(exec_subtree, intermediate_result)
+                if not scheduler.is_finished():
+                    self.scatter_results(intermediate_result)
                 del future_result_dict[exec_subtree]
 
             sleep(self.schedule_interval)
 
-        executor.shutdown()
         return scheduler.get_results()
 
     @abstractmethod
-    def execute_one_subtree(self, physical_subtree: ExecutionNode) -> Table:
+    def collect_results(self, futures, axis: int) -> Table:
         pass
 
     @abstractmethod
-    def collect_results(self, futures, axis: int) -> Table:
+    def scatter_results(self, table: Table):
+        pass
+
+    @abstractmethod
+    def clean_up(self):
         pass

@@ -13,7 +13,6 @@
 #  limitations under the License.
 import math
 
-import pandas as pd
 import numpy as np
 
 from forms.executor.table import *
@@ -27,7 +26,7 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
     for child in physical_subtree.children:
         if isinstance(child, RefExecutionNode):
             ref = child.ref
-            df = child.table.df
+            df = child.table.get_table_content()
             out_ref_type = child.out_ref_type
             start_idx = child.exec_context.start_formula_idx
             end_idx = child.exec_context.end_formula_idx
@@ -66,13 +65,13 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
             else:
                 literal = func1((literal, child.literal))
     if function == Function.MAX:
-        return construct_dftable(np.max(values, initial=literal, axis=0))
+        return construct_df_table(np.max(values, initial=literal, axis=0))
     elif function == Function.MIN:
-        return construct_dftable(np.min(values, initial=literal, axis=0))
+        return construct_df_table(np.min(values, initial=literal, axis=0))
     elif function == Function.SUM:
-        return construct_dftable(sum(values) + literal)
+        return construct_df_table(sum(values) + literal)
     elif function == Function.COUNT:
-        return construct_dftable(sum(values) + literal)
+        return construct_df_table(sum(values) + literal)
 
 
 def max_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -93,7 +92,8 @@ def sum_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 def average_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return DFTable(
-        df_executor(physical_subtree, Function.SUM).df / df_executor(physical_subtree, Function.COUNT).df
+        df=df_executor(physical_subtree, Function.SUM).df
+        / df_executor(physical_subtree, Function.COUNT).df
     )
 
 
@@ -103,7 +103,7 @@ def binary_df_executor(physical_subtree: FunctionExecutionNode, function: Functi
     for child in physical_subtree.children:
         if isinstance(child, RefExecutionNode):
             ref = child.ref
-            df = child.table.df
+            df = child.table.get_table_content()
             out_ref_type = child.out_ref_type
             start_idx = child.exec_context.start_formula_idx
             end_idx = child.exec_context.end_formula_idx
@@ -124,13 +124,13 @@ def binary_df_executor(physical_subtree: FunctionExecutionNode, function: Functi
         elif isinstance(child, LitExecutionNode):
             values.append(child.literal)
     if function == Function.PLUS:
-        return construct_dftable(values[0] + values[1])
+        return construct_df_table(values[0] + values[1])
     elif function == Function.MINUS:
-        return construct_dftable(values[0] - values[1])
+        return construct_df_table(values[0] - values[1])
     elif function == Function.MULTIPLY:
-        return construct_dftable(values[0] * values[1])
+        return construct_df_table(values[0] * values[1])
     elif function == Function.DIVIDE:
-        return construct_dftable(values[0] / values[1])
+        return construct_df_table(values[0] / values[1])
 
 
 def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -174,5 +174,5 @@ def find_function_executor(function: Function):
     return function_to_executor_dict[function]
 
 
-def construct_dftable(array):
-    return DFTable(pd.DataFrame(array))
+def construct_df_table(array):
+    return DFTable(df=pd.DataFrame(array))
