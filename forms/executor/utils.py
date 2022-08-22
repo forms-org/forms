@@ -29,3 +29,7 @@ class ExecutionContext:
         self.start_formula_idx = start_formula_idx
         self.end_formula_idx = end_formula_idx
         self.axis = axis
+        self.all_formula_idx = None
+
+    def set_all_formula_idx(self, all_formula_idx):
+        self.all_formula_idx = all_formula_idx

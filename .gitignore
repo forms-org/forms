@@ -15,4 +15,5 @@ build/
 .idea/
 tests/.coverage
 tests/coverage.xml
-
+# dask
+dask-worker-space/
