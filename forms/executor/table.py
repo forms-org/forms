@@ -14,6 +14,7 @@
 
 import pandas as pd
 from abc import ABC, abstractmethod
+from forms.runtime.remoteobject import RemoteObject
 
 
 class Table(ABC):
@@ -35,10 +36,10 @@ class Table(ABC):
 
 
 class DFTable(Table):
-    def __init__(self, df: pd.DataFrame = None, df_future=None):
-        assert df is not None or df_future is not None
+    def __init__(self, df: pd.DataFrame = None, remote_object: RemoteObject = None):
+        assert df is not None or remote_object is not None
         self.df = df
-        self.df_future = df_future
+        self.remote_object = remote_object
 
     def get_num_of_rows(self) -> int:
         return self.get_table_content().shape[0]
@@ -48,11 +49,11 @@ class DFTable(Table):
 
     def get_table_content(self) -> pd.DataFrame:
         if self.df is None:
-            self.df = self.df_future.result()
+            self.df = self.remote_object.get_content()
         return self.df
 
     def gen_table_for_execution(self) -> Table:
-        return DFTable(None, df_future=self.df_future)
+        return DFTable(None, remote_object=self.remote_object)
 
 
 class RelTable(Table):

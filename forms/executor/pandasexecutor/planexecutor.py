@@ -16,7 +16,6 @@ import pandas as pd
 
 from time import time
 
-from dask.distributed import Client
 from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
@@ -24,6 +23,7 @@ from forms.executor.planexecutor import PlanExecutor
 from forms.executor.pandasexecutor.functionexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
 from forms.core.config import FormSConfig
+from forms.runtime.runtime import create_runtime_by_name
 
 
 def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
@@ -44,13 +44,12 @@ def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
 class DFPlanExecutor(PlanExecutor):
     def __init__(self, forms_config: FormSConfig):
         super().__init__(forms_config)
-        self.client = Client(processes=True, n_workers=self.forms_config.cores)
-        self.broadcast = True
+        self.runtime = create_runtime_by_name(forms_config.runtime, forms_config)
         self.execute_one_subtree = execute_one_subtree
 
     def df_execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
         start = time()
-        df_table = DFTable(df, self.client.scatter(df, broadcast=self.broadcast))
+        df_table = DFTable(df, self.runtime.distribute_data(df))
         print(f"Scattering cost: {time() - start}")
         start = time()
         res_table = super().execute_formula_plan(df_table, formula_plan)
@@ -60,15 +59,15 @@ class DFPlanExecutor(PlanExecutor):
 
         return res_table.df
 
-    def collect_results(self, futures, axis: int) -> Table:
-        df_list = [future.result().get_table_content() for future in futures]
+    def collect_results(self, remote_object_list, axis: int) -> Table:
+        df_list = [remote_obj.get_content().get_table_content() for remote_obj in remote_object_list]
         res_df = pd.concat(df_list, axis=axis)
         return DFTable(res_df)
 
-    def scatter_results(self, table: Table):
+    def distribute_results(self, table: Table):
         if table is not None:
-            df_future = self.client.scatter(table.get_table_content(), broadcast=self.broadcast)
-            table.df_future = df_future
+            df_remote_object = self.runtime.distribute_data(table.get_table_content)
+            table.remote_object = df_remote_object
 
     def clean_up(self):
-        self.client.close()
+        self.runtime.shut_down()

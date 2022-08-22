@@ -26,7 +26,7 @@ class PlanExecutor(ABC):
     def __init__(self, forms_config: FormSConfig):
         self.forms_config = forms_config
         self.schedule_interval = 0.01  # seconds
-        self.client = None
+        self.runtime = None
         self.execute_one_subtree = None
 
     def build_exec_config(self, table: Table, ref_dir: RefDirection) -> ExecutionConfig:
@@ -45,28 +45,29 @@ class PlanExecutor(ABC):
         exec_config = self.build_exec_config(table, formula_plan.out_ref_dir)
         scheduler = create_scheduler_by_name(self.forms_config.scheduler, exec_config, exec_tree)
 
-        future_result_dict = {}
+        remote_object_dict = {}
         while not scheduler.is_finished():
             next_subtree, physical_subtree_list = scheduler.next_subtree()
             if next_subtree is not None:
-                future_result_dict[next_subtree] = [
-                    self.client.submit(self.execute_one_subtree, physical_subtree)
+                remote_object_dict[next_subtree] = [
+                    self.runtime.submit_one_func(self.execute_one_subtree, physical_subtree)
                     for physical_subtree in physical_subtree_list
                 ]
 
             finished_exec_subtrees = [
                 exec_subtree
-                for exec_subtree in future_result_dict
-                if all([future.done() for future in future_result_dict[exec_subtree]])
+                for exec_subtree in remote_object_dict
+                if all([remote_object.is_object_computed()
+                        for remote_object in remote_object_dict[exec_subtree]])
             ]
             for exec_subtree in finished_exec_subtrees:
                 intermediate_result = self.collect_results(
-                    future_result_dict[exec_subtree], exec_config.axis
+                    remote_object_dict[exec_subtree], exec_config.axis
                 )
                 scheduler.finish_subtree(exec_subtree, intermediate_result)
                 if not scheduler.is_finished():
-                    self.scatter_results(intermediate_result)
-                del future_result_dict[exec_subtree]
+                    self.distribute_results(intermediate_result)
+                del remote_object_dict[exec_subtree]
 
             sleep(self.schedule_interval)
 
@@ -77,7 +78,7 @@ class PlanExecutor(ABC):
         pass
 
     @abstractmethod
-    def scatter_results(self, table: Table):
+    def distribute_results(self, table: Table):
         pass
 
     @abstractmethod

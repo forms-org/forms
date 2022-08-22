@@ -31,3 +31,7 @@ class FunctionNotSupportedException(FormSException):
 
 class SchedulerNotSupportedException(FormSException):
     """Exception raised for not supported scheduler"""
+
+
+class RuntimeNotSupportedException(FormSException):
+    """Exception raised for not supported runtime"""

@@ -21,7 +21,7 @@ class FormSConfig:
         self.scheduler = Schedulers.SIMPLE.name.lower()
         self.enable_logical_rewriting = False
         self.enable_physical_opt = False
-        self.dask_client = "127.0.0.1:8787"
+        self.runtime = "dask"
 
 
 forms_config = FormSConfig()

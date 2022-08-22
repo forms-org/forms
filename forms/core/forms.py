@@ -48,10 +48,10 @@ def config(
     scheduler=forms_config.scheduler,
     enable_logical_rewriting=forms_config.enable_logical_rewriting,
     enable_physical_opt=forms_config.enable_physical_opt,
-    dask_client=forms_config.dask_client,
+    runtime=forms_config.runtime,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
     forms_config.enable_logical_rewriting = enable_logical_rewriting
     forms_config.enable_physical_opt = enable_physical_opt
-    forms_config.dask_client = dask_client
+    forms_config.runtime = runtime
