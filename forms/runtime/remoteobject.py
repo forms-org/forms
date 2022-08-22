@@ -29,7 +29,6 @@ class RemoteObject(ABC):
 
 
 class DaskObject(RemoteObject):
-
     def get_content(self):
         return self.object_ref.result()
 

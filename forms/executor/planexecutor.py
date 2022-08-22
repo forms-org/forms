@@ -57,8 +57,12 @@ class PlanExecutor(ABC):
             finished_exec_subtrees = [
                 exec_subtree
                 for exec_subtree in remote_object_dict
-                if all([remote_object.is_object_computed()
-                        for remote_object in remote_object_dict[exec_subtree]])
+                if all(
+                    [
+                        remote_object.is_object_computed()
+                        for remote_object in remote_object_dict[exec_subtree]
+                    ]
+                )
             ]
             for exec_subtree in finished_exec_subtrees:
                 intermediate_result = self.collect_results(

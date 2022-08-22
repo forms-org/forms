@@ -55,3 +55,7 @@ def config(
     forms_config.enable_logical_rewriting = enable_logical_rewriting
     forms_config.enable_physical_opt = enable_physical_opt
     forms_config.runtime = runtime
+
+
+def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
+    return df
