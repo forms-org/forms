@@ -14,6 +14,4 @@ Here is an illustrating example from Google sheets where the user writes the for
 <img src="https://github.com/totemtang/forms/blob/main/resources/spreadsheet-example.png"  width="400" height="200">
 
 ## Demo
-Please check out the demo here:
-
 <img src="https://github.com/totemtang/forms/blob/main/resources/demo.gif">
