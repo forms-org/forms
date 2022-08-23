@@ -17,7 +17,6 @@ import pandas as pd
 import numpy as np
 
 import forms
-from forms.core.config import forms_config
 from forms.executor.scheduler import Schedulers
 
 df = None
@@ -30,15 +29,17 @@ def execute_before_and_after_one_test():
     n = 5
     df = pd.DataFrame(np.ones((m, n)))
 
-    forms_config.scheduler = Schedulers.SIMPLE.name.lower()
-    forms_config.enable_logical_rewriting = False
-    forms_config.enable_physical_opt = False
+    forms.config(
+        scheduler=Schedulers.SIMPLE.name.lower(),
+        enable_logical_rewriting=False,
+        enable_physical_opt=False,
+    )
 
     yield
 
 
 def test_one_worker():
-    forms_config.cores = 1
+    forms.config(cores=1)
     computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
     expected_df = pd.DataFrame(np.full(100, 12.0))
     expected_df.iloc[98:100, 0] = np.NaN
@@ -46,7 +47,7 @@ def test_one_worker():
 
 
 def test_multiple_workers():
-    forms_config.cores = 4
+    forms.config(cores=4)
     computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
     expected_df = pd.DataFrame(np.full(100, 12.0))
     expected_df.iloc[98:100, 0] = np.NaN

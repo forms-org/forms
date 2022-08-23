@@ -14,7 +14,6 @@
 import pytest
 
 import forms
-from forms import forms_config
 from forms.executor.pandasexecutor.functionexecutor import *
 
 df = None
@@ -27,10 +26,9 @@ def execute_before_and_after_one_test():
     global df
     df = pd.DataFrame(np.ones((m, n)))
 
-    forms_config.cores = 4
-    forms_config.scheduler = "frrftwophase"
-    forms_config.enable_logical_rewriting = False
-    forms_config.enable_physical_opt = True
+    forms.config(
+        cores=4, scheduler="frrftwophase", enable_logical_rewriting=False, enable_physical_opt=True
+    )
     yield
 
 
