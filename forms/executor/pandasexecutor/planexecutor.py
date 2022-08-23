@@ -66,7 +66,7 @@ class DFPlanExecutor(PlanExecutor):
 
     def distribute_results(self, table: Table):
         if table is not None:
-            df_remote_object = self.runtime.distribute_data(table.get_table_content)
+            df_remote_object = self.runtime.distribute_data(table.get_table_content())
             table.remote_object = df_remote_object
 
     def clean_up(self):

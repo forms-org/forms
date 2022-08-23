@@ -41,9 +41,11 @@ class FunctionExecutionNode(ExecutionNode):
     def __init__(self, function: Function, out_ref_type: RefType, out_ref_axis: int):
         super().__init__(out_ref_type, out_ref_axis)
         self.function = function
+        self.fr_rf_optimization = FRRFOptimization.NOOPT
 
     def gen_exec_subtree(self):
         parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_axis)
+        parent.fr_rf_optimization = self.fr_rf_optimization
         children = [child.gen_exec_subtree() for child in self.children]
         link_parent_to_children(parent, children)
         return parent
@@ -90,6 +92,7 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
         parent = FunctionExecutionNode(
             plan_node.function, plan_node.out_ref_type, plan_node.out_ref_axis
         )
+        parent.fr_rf_optimization = plan_node.fr_rf_optimization
         children = [from_plan_to_execution_tree(child, table) for child in plan_node.children]
         link_parent_to_children(parent, children)
         return parent
