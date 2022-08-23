@@ -21,17 +21,11 @@ In order to keep our codebase clean and readible, we are using PEP8 guidelines. 
 
 * [black](https://github.com/psf/black)
 
-Precommit hooks are installed for you as part of [requirements-dev.txt](https://github.com/lux-org/lux/blob/master/requirements-dev.txt). To ensure precommit hooks run on every commit, run the install command:
+To automatically reformat the files, run 
 
-```bash
-pre-commit install
 ```
-
-To manually run precommit hooks use:
-
-```bash
-pre-commit run --all-files
-``` 
+make reformat
+```
 
 # Running the Test Suite
 
