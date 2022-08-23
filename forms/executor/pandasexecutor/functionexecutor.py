@@ -111,14 +111,14 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
             if axis == axis_along_row:
                 additional = literal
                 if out_ref_type == RefType.FR:
-                    # calculate the last values of following partitions
+                    # calculate the last values of previous partitions
                     for i, formula_idx in enumerate(all_formula_idx):
                         if start_idx > formula_idx:
                             additional = func2((additional, df.iloc[all_formula_idx[i + 1] - 1][0]))
                         else:
                             break
                 else:  # RefType.RF
-                    # calculate the first values of previous partitions
+                    # calculate the first values of following partitions
                     for formula_idx in reversed(all_formula_idx):
                         if formula_idx == all_formula_idx[-1]:
                             continue
