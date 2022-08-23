@@ -62,9 +62,6 @@ class RefType(Enum):
     LIT = auto()
 
 
-class RefDirection(Enum):
-    LEFT = auto()
-    RIGHT = auto()
-    UP = auto()
-    DOWN = auto()
-    NODIR = auto()
+axis_along_row = 0
+axis_along_column = 1
+default_axis = axis_along_row

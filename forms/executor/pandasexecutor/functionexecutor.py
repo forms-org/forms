@@ -18,6 +18,7 @@ import numpy as np
 from forms.executor.table import *
 from forms.executor.executionnode import *
 from forms.utils.functions import *
+from forms.utils.reference import axis_along_row
 
 
 def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> DFTable:

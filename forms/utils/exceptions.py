@@ -35,3 +35,11 @@ class SchedulerNotSupportedException(FormSException):
 
 class RuntimeNotSupportedException(FormSException):
     """Exception raised for not supported runtime"""
+
+
+class FormulaStringSyntaxErrorException(FormSException):
+    """Exception raised for wrong formula syntax"""
+
+
+class FormulaStringUnsupportedException(FormSException):
+    """Exception raised for unsupported formula string"""

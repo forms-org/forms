@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.utils.reference import Ref, RefType, RefDirection
+from forms.utils.reference import Ref, RefType, axis_along_row
 from forms.utils.functions import Function, arithmetic_functions
 from forms.utils.exceptions import InvalidArithmeticInputException
 from forms.utils.treenode import TreeNode
@@ -24,7 +24,11 @@ class PlanNode(ABC, TreeNode):
     def __init__(self):
         super().__init__()
         self.out_ref_type = None
-        self.out_ref_dir = None
+        self.out_ref_axis = None
+        self.open_value = None
+        self.seps = []
+        self.func_type = None
+        self.close_value = None
 
     @abstractmethod
     def populate_ref_info(self):
@@ -40,11 +44,11 @@ class PlanNode(ABC, TreeNode):
 
 
 class RefNode(PlanNode):
-    def __init__(self, ref: Ref, ref_type: RefType, ref_dir=RefDirection.DOWN):
+    def __init__(self, ref: Ref, ref_type: RefType, ref_axis):
         super().__init__()
         self.ref = ref
         self.out_ref_type = ref_type
-        self.out_ref_dir = ref_dir
+        self.out_ref_axis = ref_axis
 
     def populate_ref_info(self):
         pass
@@ -53,16 +57,16 @@ class RefNode(PlanNode):
         pass
 
     def replicate_node(self):
-        return RefNode(self.ref, self.out_ref_type, self.out_ref_dir)
+        return RefNode(self.ref, self.out_ref_type, self.out_ref_axis)
 
 
 class LiteralNode(PlanNode):
-    def __init__(self, literal):
+    def __init__(self, literal, ref_axis):
         super().__init__()
         self.literal = literal
         self.out_ref_type = RefType.LIT
         self.lit_type = type(literal)
-        self.out_ref_dir = RefDirection.NODIR
+        self.out_ref_axis = ref_axis
 
     def populate_ref_info(self):
         pass
@@ -75,8 +79,9 @@ class LiteralNode(PlanNode):
 
 
 class FunctionNode(PlanNode):
-    def __init__(self, function: Function):
+    def __init__(self, function: Function, ref_axis):
         super().__init__()
+        self.out_ref_axis = ref_axis
         self.function = function
         self.fr_rf_optimization = FRRFOptimization.NOOPT
 
@@ -101,9 +106,8 @@ class FunctionNode(PlanNode):
                 )
 
     def replicate_node(self):
-        function_node = FunctionNode(self.function)
+        function_node = FunctionNode(self.function, self.out_ref_axis)
         function_node.out_ref_type = self.out_ref_type
-        function_node.out_ref_dir = self.out_ref_dir
         return function_node
 
 

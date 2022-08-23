@@ -15,11 +15,10 @@
 from time import sleep
 
 from forms.executor.executionnode import from_plan_to_execution_tree
-from forms.executor.utils import axis_along_row, axis_along_column
 from forms.executor.scheduler import *
 from forms.planner.plannode import PlanNode
 from forms.core.config import FormSConfig
-from forms.utils.reference import RefDirection
+from forms.utils.reference import axis_along_column
 
 
 class PlanExecutor(ABC):
@@ -29,20 +28,17 @@ class PlanExecutor(ABC):
         self.runtime = None
         self.execute_one_subtree = None
 
-    def build_exec_config(self, table: Table, ref_dir: RefDirection) -> ExecutionConfig:
-        exec_config = ExecutionConfig()
-        exec_config.cores = self.forms_config.cores
-        if ref_dir == RefDirection.LEFT or ref_dir == RefDirection.RIGHT:
-            exec_config.num_of_formulae = table.get_num_of_columns()
-            exec_config.axis = axis_along_column
-        else:
-            exec_config.num_of_formulae = table.get_num_of_rows()
-            exec_config.axis = axis_along_row
+    def build_exec_config(self, table: Table, axis: int) -> ExecutionConfig:
+        if axis == axis_along_column:
+            num_of_formulae = table.get_num_of_columns()
+        else:  # axis_along_row
+            num_of_formulae = table.get_num_of_rows()
+        exec_config = ExecutionConfig(axis, num_of_formulae, cores=self.forms_config.cores)
         return exec_config
 
     def execute_formula_plan(self, table: Table, formula_plan: PlanNode) -> Table:
         exec_tree = from_plan_to_execution_tree(formula_plan, table)
-        exec_config = self.build_exec_config(table, formula_plan.out_ref_dir)
+        exec_config = self.build_exec_config(table, formula_plan.out_ref_axis)
         scheduler = create_scheduler_by_name(self.forms_config.scheduler, exec_config, exec_tree)
 
         remote_object_dict = {}

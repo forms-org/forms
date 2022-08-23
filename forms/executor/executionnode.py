@@ -14,17 +14,18 @@
 
 from forms.planner.plannode import *
 from forms.executor.table import Table
-from forms.executor.utils import ExecutionContext, axis_along_row, default_axis
+from forms.executor.utils import ExecutionContext
+from forms.utils.reference import axis_along_row, default_axis
 from forms.utils.treenode import TreeNode, link_parent_to_children
 
 from abc import ABC, abstractmethod
 
 
 class ExecutionNode(ABC, TreeNode):
-    def __init__(self, out_ref_type: RefType, out_ref_dir: RefDirection):
+    def __init__(self, out_ref_type: RefType, out_ref_axis: int):
         super().__init__()
         self.out_ref_type = out_ref_type
-        self.out_ref_dir = out_ref_dir
+        self.out_ref_axis = out_ref_axis
         self.exec_context = None
 
     @abstractmethod
@@ -37,12 +38,12 @@ class ExecutionNode(ABC, TreeNode):
 
 
 class FunctionExecutionNode(ExecutionNode):
-    def __init__(self, function: Function, out_ref_type: RefType, out_ref_dir: RefDirection):
-        super().__init__(out_ref_type, out_ref_dir)
+    def __init__(self, function: Function, out_ref_type: RefType, out_ref_axis: int):
+        super().__init__(out_ref_type, out_ref_axis)
         self.function = function
 
     def gen_exec_subtree(self):
-        parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_dir)
+        parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_axis)
         children = [child.gen_exec_subtree() for child in self.children]
         link_parent_to_children(parent, children)
         return parent
@@ -54,14 +55,14 @@ class FunctionExecutionNode(ExecutionNode):
 
 
 class RefExecutionNode(ExecutionNode):
-    def __init__(self, ref: Ref, table: Table, out_ref_type: RefType, out_ref_dir: RefDirection):
-        super().__init__(out_ref_type, out_ref_dir)
+    def __init__(self, ref: Ref, table: Table, out_ref_type: RefType, out_ref_axis: int):
+        super().__init__(out_ref_type, out_ref_axis)
         self.table = table
         self.ref = ref
 
     def gen_exec_subtree(self):
         return RefExecutionNode(
-            self.ref, self.table.gen_table_for_execution(), self.out_ref_type, self.out_ref_dir
+            self.ref, self.table.gen_table_for_execution(), self.out_ref_type, self.out_ref_axis
         )
 
     def set_exec_context(self, exec_context: ExecutionContext):
@@ -69,12 +70,12 @@ class RefExecutionNode(ExecutionNode):
 
 
 class LitExecutionNode(ExecutionNode):
-    def __init__(self, literal, out_ref_type: RefType, out_ref_dir: RefDirection):
-        super().__init__(out_ref_type, out_ref_dir)
+    def __init__(self, literal, out_ref_type: RefType, out_ref_axis: int):
+        super().__init__(out_ref_type, out_ref_axis)
         self.literal = literal
 
     def gen_exec_subtree(self):
-        return LitExecutionNode(self.literal, self.out_ref_type, self.out_ref_dir)
+        return LitExecutionNode(self.literal, self.out_ref_type, self.out_ref_axis)
 
     def set_exec_context(self, exec_context: ExecutionContext):
         pass
@@ -82,11 +83,13 @@ class LitExecutionNode(ExecutionNode):
 
 def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionNode:
     if isinstance(plan_node, RefNode):
-        return RefExecutionNode(plan_node.ref, table, plan_node.out_ref_type, plan_node.out_ref_dir)
+        return RefExecutionNode(plan_node.ref, table, plan_node.out_ref_type, plan_node.out_ref_axis)
     elif isinstance(plan_node, LiteralNode):
-        return LitExecutionNode(plan_node.literal, plan_node.out_ref_type, plan_node.out_ref_dir)
+        return LitExecutionNode(plan_node.literal, plan_node.out_ref_type, plan_node.out_ref_axis)
     elif isinstance(plan_node, FunctionNode):
-        parent = FunctionExecutionNode(plan_node.function, plan_node.out_ref_type, plan_node.out_ref_dir)
+        parent = FunctionExecutionNode(
+            plan_node.function, plan_node.out_ref_type, plan_node.out_ref_axis
+        )
         children = [from_plan_to_execution_tree(child, table) for child in plan_node.children]
         link_parent_to_children(parent, children)
         return parent
@@ -95,7 +98,7 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
 
 def create_intermediate_ref_node(table: Table, exec_subtree: ExecutionNode) -> RefExecutionNode:
     ref = Ref(0, 0)
-    ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_dir)
+    ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_axis)
     axis = exec_subtree.exec_context.axis if exec_subtree.exec_context is not None else default_axis
     ref_node.set_exec_context(
         ExecutionContext(

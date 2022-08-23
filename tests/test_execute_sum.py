@@ -14,6 +14,7 @@
 import pytest
 
 from forms.executor.pandasexecutor.functionexecutor import *
+from forms.utils.reference import axis_along_row
 
 table = None
 
@@ -31,10 +32,10 @@ def execute_before_and_after_one_test():
 
 def compute_one_formula(ref: Ref, ref_type: RefType) -> DFTable:
     global table
-    root = FunctionExecutionNode(Function.SUM, RefType.RR, RefDirection.DOWN)
-    child = RefExecutionNode(ref, table, ref_type, RefDirection.DOWN)
+    root = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
+    child = RefExecutionNode(ref, table, ref_type, axis_along_row)
     link_parent_to_children(root, [child])
-    child.set_exec_context(ExecutionContext(50, 100))
+    child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
     return sum_df_executor(root)
 
 
@@ -69,13 +70,13 @@ def test_execute_sum_simple_formula_rf():
 # try to mock forms.compute_formula(df, "=SUM($A$1, SUM(A1:B3))")
 def test_execute_sum_complex_formula():
     global table
-    root = FunctionExecutionNode(Function.SUM, RefType.RR, RefDirection.DOWN)
-    parent = FunctionExecutionNode(Function.SUM, RefType.RR, RefDirection.DOWN)
-    child1 = RefExecutionNode(Ref(0, 0), table, RefType.FF, RefDirection.DOWN)
-    child2 = RefExecutionNode(Ref(0, 0, 2, 1), table, RefType.RR, RefDirection.DOWN)
+    root = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
+    parent = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
+    child1 = RefExecutionNode(Ref(0, 0), table, RefType.FF, axis_along_row)
+    child2 = RefExecutionNode(Ref(0, 0, 2, 1), table, RefType.RR, axis_along_row)
     link_parent_to_children(root, [parent, child1])
     link_parent_to_children(parent, [child2])
-    root.set_exec_context(ExecutionContext(50, 100, 0))
+    root.set_exec_context(ExecutionContext(50, 100, axis_along_row))
     sub_result = sum_df_executor(parent)
     real_result = pd.DataFrame(np.full(48, 6.0))
     assert np.array_equal(sub_result.df.iloc[0:48].values, real_result.values)
