@@ -43,3 +43,7 @@ class FormulaStringSyntaxErrorException(FormSException):
 
 class FormulaStringUnsupportedException(FormSException):
     """Exception raised for unsupported formula string"""
+
+
+class AxisUnsupportedException(FormSException):
+    """Exception raised for unsupported axis"""
