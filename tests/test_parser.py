@@ -18,9 +18,7 @@ from forms.utils.functions import Function
 from forms.utils.reference import Ref, RefType, default_axis
 
 
-def evaluate_single_reference(ref_str: str,
-                              expected_ref: Ref,
-                              expected_ref_type: RefType):
+def evaluate_single_reference(ref_str: str, expected_ref: Ref, expected_ref_type: RefType):
     root = parse_formula(f"=SUM({ref_str})", default_axis)
     assert type(root) == FunctionNode
     assert root.function == Function.SUM
@@ -43,7 +41,7 @@ def test_parser_single_formula_and_reference():
 
 
 def test_parser_multiple_formula_and_reference():
-    root = parse_formula("=SUM(A1 + B1 + 1, A2:B2)", default_axis)
+    root = parse_formula("=SUM(A1 + B1, A2:B2)", default_axis)
     assert isinstance(root, FunctionNode)
     assert root.function == Function.SUM
 

@@ -15,9 +15,11 @@
 from openpyxl.formula.tokenizer import Tokenizer, Token
 from forms.planner.plannode import PlanNode, FunctionNode, LiteralNode, RefNode
 from forms.utils.functions import from_function_str
-from forms.utils.exceptions import FormulaStringSyntaxErrorException,\
-    FormulaStringUnsupportedException,\
-    AxisUnsupportedException
+from forms.utils.exceptions import (
+    FormulaStringSyntaxErrorException,
+    FormulaStringUnsupportedException,
+    AxisUnsupportedException,
+)
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.reference import default_axis, axis_along_row, Ref, RefType
 
@@ -211,7 +213,9 @@ def build_from_op_in_post_subexpression(tokens, pos: int, child_plan_node: PlanN
     cur_pos = pos
     cur_token = tokens[cur_pos]
 
-    func_str = f"{cur_token.type}_{cur_token.value}" if cur_token.type == Token.OP_POST else cur_token.value
+    func_str = (
+        f"{cur_token.type}_{cur_token.value}" if cur_token.type == Token.OP_POST else cur_token.value
+    )
     cur_plan_node = FunctionNode(from_function_str(func_str), formula_apply_axis)
     cur_plan_node.open_value = cur_token.value
     cur_plan_node.func_type = cur_token.type
@@ -276,7 +280,8 @@ def is_start_of_subexpression(token: Token) -> bool:
 
 
 def is_end_of_subexpression(token: Token) -> bool:
-    return (token.type == Token.SEP or
-            (token.type == Token.FUNC and token.subtype == Token.CLOSE) or
-            (token.type == Token.PAREN and token.subtype == Token.CLOSE)
-            )
+    return (
+        token.type == Token.SEP
+        or (token.type == Token.FUNC and token.subtype == Token.CLOSE)
+        or (token.type == Token.PAREN and token.subtype == Token.CLOSE)
+    )
