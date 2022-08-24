@@ -61,7 +61,7 @@ class DFPlanExecutor(PlanExecutor):
 
     def collect_results(self, remote_object_list, axis: int) -> Table:
         df_list = [remote_obj.get_content().get_table_content() for remote_obj in remote_object_list]
-        res_df = pd.concat(df_list, axis=axis)
+        res_df = pd.concat(df_list, axis=axis, ignore_index=True)
         return DFTable(res_df)
 
     def distribute_results(self, table: Table):
