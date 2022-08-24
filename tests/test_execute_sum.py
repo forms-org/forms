@@ -15,7 +15,11 @@ import pytest
 import numpy as np
 import pandas as pd
 
-from forms.executor.executionnode import RefExecutionNode, FunctionExecutionNode, create_intermediate_ref_node
+from forms.executor.executionnode import (
+    RefExecutionNode,
+    FunctionExecutionNode,
+    create_intermediate_ref_node,
+)
 from forms.executor.pandasexecutor.functionexecutor import sum_df_executor
 from forms.executor.table import DFTable
 from forms.executor.utils import ExecutionContext
