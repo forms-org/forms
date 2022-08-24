@@ -23,11 +23,12 @@ from forms.planner.planrewriter import PlanRewriter
 from forms.executor.pandasexecutor.planexecutor import DFPlanExecutor
 
 from forms.utils.exceptions import FormSException
+from forms.utils.reference import default_axis
 
 
-def compute_formula(df: pd.DataFrame, formula_str: str) -> pd.DataFrame:
+def compute_formula(df: pd.DataFrame, formula_str: str, axis=default_axis) -> pd.DataFrame:
     try:
-        root = parse_formula(formula_str)
+        root = parse_formula(formula_str, axis)
         root.validate()
         root.populate_ref_info()
 

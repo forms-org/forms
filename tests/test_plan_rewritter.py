@@ -21,6 +21,7 @@ from forms.core.forms import config
 from forms.core.config import forms_config
 from forms.utils.functions import Function
 from forms.utils.optimizations import FRRFOptimization
+from forms.utils.reference import default_axis
 
 
 @pytest.fixture(autouse=True)
@@ -31,7 +32,7 @@ def execute_before_and_after_one_test():
 
 
 def gen_one_test_case(formula: str) -> PlanNode:
-    root = parse_formula(formula)
+    root = parse_formula(formula, default_axis)
     root.validate()
     root.populate_ref_info()
 

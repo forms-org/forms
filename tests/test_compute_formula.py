@@ -14,7 +14,6 @@
 import pytest
 
 import forms
-from forms import forms_config
 from forms.executor.pandasexecutor.functionexecutor import *
 from forms.executor.scheduler import Schedulers
 
@@ -28,10 +27,12 @@ def execute_before_and_after_one_test():
     global df
     df = pd.DataFrame(np.ones((m, n)))
 
-    forms_config.cores = 4
-    forms_config.scheduler = Schedulers.SIMPLE.name.lower()
-    forms_config.enable_logical_rewriting = False
-    forms_config.enable_physical_opt = False
+    forms.config(
+        cores=4,
+        scheduler=Schedulers.SIMPLE.name.lower(),
+        enable_logical_rewriting=False,
+        enable_physical_opt=False,
+    )
     yield
 
 
