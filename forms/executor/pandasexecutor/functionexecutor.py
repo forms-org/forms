@@ -57,9 +57,8 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
                             .apply(func2, axis=1)
                         )
                     value.index = range(value.index.size)
-                    if out_ref_type != RefType.FF and n_formula > len(value):
-                        extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
-                        value = pd.concat([value, extra], ignore_index=True)
+                    if out_ref_type != RefType.FF:
+                        value = fill_in_nan(value, n_formula)
                 values.append(pd.DataFrame(value))
             elif isinstance(child, LitExecutionNode):
                 if function == Function.COUNT:
@@ -103,9 +102,7 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
                         .apply(func2, axis=1)
                     )
                 value.index = range(value.index.size)
-                if n_formula > len(value):
-                    extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
-                    value = pd.concat([value, extra], ignore_index=True)
+                value = fill_in_nan(value, n_formula)
             return construct_df_table(value)
         elif physical_subtree.fr_rf_optimization == FRRFOptimization.PHASETWO:
             if axis == axis_along_row:
@@ -177,9 +174,7 @@ def binary_df_executor(physical_subtree: FunctionExecutionNode, function: Functi
                 if out_ref_type == RefType.RR:
                     value = df.iloc[start_idx + ref.row : end_idx + ref.row]
                     value.index, value.columns = [range(value.index.size), range(value.columns.size)]
-                    if n_formula > len(value):
-                        extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
-                        value = pd.concat([value, extra], ignore_index=True)
+                    value = fill_in_nan(value, n_formula)
                 elif out_ref_type == RefType.FF:
                     value = np.array(df.iloc[ref.row : ref.last_row + 1])
                     value = pd.DataFrame(np.full(n_formula, value))
@@ -238,3 +233,10 @@ def find_function_executor(function: Function):
 
 def construct_df_table(array):
     return DFTable(df=pd.DataFrame(array))
+
+
+def fill_in_nan(value, n_formula):
+    if n_formula > len(value):
+        extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
+        value = pd.concat([value, extra], ignore_index=True)
+    return value
