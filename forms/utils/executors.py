@@ -12,15 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-class FormSConfig:
-    def __init__(self):
-        self.cores = 1
-        self.scheduler = "simple"
-        self.enable_logical_rewriting = False
-        self.enable_physical_opt = False
-        self.runtime = "dask"
-        self.function_executor = "pandas_executor"
+from enum import Enum, auto
+from forms.executor.dfexecutor.planexecutor import DFPlanExecutor
+from forms.core.config import FormSConfig
+from forms.utils.exceptions import ExecutorNotSupportedException
 
 
-forms_config = FormSConfig()
+class Executors(Enum):
+    DFEXECUTOR = auto()
+
+
+executor_class_dict = {Executors.DFEXECUTOR.name.lower(): DFPlanExecutor}
+
+
+def create_executor_by_name(e_name: str, forms_config: FormSConfig):
+    if e_name.lower() in executor_class_dict.keys():
+        return executor_class_dict[e_name](forms_config)
+    raise ExecutorNotSupportedException(f"Executor {e_name} is not supported")

@@ -14,8 +14,14 @@
 
 from abc import ABC, abstractmethod
 
-from forms.planner.plannode import PlanNode, RefNode, LiteralNode, FunctionNode
-from forms.utils.functions import Function, distributive_functions, algebraic_functions
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode
+from forms.utils.functions import (
+    Function,
+    distributive_functions,
+    from_function_to_open_value,
+    close_value,
+    FunctionType,
+)
 from forms.utils.reference import RefType
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.generic import same_list
@@ -33,6 +39,9 @@ class PlusToSumRule(RewritingRule):
     def rewrite(plan_node: FunctionNode) -> FunctionNode:
         if plan_node.function == Function.PLUS:
             plan_node.function = Function.SUM
+            plan_node.open_value = from_function_to_open_value(plan_node.function)
+            plan_node.close_value = close_value
+            plan_node.func_type = FunctionType.FUNC
         return plan_node
 
 
@@ -44,10 +53,12 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     ):
         if parent.function in distributive_functions:
             new_child = parent.replicate_node()
+            new_child.seps = []
             link_parent_to_children(new_child, [child])
         elif parent.function == Function.AVG:
             new_child = parent.replicate_node()
             new_child.function = Function.SUM
+            new_child.seps = []
             link_parent_to_children(new_child, [child])
     return new_child
 
@@ -77,12 +88,14 @@ def factor_in(child: PlanNode, parent: FunctionNode) -> list:
             and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
+            parent.seps += child.seps
         elif (
             parent.function == Function.AVG
             and child.function == Function.SUM
             and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
+            parent.seps += child.seps
     return new_children
 
 

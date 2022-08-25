@@ -17,8 +17,8 @@ from forms.planner.plannode import PlanNode, FunctionNode, LiteralNode, RefNode
 from forms.utils.functions import from_function_str
 from forms.utils.exceptions import (
     FormulaStringSyntaxErrorException,
-    FormulaStringUnsupportedException,
-    AxisUnsupportedException,
+    FormulaStringNotSupportedException,
+    AxisNotSupportedException,
 )
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.reference import default_axis, axis_along_row, Ref, RefType
@@ -31,7 +31,7 @@ formula_apply_axis = default_axis
 
 def parse_formula(formula_string: str, axis: int) -> PlanNode:
     if axis != axis_along_row:
-        raise AxisUnsupportedException(f"Axis {axis} not supported")
+        raise AxisNotSupportedException(f"Axis {axis} not supported")
     global formula_apply_axis
     formula_apply_axis = axis
     tokens = Tokenizer(formula_string).items
@@ -236,7 +236,7 @@ def raise_syntax_exception(cur_pos, cur_token):
 
 
 def raise_unsupported_exception(cur_pos, cur_token):
-    raise FormulaStringUnsupportedException(f"Unsupported Error at {cur_pos}: {cur_token.value}")
+    raise FormulaStringNotSupportedException(f"Unsupported Error at {cur_pos}: {cur_token.value}")
 
 
 def from_func_value_to_func_str(func_value) -> str:
