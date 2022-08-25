@@ -33,7 +33,7 @@ def execute_before_and_after_one_test():
 
 def gen_one_test_case(formula: str) -> PlanNode:
     root = parse_formula(formula, default_axis)
-    root.validate()
+    root.validate(forms_config)
     root.populate_ref_info()
 
     plan_rewriter = PlanRewriter(forms_config)
