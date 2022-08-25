@@ -82,10 +82,18 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
                 df = df.iloc[:, ref.col : ref.last_col + 1]
                 h = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.FR:
+                    df = df.iloc[
+                        ref.row if start_idx == 0 else start_idx + ref.last_row : end_idx + ref.last_row
+                    ]
                     value = get_value_fr(
                         df, h if start_idx == 0 else 1, func_first_axis, func_second_axis
                     )
                 else:  # RefType.RF
+                    df = df.iloc[
+                        ref.row + start_idx : ref.last_row + 1
+                        if end_idx == all_formula_idx[-1]
+                        else ref.row + end_idx
+                    ]
                     value = get_value_rf(
                         df,
                         max(1, h - end_idx) if end_idx == all_formula_idx[-1] else 1,
