@@ -193,7 +193,7 @@ def construct_df_table(array):
 
 
 def get_value_rr(df: pd.DataFrame, window_size: int, func1, func2) -> pd.DataFrame:
-    return df.rolling(window_size, min_periods=window_size).agg(func1).dropna().apply(func2, axis=1)
+    return df.agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
 
 
 def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
@@ -201,11 +201,11 @@ def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
 
 
 def get_value_fr(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.expanding(min_window_size).agg(func1).dropna().apply(func2, axis=1)
+    return df.agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna()
 
 
 def get_value_rf(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.iloc[::-1].expanding(min_window_size).agg(func1).dropna().iloc[::-1].apply(func2, axis=1)
+    return df.iloc[::-1].agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna().iloc[::-1]
 
 
 def fill_in_nan(value, n_formula: int) -> pd.DataFrame:

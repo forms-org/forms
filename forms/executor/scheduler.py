@@ -19,7 +19,6 @@ from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
 from forms.utils.exceptions import SchedulerNotSupportedException
-from forms.utils.reference import RefType, axis_along_row, axis_along_column
 from forms.utils.treenode import link_parent_to_children
 
 
