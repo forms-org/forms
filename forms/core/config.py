@@ -21,6 +21,7 @@ class FormSConfig:
         self.enable_physical_opt = False
         self.runtime = "dask"
         self.function_executor = "pandas_executor"
+        self.partition_planner = "evenlydivided"
 
 
 forms_config = FormSConfig()

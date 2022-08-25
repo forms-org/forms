@@ -51,3 +51,7 @@ class AxisNotSupportedException(FormSException):
 
 class ExecutorNotSupportedException(FormSException):
     """Exception raised for unsupported Executor"""
+
+
+class PartitionPlannerNotSupportedException(FormSException):
+    """Exception raised for unsupported PartitionPlanner"""
