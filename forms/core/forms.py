@@ -59,20 +59,4 @@ def config(
 
 
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
-    try:
-        for i, label in enumerate(df.columns):
-            res = ""
-            # We want A = 1 instead of 0
-            i += 1
-            while i > 0:
-                mod = (i - 1) % 26
-                res += chr(mod + ord("A"))
-                i = (i - 1) // 26
-            res = res[::-1]
-            if keep_original_labels:
-                res = res + " (" + label + ")"
-            df.rename(columns={label: res}, inplace=True)
-        df.index = [i for i in range(1, len(df.index) + 1)]
-        return df
-    except FormSException:
-        traceback.print_exception(*sys.exc_info())
+    return df
