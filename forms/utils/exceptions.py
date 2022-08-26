@@ -55,3 +55,7 @@ class ExecutorNotSupportedException(FormSException):
 
 class FunctionExecutorNotSupportedException(FormSException):
     """Exception raised for unsupported FunctionExecutor"""
+
+
+class CostModelNotSupportedException(FormSException):
+    """Exception raised for unsupported CostModel"""

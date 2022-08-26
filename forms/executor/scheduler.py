@@ -15,11 +15,13 @@
 from abc import ABC, abstractmethod
 
 from enum import Enum, auto
+
+from forms.core.config import forms_config
+from forms.executor.costmodel import create_cost_model_by_name
 from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create_intermediate_ref_node
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
 from forms.utils.exceptions import SchedulerNotSupportedException
-from forms.utils.reference import RefType, axis_along_row, axis_along_column
 from forms.utils.treenode import link_parent_to_children
 
 
@@ -27,6 +29,7 @@ class BaseScheduler(ABC):
     def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
         self.exec_config = exec_config
         self.execution_tree = execution_tree
+        self.cost_model = create_cost_model_by_name(forms_config.cost_model, exec_config.num_of_formulae)
 
     @abstractmethod
     def next_subtree(self) -> (ExecutionNode, list):
@@ -52,12 +55,12 @@ class SimpleScheduler(BaseScheduler):
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
-            num_of_formulae = self.exec_config.num_of_formulae
+            partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
             exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(
-                    int(i * num_of_formulae / cores),
-                    int((i + 1) * num_of_formulae / cores),
+                    partition_plan[i],
+                    partition_plan[i + 1],
                     self.exec_config.axis,
                 )
                 for i in range(cores)
@@ -79,39 +82,9 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
         self.phase_two_scheduled = False
         self.phase_one_finished = False
         self.ref_type = execution_tree.children[0].children[0].out_ref_type
-        self.partition_plan = self.partition_plan()
-
-    def partition_plan(self):
-        cores = self.exec_config.cores
-        num_of_formulae = self.exec_config.num_of_formulae
-        partitions = [int(i * num_of_formulae / cores) for i in range(cores)]
-        partitions.append(num_of_formulae)
-        return partitions
-
-    def slice(self, subtrees):
-        partition_plan = self.partition_plan
-        axis = self.exec_config.axis
-        for i, subtree in enumerate(subtrees):
-            child_ref_node = subtree.children[0]
-            df = child_ref_node.table.get_table_content()
-            ref = child_ref_node.ref
-            if axis == axis_along_row:
-                start_row = ref.row
-                end_row = ref.last_row
-                if self.ref_type == RefType.FR:
-                    if i == 0:
-                        child_ref_node.table.df = df.iloc[start_row : partition_plan[i + 1] + end_row]
-                    else:
-                        child_ref_node.table.df = df.iloc[
-                            partition_plan[i] + end_row : partition_plan[i + 1] + end_row
-                        ]
-                else:  # RefType.RF
-                    if i == len(subtrees) - 1:
-                        child_ref_node.table.df = df.iloc[start_row + partition_plan[i] : end_row + 1]
-                    else:
-                        child_ref_node.table.df = df.iloc[
-                            start_row + partition_plan[i] : start_row + partition_plan[i + 1]
-                        ]
+        self.partition_plan = self.cost_model.get_partition_plan(
+            self.execution_tree, self.exec_config.cores
+        )
 
     def next_subtree(self) -> (ExecutionNode, list):
         cores = self.exec_config.cores
@@ -128,7 +101,6 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
             # create subtrees from child node (PHASEONE node) and slice table for each subtree
             child = self.execution_tree.children[0]
             exec_subtree_list = [child.gen_exec_subtree() for _ in range(cores)]
-            self.slice(exec_subtree_list)
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
                 exec_subtree_list[i].exec_context.set_all_formula_idx(partition_plan)

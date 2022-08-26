@@ -52,6 +52,7 @@ def config(
     enable_physical_opt=forms_config.enable_physical_opt,
     runtime=forms_config.runtime,
     function_executor=forms_config.function_executor,
+    cost_model=forms_config.cost_model,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
@@ -59,7 +60,41 @@ def config(
     forms_config.enable_physical_opt = enable_physical_opt
     forms_config.runtime = runtime
     forms_config.function_executor = function_executor
+    forms_config.cost_model = cost_model
 
 
+# Input parameters: Single or multi-index row/col Dataframe, keep_original_labels boolean
+# Output: Dataframe in spreadsheet view. Row indices and column labels are both of type string.
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
-    return df
+    try:
+        # Flatten cols into tuple format if multiindex
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.to_flat_index()
+        for i, label in enumerate(df.columns):
+            res = ""
+            # We want A = 1 instead of 0
+            i += 1
+            while i > 0:
+                mod = (i - 1) % 26
+                res += chr(mod + ord("A"))
+                i = (i - 1) // 26
+            res = res[::-1]
+            # Preserve labels
+            if keep_original_labels:
+                res = res + " (" + str(label) + ")"
+            df.rename(columns={label: res}, inplace=True)
+
+        # Preserve labels
+        if keep_original_labels:
+            # Flatten rows if multiindex
+            if isinstance(df.index, pd.MultiIndex):
+                df.index = [
+                    str(i + 1) + " (" + ".".join(col) + ")" for i, col in enumerate(df.index.values)
+                ]
+            else:
+                df.index = [str(i + 1) + " (" + str(col) + ")" for i, col in enumerate(df.index.values)]
+        else:
+            df.index = [str(i) for i in range(1, len(df.index) + 1)]
+        return df
+    except FormSException:
+        traceback.print_exception(*sys.exc_info())

@@ -29,5 +29,9 @@ class ExecutionContext:
         self.compiled_formula_func = None
         self.function_executor = None
 
-    def set_all_formula_idx(self, all_formula_idx):
+    def set_all_formula_idx(self, all_formula_idx: list):
+        """
+        all_formula_idx: a list of index for all partitions (will be used in phase-two optimization)
+        Example: [0, 25, 50, 75, 100]
+        """
         self.all_formula_idx = all_formula_idx
