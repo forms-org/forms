@@ -60,6 +60,9 @@ def config(
 
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
     try:
+        # Flatten cols into tuple format if multiindex
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.to_flat_index()
         for i, label in enumerate(df.columns):
             res = ""
             # We want A = 1 instead of 0
@@ -70,8 +73,11 @@ def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
                 i = (i - 1) // 26
             res = res[::-1]
             if keep_original_labels:
-                res = res + " (" + label + ")"
+                res = res + " (" + str(label) + ")"
             df.rename(columns={label: res}, inplace=True)
+        # Flatten all row levels if multiindex
+        if isinstance(df.index, pd.MultiIndex):
+            df.reset_index()
         df.index = [i for i in range(1, len(df.index) + 1)]
         return df
     except FormSException:
