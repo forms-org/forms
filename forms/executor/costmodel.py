@@ -28,20 +28,18 @@ from forms.utils.reference import RefType
 
 
 class BaseCostModel(ABC):
-    def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
-        self.subtree = subtree
-        self.cores = config.cores
-        self.num_of_formulae = config.num_of_formulae
+    def __init__(self, num_of_formulae: int):
+        self.num_of_formulae = num_of_formulae
 
     @abstractmethod
-    def cost(self):
+    def cost(self, subtree: ExecutionNode, cores: int):
         """
-        Returns: the estimated cost for the whole subtree
+        Returns: the estimated cost for the whole subtree if run on cores number of cores
         """
         pass
 
     @abstractmethod
-    def get_partition_plan(self):
+    def get_partition_plan(self, subtree: ExecutionNode, cores: int):
         """
         Returns: the partition plan (how formulae are partitioned across cores)
         """
@@ -49,14 +47,13 @@ class BaseCostModel(ABC):
 
 
 class SimpleCostModel(BaseCostModel, ABC):
-    def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
-        super().__init__(subtree, config)
+    def __init__(self, num_of_formulae: int):
+        super().__init__(num_of_formulae)
 
-    def cost(self):
+    def cost(self, subtree: ExecutionNode, cores: int):
         return self.num_of_formulae
 
-    def get_partition_plan(self):
-        cores = self.cores
+    def get_partition_plan(self, subtree: ExecutionNode, cores: int):
         num_of_formulae = self.num_of_formulae
         partitions = [int(i * num_of_formulae / cores) for i in range(cores)]
         partitions.append(num_of_formulae)
@@ -81,8 +78,8 @@ def ff_compute(k, w, h):
 
 
 class LoadBalanceCostModel(BaseCostModel, ABC):
-    def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
-        super().__init__(subtree, config)
+    def __init__(self, num_of_formulae: int):
+        super().__init__(num_of_formulae)
 
     def f_compute(self, subtree, k):
         cost = 0
@@ -104,17 +101,17 @@ class LoadBalanceCostModel(BaseCostModel, ABC):
                 cost += self.f_compute(child, k)
         return cost
 
-    def F(self, k, N):
-        return self.f_compute(self.subtree, k) / self.f_compute(self.subtree, N)
+    def F(self, subtree, k, N):
+        return self.f_compute(subtree, k) / self.f_compute(subtree, N)
 
-    def cost(self):
-        return self.f_compute(self.subtree, self.num_of_formulae)
+    def cost(self, subtree: ExecutionNode, cores: int):
+        return self.f_compute(subtree, self.num_of_formulae)
 
-    def get_partition_plan(self):
-        Q = inversefunc(lambda p: self.F(p, self.num_of_formulae))
+    def get_partition_plan(self, subtree: ExecutionNode, cores: int):
+        Q = inversefunc(lambda p: self.F(subtree, p, self.num_of_formulae))
         partitions = [0]
-        for i in range(1, self.cores):
-            p = i / self.cores
+        for i in range(1, cores):
+            p = i / cores
             res = Q(p)
             partitions.append(int(res))
         partitions.append(self.num_of_formulae)
@@ -132,7 +129,7 @@ partition_planner_class_dict = {
 }
 
 
-def create_cost_model_by_name(c_name: str, execution_tree: ExecutionNode, exec_config: ExecutionConfig):
+def create_cost_model_by_name(c_name: str, num_of_formulae: int):
     if c_name.lower() in partition_planner_class_dict.keys():
-        return partition_planner_class_dict[c_name](execution_tree, exec_config)
+        return partition_planner_class_dict[c_name](num_of_formulae)
     raise CostModelNotSupportedException(f"Cost Model {c_name} is not supported")

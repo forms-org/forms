@@ -29,7 +29,7 @@ class BaseScheduler(ABC):
     def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
         self.exec_config = exec_config
         self.execution_tree = execution_tree
-        self.cost_model = create_cost_model_by_name(forms_config.cost_model, execution_tree, exec_config)
+        self.cost_model = create_cost_model_by_name(forms_config.cost_model, exec_config.num_of_formulae)
 
     @abstractmethod
     def next_subtree(self) -> (ExecutionNode, list):
@@ -55,7 +55,7 @@ class SimpleScheduler(BaseScheduler):
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
-            partition_plan = self.cost_model.get_partition_plan()
+            partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
             exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(
@@ -82,10 +82,13 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
         self.phase_two_scheduled = False
         self.phase_one_finished = False
         self.ref_type = execution_tree.children[0].children[0].out_ref_type
+        self.partition_plan = self.cost_model.get_partition_plan(
+            self.execution_tree, self.exec_config.cores
+        )
 
     def next_subtree(self) -> (ExecutionNode, list):
         cores = self.exec_config.cores
-        partition_plan = self.cost_model.get_partition_plan()
+        partition_plan = self.partition_plan
         exec_context_list = [
             ExecutionContext(
                 partition_plan[i],
