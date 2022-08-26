@@ -21,6 +21,7 @@ class FormSConfig:
         self.enable_physical_opt = False
         self.runtime = "dask"
         self.function_executor = "pandas_executor"
+        self.cost_model = "simple"
 
 
 forms_config = FormSConfig()

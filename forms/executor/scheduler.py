@@ -15,6 +15,9 @@
 from abc import ABC, abstractmethod
 
 from enum import Enum, auto
+
+from forms.core.config import forms_config
+from forms.executor.costmodel import create_cost_model_by_name
 from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create_intermediate_ref_node
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
@@ -26,6 +29,7 @@ class BaseScheduler(ABC):
     def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
         self.exec_config = exec_config
         self.execution_tree = execution_tree
+        self.cost_model = create_cost_model_by_name(forms_config.cost_model, exec_config.num_of_formulae)
 
     @abstractmethod
     def next_subtree(self) -> (ExecutionNode, list):
@@ -51,12 +55,12 @@ class SimpleScheduler(BaseScheduler):
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
-            num_of_formulae = self.exec_config.num_of_formulae
+            partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
             exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(
-                    int(i * num_of_formulae / cores),
-                    int((i + 1) * num_of_formulae / cores),
+                    partition_plan[i],
+                    partition_plan[i + 1],
                     self.exec_config.axis,
                 )
                 for i in range(cores)
@@ -78,14 +82,9 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
         self.phase_two_scheduled = False
         self.phase_one_finished = False
         self.ref_type = execution_tree.children[0].children[0].out_ref_type
-        self.partition_plan = self.partition_plan()
-
-    def partition_plan(self):
-        cores = self.exec_config.cores
-        num_of_formulae = self.exec_config.num_of_formulae
-        partitions = [int(i * num_of_formulae / cores) for i in range(cores)]
-        partitions.append(num_of_formulae)
-        return partitions
+        self.partition_plan = self.cost_model.get_partition_plan(
+            self.execution_tree, self.exec_config.cores
+        )
 
     def next_subtree(self) -> (ExecutionNode, list):
         cores = self.exec_config.cores

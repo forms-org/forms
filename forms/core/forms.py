@@ -52,6 +52,7 @@ def config(
     enable_physical_opt=forms_config.enable_physical_opt,
     runtime=forms_config.runtime,
     function_executor=forms_config.function_executor,
+    cost_model=forms_config.cost_model,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
@@ -59,6 +60,7 @@ def config(
     forms_config.enable_physical_opt = enable_physical_opt
     forms_config.runtime = runtime
     forms_config.function_executor = function_executor
+    forms_config.cost_model = cost_model
 
 
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
