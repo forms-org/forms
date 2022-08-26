@@ -20,7 +20,7 @@ class FormSConfig:
         self.enable_logical_rewriting = False
         self.enable_physical_opt = False
         self.runtime = "dask"
-        self.function_executor = "pandas_executor"
+        self.function_executor = "df_pandas_executor"
 
 
 forms_config = FormSConfig()

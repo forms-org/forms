@@ -36,6 +36,10 @@ class ExecutionNode(ABC, TreeNode):
     def set_exec_context(self, exec_context: ExecutionContext):
         pass
 
+    @abstractmethod
+    def collect_ref_nodes_in_order(self) -> list:
+        pass
+
 
 class FunctionExecutionNode(ExecutionNode):
     def __init__(self, function: Function, out_ref_type: RefType, out_ref_axis: int):
@@ -55,6 +59,12 @@ class FunctionExecutionNode(ExecutionNode):
         for child in self.children:
             child.set_exec_context(exec_context)
 
+    def collect_ref_nodes_in_order(self) -> list:
+        ref_children = []
+        for child in self.children:
+            ref_children.extend(child.collect_ref_nodes_in_order())
+        return ref_children
+
 
 class RefExecutionNode(ExecutionNode):
     def __init__(self, ref: Ref, table: Table, out_ref_type: RefType, out_ref_axis: int):
@@ -70,6 +80,9 @@ class RefExecutionNode(ExecutionNode):
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
 
+    def collect_ref_nodes_in_order(self) -> list:
+        return [self]
+
 
 class LitExecutionNode(ExecutionNode):
     def __init__(self, literal, out_ref_type: RefType, out_ref_axis: int):
@@ -82,17 +95,25 @@ class LitExecutionNode(ExecutionNode):
     def set_exec_context(self, exec_context: ExecutionContext):
         pass
 
+    def collect_ref_nodes_in_order(self) -> list:
+        return []
+
 
 def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionNode:
     if isinstance(plan_node, RefNode):
-        return RefExecutionNode(plan_node.ref, table, plan_node.out_ref_type, plan_node.out_ref_axis)
+        ref_node = RefExecutionNode(plan_node.ref, table, plan_node.out_ref_type, plan_node.out_ref_axis)
+        ref_node.copy_formula_string_info_from(plan_node)
+        return ref_node
     elif isinstance(plan_node, LiteralNode):
-        return LitExecutionNode(plan_node.literal, plan_node.out_ref_type, plan_node.out_ref_axis)
+        lit_node = LitExecutionNode(plan_node.literal, plan_node.out_ref_type, plan_node.out_ref_axis)
+        lit_node.copy_formula_string_info_from(plan_node)
+        return lit_node
     elif isinstance(plan_node, FunctionNode):
         parent = FunctionExecutionNode(
             plan_node.function, plan_node.out_ref_type, plan_node.out_ref_axis
         )
         parent.fr_rf_optimization = plan_node.fr_rf_optimization
+        parent.copy_formula_string_info_from(plan_node)
         children = [from_plan_to_execution_tree(child, table) for child in plan_node.children]
         link_parent_to_children(parent, children)
         return parent

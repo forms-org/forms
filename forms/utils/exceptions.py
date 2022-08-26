@@ -51,3 +51,7 @@ class AxisNotSupportedException(FormSException):
 
 class ExecutorNotSupportedException(FormSException):
     """Exception raised for unsupported Executor"""
+
+
+class FunctionExecutorNotSupportedException(FormSException):
+    """Exception raised for unsupported FunctionExecutor"""

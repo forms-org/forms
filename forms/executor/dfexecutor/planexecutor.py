@@ -50,7 +50,7 @@ class DFPlanExecutor(PlanExecutor):
     def df_execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
         start = time()
         df_table = DFTable(df, self.runtime.distribute_data(df))
-        print(f"Scattering cost: {time() - start}")
+        print(f"Distributing data time: {time() - start}")
         start = time()
         res_table = super().execute_formula_plan(df_table, formula_plan)
         print(f"Execution time: {time() - start}")

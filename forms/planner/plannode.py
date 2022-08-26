@@ -110,14 +110,14 @@ class FunctionNode(PlanNode):
                     "Not supporting range input for arithmetic functions"
                 )
         if (
-            forms_config.function_executor == FunctionExecutor.pandas_executor.name.lower()
+            forms_config.function_executor == FunctionExecutor.df_pandas_executor.name.lower()
             and self.function not in pandas_supported_functions
         ):
             raise FunctionNotSupportedException(
                 f"Function {self.function} is not supported by pandas executors"
             )
         if (
-            forms_config.function_executor == FunctionExecutor.formulas_executor.name.lower()
+            forms_config.function_executor == FunctionExecutor.df_formulas_executor.name.lower()
             and self.function not in formulas_supported_functions
         ):
             raise FunctionNotSupportedException(

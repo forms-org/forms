@@ -26,6 +26,8 @@ class ExecutionContext:
         self.end_formula_idx = end_formula_idx
         self.axis = axis
         self.all_formula_idx = None
+        self.compiled_formula_func = None
+        self.function_executor = None
 
     def set_all_formula_idx(self, all_formula_idx):
         self.all_formula_idx = all_formula_idx
