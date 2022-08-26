@@ -17,6 +17,14 @@ class TreeNode:
     def __init__(self):
         self.parent = None
         self.children = None
+        self.out_ref_type = None
+        self.out_ref_axis = None
+
+        # for reconstructing a formula string
+        self.open_value = None
+        self.seps = []
+        self.func_type = None
+        self.close_value = None
 
 
 def link_parent_to_children(parent: TreeNode, children: list):

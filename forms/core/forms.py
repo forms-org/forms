@@ -20,22 +20,23 @@ from forms.core.config import forms_config
 
 from forms.parser.parser import parse_formula
 from forms.planner.planrewriter import PlanRewriter
-from forms.executor.pandasexecutor.planexecutor import DFPlanExecutor
 
 from forms.utils.exceptions import FormSException
 from forms.utils.reference import default_axis
+from forms.utils.executors import create_executor_by_name
 
 
 def compute_formula(df: pd.DataFrame, formula_str: str, axis=default_axis) -> pd.DataFrame:
     try:
         root = parse_formula(formula_str, axis)
-        root.validate()
+        root.validate(forms_config)
         root.populate_ref_info()
 
         plan_rewriter = PlanRewriter(forms_config)
         root = plan_rewriter.rewrite_plan(root)
 
-        plan_executor = DFPlanExecutor(forms_config)
+        executor_name = "dfexecutor"
+        plan_executor = create_executor_by_name(executor_name, forms_config)
         res = plan_executor.df_execute_formula_plan(df, root)
         plan_executor.clean_up()
 
@@ -50,12 +51,14 @@ def config(
     enable_logical_rewriting=forms_config.enable_logical_rewriting,
     enable_physical_opt=forms_config.enable_physical_opt,
     runtime=forms_config.runtime,
+    function_executor=forms_config.function_executor,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
     forms_config.enable_logical_rewriting = enable_logical_rewriting
     forms_config.enable_physical_opt = enable_physical_opt
     forms_config.runtime = runtime
+    forms_config.function_executor = function_executor
 
 
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):

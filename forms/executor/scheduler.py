@@ -19,7 +19,6 @@ from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
 from forms.utils.exceptions import SchedulerNotSupportedException
-from forms.utils.reference import RefType, axis_along_row, axis_along_column
 from forms.utils.treenode import link_parent_to_children
 
 
@@ -88,31 +87,6 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
         partitions.append(num_of_formulae)
         return partitions
 
-    def slice(self, subtrees):
-        partition_plan = self.partition_plan
-        axis = self.exec_config.axis
-        for i, subtree in enumerate(subtrees):
-            child_ref_node = subtree.children[0]
-            df = child_ref_node.table.get_table_content()
-            ref = child_ref_node.ref
-            if axis == axis_along_row:
-                start_row = ref.row
-                end_row = ref.last_row
-                if self.ref_type == RefType.FR:
-                    if i == 0:
-                        child_ref_node.table.df = df.iloc[start_row : partition_plan[i + 1] + end_row]
-                    else:
-                        child_ref_node.table.df = df.iloc[
-                            partition_plan[i] + end_row : partition_plan[i + 1] + end_row
-                        ]
-                else:  # RefType.RF
-                    if i == len(subtrees) - 1:
-                        child_ref_node.table.df = df.iloc[start_row + partition_plan[i] : end_row + 1]
-                    else:
-                        child_ref_node.table.df = df.iloc[
-                            start_row + partition_plan[i] : start_row + partition_plan[i + 1]
-                        ]
-
     def next_subtree(self) -> (ExecutionNode, list):
         cores = self.exec_config.cores
         partition_plan = self.partition_plan
@@ -128,7 +102,6 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
             # create subtrees from child node (PHASEONE node) and slice table for each subtree
             child = self.execution_tree.children[0]
             exec_subtree_list = [child.gen_exec_subtree() for _ in range(cores)]
-            self.slice(exec_subtree_list)
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
                 exec_subtree_list[i].exec_context.set_all_formula_idx(partition_plan)

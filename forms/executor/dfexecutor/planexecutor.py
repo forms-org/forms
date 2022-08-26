@@ -20,7 +20,7 @@ from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
-from forms.executor.pandasexecutor.functionexecutor import find_function_executor
+from forms.executor.dfexecutor.functionexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
 from forms.core.config import FormSConfig
 from forms.runtime.runtime import create_runtime_by_name

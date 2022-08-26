@@ -20,7 +20,7 @@ from forms.executor.executionnode import (
     FunctionExecutionNode,
     create_intermediate_ref_node,
 )
-from forms.executor.pandasexecutor.functionexecutor import sum_df_executor
+from forms.executor.dfexecutor.functionexecutor import sum_df_executor
 from forms.executor.table import DFTable
 from forms.executor.utils import ExecutionContext
 from forms.utils.reference import Ref, RefType, axis_along_row

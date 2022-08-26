@@ -12,10 +12,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from enum import Enum
+from enum import Enum, auto
 
 from forms.utils.exceptions import FunctionNotSupportedException
-
+from openpyxl.formula.tokenizer import Token
 
 # Function-related definitions
 class Function(Enum):
@@ -28,6 +28,7 @@ class Function(Enum):
     MINUS = "-"
     MULTIPLY = "*"
     DIVIDE = "/"
+    SUMIF = "sumif"
 
 
 def from_function_str(function_str: str) -> Function:
@@ -39,4 +40,42 @@ def from_function_str(function_str: str) -> Function:
 
 arithmetic_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
 distributive_functions = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT}
+distributive_functions_if = {Function.SUMIF}
 algebraic_functions = {Function.AVG}
+algebraic_functions_if = {}
+
+pandas_supported_functions = {
+    Function.PLUS,
+    Function.MINUS,
+    Function.MULTIPLY,
+    Function.DIVIDE,
+    Function.SUM,
+    Function.MIN,
+    Function.MAX,
+    Function.COUNT,
+    Function.AVG,
+}
+
+formulas_unsupported_functions = set()
+formulas_supported_functions = set(Function) - formulas_unsupported_functions
+
+
+# The following is for supporting the formulas executor
+def from_function_to_open_value(function: Function) -> str:
+    return function.value + "("
+
+
+close_value = ")"
+
+
+class FunctionType(Enum):
+    FUNC = Token.FUNC
+    OP_IN = Token.OP_IN
+    OP_PRE = Token.OP_PRE
+    OP_POST = Token.OP_POST
+
+
+class FunctionExecutor(Enum):
+    pandas_executor = auto()
+    formulas_executor = auto()
+    mixed_executor = auto()
