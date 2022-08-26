@@ -17,8 +17,8 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 
 from forms.core.config import forms_config
+from forms.executor.costmodel import create_cost_model_by_name
 from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create_intermediate_ref_node
-from forms.executor.partitionplanner import create_partition_planner_by_name
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionConfig, ExecutionContext
 from forms.utils.exceptions import SchedulerNotSupportedException
@@ -29,9 +29,7 @@ class BaseScheduler(ABC):
     def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
         self.exec_config = exec_config
         self.execution_tree = execution_tree
-        self.partition_planner = create_partition_planner_by_name(
-            forms_config.partition_planner, execution_tree, exec_config
-        )
+        self.cost_model = create_cost_model_by_name(forms_config.cost_model, execution_tree, exec_config)
 
     @abstractmethod
     def next_subtree(self) -> (ExecutionNode, list):
@@ -57,7 +55,7 @@ class SimpleScheduler(BaseScheduler):
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
-            partition_plan = self.partition_planner.partition_plan()
+            partition_plan = self.cost_model.get_partition_plan()
             exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(
@@ -87,7 +85,7 @@ class RFFRTwoPhaseScheduler(BaseScheduler):
 
     def next_subtree(self) -> (ExecutionNode, list):
         cores = self.exec_config.cores
-        partition_plan = self.partition_planner.partition_plan()
+        partition_plan = self.cost_model.get_partition_plan()
         exec_context_list = [
             ExecutionContext(
                 partition_plan[i],

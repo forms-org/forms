@@ -23,26 +23,39 @@ from forms.executor.executionnode import (
     LitExecutionNode,
 )
 from forms.executor.utils import ExecutionConfig
-from forms.utils.exceptions import PartitionPlannerNotSupportedException
+from forms.utils.exceptions import CostModelNotSupportedException
 from forms.utils.reference import RefType
 
 
-class BasePartitionPlanner(ABC):
+class BaseCostModel(ABC):
     def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
         self.subtree = subtree
         self.cores = config.cores
         self.num_of_formulae = config.num_of_formulae
 
     @abstractmethod
-    def partition_plan(self):
+    def cost(self):
+        """
+        Returns: the estimated cost for the whole subtree
+        """
+        pass
+
+    @abstractmethod
+    def get_partition_plan(self):
+        """
+        Returns: the partition plan (how formulae are partitioned across cores)
+        """
         pass
 
 
-class EvenlyDividedPartitionPlanner(BasePartitionPlanner, ABC):
+class SimpleCostModel(BaseCostModel, ABC):
     def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
         super().__init__(subtree, config)
 
-    def partition_plan(self):
+    def cost(self):
+        return self.num_of_formulae
+
+    def get_partition_plan(self):
         cores = self.cores
         num_of_formulae = self.num_of_formulae
         partitions = [int(i * num_of_formulae / cores) for i in range(cores)]
@@ -67,7 +80,7 @@ def ff_compute(k, w, h):
     return k * w * h
 
 
-class CostModelPartitionPlanner(BasePartitionPlanner, ABC):
+class LoadBalanceCostModel(BaseCostModel, ABC):
     def __init__(self, subtree: ExecutionNode, config: ExecutionConfig):
         super().__init__(subtree, config)
 
@@ -95,12 +108,9 @@ class CostModelPartitionPlanner(BasePartitionPlanner, ABC):
         return self.f_compute(self.subtree, k) / self.f_compute(self.subtree, N)
 
     def cost(self):
-        """
-        Returns: the estimated cost for the whole subtree
-        """
         return self.f_compute(self.subtree, self.num_of_formulae)
 
-    def partition_plan(self):
+    def get_partition_plan(self):
         Q = inversefunc(lambda p: self.F(p, self.num_of_formulae))
         partitions = [0]
         for i in range(1, self.cores):
@@ -111,20 +121,18 @@ class CostModelPartitionPlanner(BasePartitionPlanner, ABC):
         return partitions
 
 
-class PartitionPlanners(Enum):
-    EvenlyDivided = auto()
-    CostModel = auto()
+class CostModels(Enum):
+    Simple = auto()
+    LoadBalance = auto()
 
 
 partition_planner_class_dict = {
-    PartitionPlanners.EvenlyDivided.name.lower(): EvenlyDividedPartitionPlanner,
-    PartitionPlanners.CostModel.name.lower(): CostModelPartitionPlanner,
+    CostModels.Simple.name.lower(): SimpleCostModel,
+    CostModels.LoadBalance.name.lower(): LoadBalanceCostModel,
 }
 
 
-def create_partition_planner_by_name(
-    p_name: str, execution_tree: ExecutionNode, exec_config: ExecutionConfig
-):
-    if p_name.lower() in partition_planner_class_dict.keys():
-        return partition_planner_class_dict[p_name](execution_tree, exec_config)
-    raise PartitionPlannerNotSupportedException(f"Partition Planner {p_name} is not supported")
+def create_cost_model_by_name(c_name: str, execution_tree: ExecutionNode, exec_config: ExecutionConfig):
+    if c_name.lower() in partition_planner_class_dict.keys():
+        return partition_planner_class_dict[c_name](execution_tree, exec_config)
+    raise CostModelNotSupportedException(f"Cost Model {c_name} is not supported")

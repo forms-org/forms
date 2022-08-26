@@ -53,5 +53,5 @@ class ExecutorNotSupportedException(FormSException):
     """Exception raised for unsupported Executor"""
 
 
-class PartitionPlannerNotSupportedException(FormSException):
-    """Exception raised for unsupported PartitionPlanner"""
+class CostModelNotSupportedException(FormSException):
+    """Exception raised for unsupported CostModel"""
