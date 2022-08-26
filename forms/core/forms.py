@@ -58,6 +58,8 @@ def config(
     forms_config.runtime = runtime
 
 
+# Input parameters: Single or multi-index row/col Dataframe, keep_original_labels boolean
+# Output: Dataframe in spreadsheet view. Row indices and column labels are both of type string.
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
     try:
         # Flatten cols into tuple format if multiindex
@@ -72,13 +74,22 @@ def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
                 res += chr(mod + ord("A"))
                 i = (i - 1) // 26
             res = res[::-1]
+            # Preserve labels
             if keep_original_labels:
                 res = res + " (" + str(label) + ")"
             df.rename(columns={label: res}, inplace=True)
-        # Flatten all row levels if multiindex
-        if isinstance(df.index, pd.MultiIndex):
-            df.reset_index()
-        df.index = [i for i in range(1, len(df.index) + 1)]
+
+        # Preserve labels
+        if keep_original_labels:
+            # Flatten rows if multiindex
+            if isinstance(df.index, pd.MultiIndex):
+                df.index = [
+                    str(i + 1) + " (" + ".".join(col) + ")" for i, col in enumerate(df.index.values)
+                ]
+            else:
+                df.index = [str(i + 1) + " (" + str(col) + ")" for i, col in enumerate(df.index.values)]
+        else:
+            df.index = [str(i) for i in range(1, len(df.index) + 1)]
         return df
     except FormSException:
         traceback.print_exception(*sys.exc_info())
