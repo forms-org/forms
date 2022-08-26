@@ -13,9 +13,16 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.utils.reference import Ref, RefType, axis_along_row
-from forms.utils.functions import Function, arithmetic_functions
-from forms.utils.exceptions import InvalidArithmeticInputException
+from forms.core.config import FormSConfig
+from forms.utils.reference import Ref, RefType
+from forms.utils.functions import (
+    Function,
+    arithmetic_functions,
+    pandas_supported_functions,
+    formulas_supported_functions,
+    FunctionExecutor,
+)
+from forms.utils.exceptions import InvalidArithmeticInputException, FunctionNotSupportedException
 from forms.utils.treenode import TreeNode
 from forms.utils.optimizations import FRRFOptimization
 
@@ -23,19 +30,13 @@ from forms.utils.optimizations import FRRFOptimization
 class PlanNode(ABC, TreeNode):
     def __init__(self):
         super().__init__()
-        self.out_ref_type = None
-        self.out_ref_axis = None
-        self.open_value = None
-        self.seps = []
-        self.func_type = None
-        self.close_value = None
 
     @abstractmethod
     def populate_ref_info(self):
         pass
 
     @abstractmethod
-    def validate(self):
+    def validate(self, forms_config: FormSConfig):
         pass
 
     @abstractmethod
@@ -53,11 +54,13 @@ class RefNode(PlanNode):
     def populate_ref_info(self):
         pass
 
-    def validate(self):
+    def validate(self, forms_config: FormSConfig):
         pass
 
     def replicate_node(self):
-        return RefNode(self.ref, self.out_ref_type, self.out_ref_axis)
+        ref_node = RefNode(self.ref, self.out_ref_type, self.out_ref_axis)
+        ref_node.open_value = self.open_value
+        return ref_node
 
 
 class LiteralNode(PlanNode):
@@ -71,11 +74,13 @@ class LiteralNode(PlanNode):
     def populate_ref_info(self):
         pass
 
-    def validate(self):
+    def validate(self, forms_config: FormSConfig):
         pass
 
     def replicate_node(self):
-        return LiteralNode(self.literal)
+        literal_node = LiteralNode(self.literal, self.out_ref_axis)
+        literal_node.open_value = self.open_value
+        return literal_node
 
 
 class FunctionNode(PlanNode):
@@ -96,18 +101,36 @@ class FunctionNode(PlanNode):
         else:
             self.out_ref_type = RefType.RR
 
-    def validate(self):
+    def validate(self, forms_config: FormSConfig):
         for child in self.children:
-            child.validate()
+            child.validate(forms_config)
         if self.function in arithmetic_functions:
             if any(is_reference_range(child) for child in self.children):
                 raise InvalidArithmeticInputException(
-                    "Not supporting range" "input for arithmetic functions"
+                    "Not supporting range input for arithmetic functions"
                 )
+        if (
+            forms_config.function_executor == FunctionExecutor.pandas_executor.name.lower()
+            and self.function not in pandas_supported_functions
+        ):
+            raise FunctionNotSupportedException(
+                f"Function {self.function} is not supported by pandas executors"
+            )
+        if (
+            forms_config.function_executor == FunctionExecutor.formulas_executor.name.lower()
+            and self.function not in formulas_supported_functions
+        ):
+            raise FunctionNotSupportedException(
+                f"Function {self.function} is not supported by formula executors"
+            )
 
     def replicate_node(self):
         function_node = FunctionNode(self.function, self.out_ref_axis)
         function_node.out_ref_type = self.out_ref_type
+        function_node.open_value = self.open_value
+        function_node.func_type = self.func_type
+        function_node.seps = self.seps
+        function_node.close_value = self.close_value
         return function_node
 
 
