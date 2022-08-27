@@ -44,7 +44,7 @@ class DFCompiler(BaseCompiler):
         elif function_executor == FunctionExecutor.df_formulas_executor:
             func_node.exec_context.function_executor = function_executor
             if func_node.fr_rf_optimization != FRRFOptimization.PHASETWO:
-                formula_str = func_node.construct_formula_string()
+                formula_str = "=" + func_node.construct_formula_string()
                 func_node.exec_context.compiled_formula_func = (
                     formulas.Parser().ast(formula_str)[1].compile()
                 )
