@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 from enum import Enum, auto
 
 from forms.core.config import forms_config
+from forms.executor.compiler import BaseCompiler
 from forms.executor.costmodel import create_cost_model_by_name
 from forms.executor.executionnode import ExecutionNode, RefExecutionNode, create_intermediate_ref_node
 from forms.executor.table import Table
@@ -26,7 +27,10 @@ from forms.utils.treenode import link_parent_to_children
 
 
 class BaseScheduler(ABC):
-    def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
+    def __init__(
+        self, compiler: BaseCompiler, exec_config: ExecutionConfig, execution_tree: ExecutionNode
+    ):
+        self.compiler = compiler
         self.exec_config = exec_config
         self.execution_tree = execution_tree
         self.cost_model = create_cost_model_by_name(forms_config.cost_model, exec_config.num_of_formulae)
@@ -48,15 +52,22 @@ class BaseScheduler(ABC):
 
 
 class SimpleScheduler(BaseScheduler):
-    def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
-        super().__init__(exec_config, execution_tree)
+    def __init__(
+        self, compiler: BaseCompiler, exec_config: ExecutionConfig, execution_tree: ExecutionNode
+    ):
+        super().__init__(compiler, exec_config, execution_tree)
         self.scheduled = False
 
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
             partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
-            exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
+            exec_subtree_list = [
+                self.compiler.compile(
+                    self.execution_tree.gen_exec_subtree(), self.exec_config.function_executor
+                )
+                for _ in range(cores)
+            ]
             exec_context_list = [
                 ExecutionContext(
                     partition_plan[i],
@@ -76,8 +87,10 @@ class SimpleScheduler(BaseScheduler):
 
 
 class RFFRTwoPhaseScheduler(BaseScheduler):
-    def __init__(self, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
-        super().__init__(exec_config, execution_tree)
+    def __init__(
+        self, compiler: BaseCompiler, exec_config: ExecutionConfig, execution_tree: ExecutionNode
+    ):
+        super().__init__(compiler, exec_config, execution_tree)
         self.phase_one_scheduled = False
         self.phase_two_scheduled = False
         self.phase_one_finished = False
@@ -139,7 +152,9 @@ scheduler_class_dict = {
 }
 
 
-def create_scheduler_by_name(s_name: str, exec_config: ExecutionConfig, execution_tree: ExecutionNode):
+def create_scheduler_by_name(
+    s_name: str, compiler: BaseCompiler, exec_config: ExecutionConfig, execution_tree: ExecutionNode
+):
     if s_name.lower() in scheduler_class_dict.keys():
-        return scheduler_class_dict[s_name](exec_config, execution_tree)
+        return scheduler_class_dict[s_name](compiler, exec_config, execution_tree)
     raise SchedulerNotSupportedException(f"Scheduler {s_name} is not supported")

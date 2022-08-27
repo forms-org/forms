@@ -14,37 +14,45 @@
 
 import formulas
 from abc import ABC, abstractmethod
+from functools import cmp_to_key
 
 from forms.utils.functions import FunctionExecutor, Function
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.exceptions import FunctionExecutorNotSupportedException
 from forms.utils.optimizations import FRRFOptimization
 
 
-class BaseCompiler(ABC):
+def sort_by_ref_func(ref_a: RefExecutionNode, ref_b: RefExecutionNode) -> int:
+    return ref_a.ref.cmp(ref_b.ref)
 
+
+class BaseCompiler(ABC):
     @abstractmethod
-    def compile(self, func_node: FunctionExecutionNode,
-                function_executor: FunctionExecutor) -> FunctionExecutionNode:
+    def compile(
+        self, func_node: FunctionExecutionNode, function_executor: FunctionExecutor
+    ) -> FunctionExecutionNode:
         pass
 
 
 class DFCompiler(BaseCompiler):
-
-    @abstractmethod
-    def compile(self, func_node: FunctionExecutionNode,
-                function_executor: FunctionExecutor) -> FunctionExecutionNode:
+    def compile(
+        self, func_node: FunctionExecutionNode, function_executor: FunctionExecutor
+    ) -> FunctionExecutionNode:
         if function_executor == FunctionExecutor.df_pandas_executor:
             return func_node
         elif function_executor == FunctionExecutor.df_formulas_executor:
             func_node.exec_context.function_executor = function_executor
             if func_node.fr_rf_optimization != FRRFOptimization.PHASETWO:
                 formula_str = func_node.construct_formula_string()
-                func_node.exec_context.compiled_formula_func = formulas.Parser().ast(formula_str)[1].compile()
+                func_node.exec_context.compiled_formula_func = (
+                    formulas.Parser().ast(formula_str)[1].compile()
+                )
                 func_node.function = Function.FORMULAS
 
-                child_ref_nodes = func_node.collect_ref_nodes_in_order()
+                child_ref_nodes = sorted(
+                    func_node.collect_ref_nodes_in_order(), key=cmp_to_key(sort_by_ref_func)
+                )
                 link_parent_to_children(func_node, child_ref_nodes)
             return func_node
         else:

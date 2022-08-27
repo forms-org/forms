@@ -14,10 +14,11 @@
 
 
 class ExecutionConfig:
-    def __init__(self, axis: int, num_of_formulae: int, cores: int = 1):
+    def __init__(self, axis: int, function_executor, num_of_formulae: int, cores: int = 1):
         self.cores = cores
         self.axis = axis
         self.num_of_formulae = num_of_formulae
+        self.function_executor = function_executor
 
 
 class ExecutionContext:

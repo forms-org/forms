@@ -19,12 +19,14 @@ from forms.executor.scheduler import *
 from forms.planner.plannode import PlanNode
 from forms.core.config import FormSConfig
 from forms.utils.reference import axis_along_column
+from forms.utils.functions import FunctionExecutor
 
 
 class PlanExecutor(ABC):
     def __init__(self, forms_config: FormSConfig):
         self.forms_config = forms_config
         self.schedule_interval = 0.01  # seconds
+        self.compiler = None
         self.runtime = None
         self.execute_one_subtree = None
 
@@ -33,13 +35,20 @@ class PlanExecutor(ABC):
             num_of_formulae = table.get_num_of_columns()
         else:  # axis_along_row
             num_of_formulae = table.get_num_of_rows()
-        exec_config = ExecutionConfig(axis, num_of_formulae, cores=self.forms_config.cores)
+        exec_config = ExecutionConfig(
+            axis,
+            FunctionExecutor[self.forms_config.function_executor],
+            num_of_formulae,
+            cores=self.forms_config.cores,
+        )
         return exec_config
 
     def execute_formula_plan(self, table: Table, formula_plan: PlanNode) -> Table:
         exec_tree = from_plan_to_execution_tree(formula_plan, table)
         exec_config = self.build_exec_config(table, formula_plan.out_ref_axis)
-        scheduler = create_scheduler_by_name(self.forms_config.scheduler, exec_config, exec_tree)
+        scheduler = create_scheduler_by_name(
+            self.forms_config.scheduler, self.compiler, exec_config, exec_tree
+        )
 
         remote_object_dict = {}
         while not scheduler.is_finished():

@@ -14,11 +14,14 @@
 import math
 
 import numpy as np
+import pandas as pd
 
-from forms.executor.table import *
-from forms.executor.executionnode import *
-from forms.utils.functions import *
-from forms.utils.reference import axis_along_row
+from forms.executor.table import DFTable
+from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
+from forms.utils.functions import Function
+from forms.utils.reference import axis_along_row, RefType
+from forms.utils.optimizations import FRRFOptimization
+from forms.executor.dfexecutor.formulasexecutor import formulas_executor
 
 
 def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> DFTable:
@@ -41,6 +44,7 @@ def df_executor(physical_subtree: FunctionExecutionNode, function: Function) -> 
                 end_idx = child.exec_context.end_formula_idx
                 n_formula = end_idx - start_idx
                 axis = child.exec_context.axis
+                # TODO: add support for axis_along_column
                 if axis == axis_along_row:
                     df = df.iloc[:, ref.col : ref.last_col + 1]
                     window_size = ref.last_row - ref.row + 1
@@ -171,23 +175,6 @@ def divide_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return construct_df_table(values[0] / values[1])
 
 
-function_to_executor_dict = {
-    Function.MAX: max_df_executor,
-    Function.MIN: min_df_executor,
-    Function.COUNT: count_df_executor,
-    Function.AVG: average_df_executor,
-    Function.SUM: sum_df_executor,
-    Function.PLUS: plus_df_executor,
-    Function.MINUS: minus_df_executor,
-    Function.MULTIPLY: multiply_df_executor,
-    Function.DIVIDE: divide_df_executor,
-}
-
-
-def find_function_executor(function: Function):
-    return function_to_executor_dict[function]
-
-
 def construct_df_table(array):
     return DFTable(df=pd.DataFrame(array))
 
@@ -259,3 +246,21 @@ function_to_parameters_dict = {
     Function.COUNT: ["count", sum, np.ma.count, lambda x: x[0] + 1, compute_sum, 0],
     Function.SUM: [sum] * 4 + [compute_sum, 0],
 }
+
+
+function_to_executor_dict = {
+    Function.MAX: max_df_executor,
+    Function.MIN: min_df_executor,
+    Function.COUNT: count_df_executor,
+    Function.AVG: average_df_executor,
+    Function.SUM: sum_df_executor,
+    Function.PLUS: plus_df_executor,
+    Function.MINUS: minus_df_executor,
+    Function.MULTIPLY: multiply_df_executor,
+    Function.DIVIDE: divide_df_executor,
+    Function.FORMULAS: formulas_executor,
+}
+
+
+def find_function_executor(function: Function):
+    return function_to_executor_dict[function]

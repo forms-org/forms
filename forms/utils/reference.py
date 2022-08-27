@@ -22,6 +22,18 @@ RELATIVE = "r"
 FIXED = "f"
 
 
+def compare_cells(row, col, other_row, other_col) -> int:
+    if col < other_col:
+        return -1
+    elif col > other_col:
+        return 1
+    elif row < other_row:
+        return -1
+    elif row > other_row:
+        return 1
+    return 0
+
+
 class Ref:
     def __init__(self, row: int, col: int, last_row=INVALID_IDX, last_col=INVALID_IDX):
         if row <= INVALID_IDX or col <= INVALID_IDX:
@@ -52,6 +64,13 @@ class Ref:
             return True
         else:
             return False
+
+    def cmp(self, other) -> int:
+        res = compare_cells(self.row, self.col, other.row, other.col)
+        if res != 0:
+            return res
+        else:
+            return compare_cells(self.last_row, self.last_col, other.last_row, other.last_col)
 
 
 class RefType(Enum):

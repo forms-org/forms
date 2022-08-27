@@ -39,22 +39,23 @@ class TreeNode:
             assert len(self.children) == len(self.seps) + 1
             func_str = self.open_value.join(self.children[0].construct_formula_string())
             for child_idx in range(len(self.children) - 1):
-                func_str = func_str.join(self.seps[child_idx + 1])\
-                    .join(self.children[child_idx + 1].construct_formula_string())
+                func_str = func_str.join(self.seps[child_idx + 1]).join(
+                    self.children[child_idx + 1].construct_formula_string()
+                )
             return func_str.join(self.close_value)
         elif self.func_type == Token.OP_IN:
             assert len(self.children) == 2
             left_subexpression = self.children[0].construct_formula_string()
             right_subexpression = self.children[1].construct_formula_string()
-            return '{' + left_subexpression + self.open_value + right_subexpression + '}'
+            return "{" + left_subexpression + self.open_value + right_subexpression + "}"
         elif self.func_type == Token.OP_PRE:
             assert len(self.children) == 1
             subexpression = self.children[0].construct_formula_string()
-            return '{' + self.open_value + subexpression + '}'
+            return "{" + self.open_value + subexpression + "}"
         elif self.func_type == Token.OP_POST:
             assert len(self.children) == 1
             subexpression = self.children[0].construct_formula_string()
-            return '{' + subexpression + self.open_value + '}'
+            return "{" + subexpression + self.open_value + "}"
         else:
             return self.open_value
 

@@ -20,10 +20,11 @@ from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
-from forms.executor.dfexecutor.functionexecutor import find_function_executor
+from forms.executor.dfexecutor.basicfuncexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
 from forms.core.config import FormSConfig
 from forms.runtime.runtime import create_runtime_by_name
+from forms.executor.compiler import DFCompiler
 
 
 def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
@@ -44,6 +45,7 @@ def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
 class DFPlanExecutor(PlanExecutor):
     def __init__(self, forms_config: FormSConfig):
         super().__init__(forms_config)
+        self.compiler = DFCompiler()
         self.runtime = create_runtime_by_name(forms_config.runtime, forms_config)
         self.execute_one_subtree = execute_one_subtree
 
