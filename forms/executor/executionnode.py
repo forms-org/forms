@@ -12,11 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from forms.planner.plannode import *
 from forms.executor.table import Table
 from forms.executor.utils import ExecutionContext
-from forms.utils.reference import axis_along_row, default_axis
+from forms.utils.reference import Ref, RefType, axis_along_row, default_axis, origin_ref
 from forms.utils.treenode import TreeNode, link_parent_to_children
+from forms.utils.functions import Function
+from forms.utils.optimizations import FRRFOptimization
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
 
 from abc import ABC, abstractmethod
 
@@ -42,13 +44,14 @@ class ExecutionNode(ABC, TreeNode):
 
 
 class FunctionExecutionNode(ExecutionNode):
-    def __init__(self, function: Function, out_ref_type: RefType, out_ref_axis: int):
+    def __init__(self, function: Function, ref: Ref, out_ref_type: RefType, out_ref_axis: int):
         super().__init__(out_ref_type, out_ref_axis)
+        self.ref = ref
         self.function = function
         self.fr_rf_optimization = FRRFOptimization.NOOPT
 
     def gen_exec_subtree(self):
-        parent = FunctionExecutionNode(self.function, self.out_ref_type, self.out_ref_axis)
+        parent = FunctionExecutionNode(self.function, self.ref, self.out_ref_type, self.out_ref_axis)
         parent.fr_rf_optimization = self.fr_rf_optimization
         children = [child.gen_exec_subtree() for child in self.children]
         link_parent_to_children(parent, children)
@@ -110,7 +113,7 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
         return lit_node
     elif isinstance(plan_node, FunctionNode):
         parent = FunctionExecutionNode(
-            plan_node.function, plan_node.out_ref_type, plan_node.out_ref_axis
+            plan_node.function, plan_node.ref, plan_node.out_ref_type, plan_node.out_ref_axis
         )
         parent.fr_rf_optimization = plan_node.fr_rf_optimization
         parent.copy_formula_string_info_from(plan_node)
@@ -120,8 +123,8 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: Table) -> ExecutionN
     assert False
 
 
-def create_intermediate_ref_node(table: Table, exec_subtree: ExecutionNode) -> RefExecutionNode:
-    ref = Ref(0, 0)
+def create_intermediate_ref_node(table: Table, exec_subtree: FunctionExecutionNode) -> RefExecutionNode:
+    ref = exec_subtree.ref
     ref_node = RefExecutionNode(ref, table, exec_subtree.out_ref_type, exec_subtree.out_ref_axis)
     axis = exec_subtree.exec_context.axis if exec_subtree.exec_context is not None else default_axis
     ref_node.set_exec_context(

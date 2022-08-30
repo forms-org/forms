@@ -23,7 +23,7 @@ from forms.executor.executionnode import (
 from forms.executor.dfexecutor.basicfuncexecutor import sum_df_executor
 from forms.executor.table import DFTable
 from forms.executor.utils import ExecutionContext
-from forms.utils.reference import Ref, RefType, axis_along_row
+from forms.utils.reference import Ref, RefType, axis_along_row, origin_ref
 from forms.utils.functions import Function
 from forms.utils.treenode import link_parent_to_children
 
@@ -43,7 +43,7 @@ def execute_before_and_after_one_test():
 
 def compute_one_formula(ref: Ref, ref_type: RefType) -> DFTable:
     global table
-    root = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
+    root = FunctionExecutionNode(Function.SUM, Ref(0, 0), RefType.RR, axis_along_row)
     child = RefExecutionNode(ref, table, ref_type, axis_along_row)
     link_parent_to_children(root, [child])
     child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
@@ -81,8 +81,8 @@ def test_execute_sum_simple_formula_rf():
 # try to mock forms.compute_formula(df, "=SUM($A$1, SUM(A1:B3))")
 def test_execute_sum_complex_formula():
     global table
-    root = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
-    parent = FunctionExecutionNode(Function.SUM, RefType.RR, axis_along_row)
+    root = FunctionExecutionNode(Function.SUM, origin_ref, RefType.RR, axis_along_row)
+    parent = FunctionExecutionNode(Function.SUM, origin_ref, RefType.RR, axis_along_row)
     child1 = RefExecutionNode(Ref(0, 0), table, RefType.FF, axis_along_row)
     child2 = RefExecutionNode(Ref(0, 0, 2, 1), table, RefType.RR, axis_along_row)
     link_parent_to_children(root, [parent, child1])

@@ -21,7 +21,7 @@ from forms.core.forms import config
 from forms.core.config import forms_config
 from forms.utils.functions import Function
 from forms.utils.optimizations import FRRFOptimization
-from forms.utils.reference import default_axis
+from forms.utils.reference import default_axis, Ref
 
 
 @pytest.fixture(autouse=True)
@@ -82,6 +82,41 @@ def test_algebraic_factor_in_rewriter():
 
     assert root.function == Function.AVG
     assert all(isinstance(child, RefNode) for child in root.children)
+
+
+def assert_for_if_push_down(plan_node: PlanNode, func_one: Function, func_two: Function):
+    assert plan_node.function == func_one
+    assert isinstance(plan_node.children[0], FunctionNode)
+    assert plan_node.children[0].function == func_two
+    assert plan_node.children[0].ref == Ref(0, 0, 1, 0)
+    assert plan_node.children[0].children[0].ref == Ref(0, 0, 0, 1)
+
+
+def test_sum_if_push_down_rewriter():
+    forms_config.enable_physical_opt = False
+    forms_config.function_executor = "df_formulas_executor"
+    root = gen_one_test_case('=SUMIF(A1:B2, ">1")')
+
+    assert_for_if_push_down(root, Function.SUM, Function.SUMIF)
+
+
+def test_count_if_push_down_rewriter():
+    forms_config.enable_physical_opt = False
+    forms_config.function_executor = "df_formulas_executor"
+    root = gen_one_test_case('=COUNTIF(A1:B2, ">1")')
+
+    assert_for_if_push_down(root, Function.SUM, Function.COUNTIF)
+
+
+def test_average_if_push_down_rewriter():
+    forms_config.enable_physical_opt = False
+    forms_config.function_executor = "df_formulas_executor"
+    root = gen_one_test_case('=AVERAGEIF(A1:B2, ">1")')
+
+    assert root.function == Function.DIVIDE
+    assert len(root.children) == 2
+    assert_for_if_push_down(root.children[0], Function.SUM, Function.SUMIF)
+    assert_for_if_push_down(root.children[1], Function.SUM, Function.COUNTIF)
 
 
 def test_physical_opt():
