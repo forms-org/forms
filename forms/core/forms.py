@@ -24,10 +24,13 @@ from forms.planner.planrewriter import PlanRewriter
 from forms.utils.exceptions import FormSException
 from forms.utils.reference import default_axis
 from forms.utils.executors import create_executor_by_name
+from forms.utils.validation import validate
 
 
 def compute_formula(df: pd.DataFrame, formula_str: str, axis=default_axis) -> pd.DataFrame:
     try:
+        validate(forms_config)
+
         root = parse_formula(formula_str, axis)
         root.validate(forms_config)
         root.populate_ref_info()
@@ -52,6 +55,7 @@ def config(
     enable_physical_opt=forms_config.enable_physical_opt,
     runtime=forms_config.runtime,
     function_executor=forms_config.function_executor,
+    cost_model=forms_config.cost_model,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
@@ -59,13 +63,12 @@ def config(
     forms_config.enable_physical_opt = enable_physical_opt
     forms_config.runtime = runtime
     forms_config.function_executor = function_executor
+    forms_config.cost_model = cost_model
 
 
-# Input parameters: Single or multi-index row/col Dataframe, keep_original_labels boolean
-# Output: Dataframe in spreadsheet view. Row indices and column labels are both of type string.
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
     try:
-        # Flatten cols into tuple format if multiindex
+        # Flatten cols into tuple format if multi-index
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.to_flat_index()
         for i, label in enumerate(df.columns):
@@ -84,7 +87,7 @@ def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
 
         # Preserve labels
         if keep_original_labels:
-            # Flatten rows if multiindex
+            # Flatten rows if multi-index
             if isinstance(df.index, pd.MultiIndex):
                 df.index = [
                     str(i + 1) + " (" + ".".join(col) + ")" for i, col in enumerate(df.index.values)

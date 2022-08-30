@@ -12,16 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-class FormSConfig:
-    def __init__(self):
-        self.cores = 1
-        self.scheduler = "simple"
-        self.enable_logical_rewriting = False
-        self.enable_physical_opt = False
-        self.runtime = "dask"
-        self.function_executor = "df_pandas_executor"
-        self.cost_model = "simple"
+from forms.executor.table import DFTable
+from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode
 
 
-forms_config = FormSConfig()
+def formulas_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    pass

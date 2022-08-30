@@ -12,16 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-class FormSConfig:
-    def __init__(self):
-        self.cores = 1
-        self.scheduler = "simple"
-        self.enable_logical_rewriting = False
-        self.enable_physical_opt = False
-        self.runtime = "dask"
-        self.function_executor = "df_pandas_executor"
-        self.cost_model = "simple"
+from forms.core.config import FormSConfig
+from forms.utils.functions import FunctionExecutor
+from forms.utils.exceptions import FunctionExecutorNotSupportedException
 
 
-forms_config = FormSConfig()
+def validate(forms_config: FormSConfig):
+    if forms_config.function_executor == FunctionExecutor.df_mixed_executor.name.lower():
+        raise FunctionExecutorNotSupportedException(f"{forms_config.function_executor} Not Supported")

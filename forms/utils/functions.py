@@ -17,6 +17,7 @@ from enum import Enum, auto
 from forms.utils.exceptions import FunctionNotSupportedException
 from openpyxl.formula.tokenizer import Token
 
+
 # Function-related definitions
 class Function(Enum):
     SUM = "sum"
@@ -29,6 +30,7 @@ class Function(Enum):
     MULTIPLY = "*"
     DIVIDE = "/"
     SUMIF = "sumif"
+    FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 
 def from_function_str(function_str: str) -> Function:
@@ -76,6 +78,6 @@ class FunctionType(Enum):
 
 
 class FunctionExecutor(Enum):
-    pandas_executor = auto()
-    formulas_executor = auto()
-    mixed_executor = auto()
+    df_pandas_executor = auto()
+    df_formulas_executor = auto()
+    df_mixed_executor = auto()
