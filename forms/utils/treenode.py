@@ -37,12 +37,14 @@ class TreeNode:
     def construct_formula_string(self) -> str:
         if self.func_type == Token.FUNC:
             assert len(self.children) == len(self.seps) + 1
-            func_str = self.open_value.join(self.children[0].construct_formula_string())
+            func_str = self.open_value + self.children[0].construct_formula_string()
             for child_idx in range(len(self.children) - 1):
-                func_str = func_str.join(self.seps[child_idx + 1]).join(
-                    self.children[child_idx + 1].construct_formula_string()
+                func_str = (
+                    func_str
+                    + self.seps[child_idx]
+                    + self.children[child_idx + 1].construct_formula_string()
                 )
-            return func_str.join(self.close_value)
+            return func_str + self.close_value
         elif self.func_type == Token.OP_IN:
             assert len(self.children) == 2
             left_subexpression = self.children[0].construct_formula_string()

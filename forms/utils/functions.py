@@ -30,6 +30,8 @@ class Function(Enum):
     MULTIPLY = "*"
     DIVIDE = "/"
     SUMIF = "sumif"
+    COUNTIF = "countif"
+    AVERAGEIF = "averageif"
     FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 

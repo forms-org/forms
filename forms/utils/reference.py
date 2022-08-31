@@ -14,7 +14,7 @@
 
 
 from enum import Enum, auto
-from forms.utils.exceptions import InvalidIndexException
+from forms.utils.exceptions import InvalidIndexException, AxisNotSupportedException
 
 # Reference-related definitions
 INVALID_IDX = -1
@@ -72,6 +72,13 @@ class Ref:
         else:
             return compare_cells(self.last_row, self.last_col, other.last_row, other.last_col)
 
+    def get_row_or_column_count(self, axis: int) -> int:
+        if axis == axis_along_row:
+            return self.last_row - self.row + 1
+        elif axis == axis_along_column:
+            return self.last_col - self.col + 1
+        raise AxisNotSupportedException(f"Axis {axis} not supported")
+
 
 class RefType(Enum):
     RR = auto()
@@ -84,3 +91,6 @@ class RefType(Enum):
 axis_along_row = 0
 axis_along_column = 1
 default_axis = axis_along_row
+
+origin = 0
+origin_ref = Ref(origin, origin)

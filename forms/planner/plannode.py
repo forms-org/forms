@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 from forms.core.config import FormSConfig
-from forms.utils.reference import Ref, RefType
+from forms.utils.reference import Ref, RefType, origin_ref
 from forms.utils.functions import (
     Function,
     arithmetic_functions,
@@ -86,6 +86,7 @@ class LiteralNode(PlanNode):
 class FunctionNode(PlanNode):
     def __init__(self, function: Function, ref_axis):
         super().__init__()
+        self.ref = origin_ref
         self.out_ref_axis = ref_axis
         self.function = function
         self.fr_rf_optimization = FRRFOptimization.NOOPT
@@ -126,6 +127,7 @@ class FunctionNode(PlanNode):
 
     def replicate_node(self):
         function_node = FunctionNode(self.function, self.out_ref_axis)
+        function_node.ref = self.ref
         function_node.out_ref_type = self.out_ref_type
         function_node.open_value = self.open_value
         function_node.func_type = self.func_type

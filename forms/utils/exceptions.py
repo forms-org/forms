@@ -59,3 +59,7 @@ class FunctionExecutorNotSupportedException(FormSException):
 
 class CostModelNotSupportedException(FormSException):
     """Exception raised for unsupported CostModel"""
+
+
+class NonScalarNotSupportedException(FormSException):
+    """Exception raised for non-scalar output"""
