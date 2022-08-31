@@ -42,16 +42,16 @@ def formulas_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
                 axis = child.exec_context.axis
                 # TODO: add support for axis_along_column
                 if axis == axis_along_row:
-                    df = df.iloc[:, ref.col: ref.last_col + 1]
+                    df = df.iloc[:, ref.col : ref.last_col + 1]
                     # window_size = ref.last_row - ref.row + 1
                     if out_ref_type == RefType.RR:
-                        window = df.iloc[idx + ref.row: idx + ref.last_row + 1].to_numpy()
+                        window = df.iloc[idx + ref.row : idx + ref.last_row + 1].to_numpy()
                     elif out_ref_type == RefType.FF:
-                        window = df.iloc[ref.row: ref.last_row + 1].to_numpy()
+                        window = df.iloc[ref.row : ref.last_row + 1].to_numpy()
                     elif out_ref_type == RefType.FR:
-                        window = df.iloc[ref.row: idx + ref.last_row + 1].to_numpy()
+                        window = df.iloc[ref.row : idx + ref.last_row + 1].to_numpy()
                     else:  # out_ref_type == RefType.RF
-                        window = df.iloc[ref.row + idx: ref.last_row + 1].values.to_numpy()
+                        window = df.iloc[ref.row + idx : ref.last_row + 1].values.to_numpy()
                 values.append(window)
         res = func(*values)
         if isinstance(res, np.ndarray):
