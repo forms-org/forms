@@ -21,8 +21,9 @@ import forms as fs
 
 def test_multicore(cores: int):
     df = pd.DataFrame(np.random.randint(0, 100, size=(100000, 5)))
-    formula = "=SUM(A1:C2)"
-    fs.config(cores=cores)
+    formula = '=SUM(A1:C3)'
+    function_executor = "df_formulas_executor"
+    fs.config(cores=cores, function_executor=function_executor)
     print(cores)
     return fs.compute_formula(df, formula)
 
