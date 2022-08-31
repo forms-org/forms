@@ -62,12 +62,7 @@ class SimpleScheduler(BaseScheduler):
         if not self.scheduled:
             cores = self.exec_config.cores
             partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
-            exec_subtree_list = [
-                self.compiler.compile(
-                    self.execution_tree.gen_exec_subtree(), self.exec_config.function_executor
-                )
-                for _ in range(cores)
-            ]
+            exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(
                     partition_plan[i],
@@ -78,6 +73,10 @@ class SimpleScheduler(BaseScheduler):
             ]
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
+            exec_subtree_list = [
+                self.compiler.compile(exec_subtree_list[i], self.exec_config.function_executor)
+                for i in range(cores)
+            ]
             self.scheduled = True
             return self.execution_tree, exec_subtree_list
         return None, None
