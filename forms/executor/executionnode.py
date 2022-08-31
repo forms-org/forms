@@ -53,6 +53,7 @@ class FunctionExecutionNode(ExecutionNode):
     def gen_exec_subtree(self):
         parent = FunctionExecutionNode(self.function, self.ref, self.out_ref_type, self.out_ref_axis)
         parent.fr_rf_optimization = self.fr_rf_optimization
+        parent.copy_formula_string_info_from(self)
         children = [child.gen_exec_subtree() for child in self.children]
         link_parent_to_children(parent, children)
         return parent
@@ -76,9 +77,11 @@ class RefExecutionNode(ExecutionNode):
         self.ref = ref
 
     def gen_exec_subtree(self):
-        return RefExecutionNode(
+        ref_node = RefExecutionNode(
             self.ref, self.table.gen_table_for_execution(), self.out_ref_type, self.out_ref_axis
         )
+        ref_node.copy_formula_string_info_from(self)
+        return ref_node
 
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
@@ -93,7 +96,9 @@ class LitExecutionNode(ExecutionNode):
         self.literal = literal
 
     def gen_exec_subtree(self):
-        return LitExecutionNode(self.literal, self.out_ref_type, self.out_ref_axis)
+        lit_node = LitExecutionNode(self.literal, self.out_ref_type, self.out_ref_axis)
+        lit_node.copy_formula_string_info_from(self)
+        return lit_node
 
     def set_exec_context(self, exec_context: ExecutionContext):
         pass
