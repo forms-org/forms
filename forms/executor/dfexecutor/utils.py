@@ -16,5 +16,5 @@ from forms.executor.executionnode import FunctionExecutionNode
 
 
 # TODO
-def remote_access_planning(exec_subree: FunctionExecutionNode) -> FunctionExecutionNode:
-    return exec_subree
+def remote_access_planning(exec_subtree: FunctionExecutionNode) -> FunctionExecutionNode:
+    return exec_subtree
