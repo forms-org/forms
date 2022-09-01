@@ -12,25 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from abc import abstractmethod, ABC
+from forms.executor.executionnode import FunctionExecutionNode
 
 
-class RemoteObject(ABC):
-    def __init__(self, object_ref):
-        self.object_ref = object_ref
-
-    @abstractmethod
-    def get_computed_result(self):
-        pass
-
-    @abstractmethod
-    def is_object_computed(self):
-        pass
-
-
-class DaskObject(RemoteObject):
-    def get_computed_result(self):
-        return self.object_ref.result()
-
-    def is_object_computed(self):
-        return self.object_ref.done()
+# TODO
+def remote_access_planning(exec_subree: FunctionExecutionNode) -> FunctionExecutionNode:
+    return exec_subree

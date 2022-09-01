@@ -56,6 +56,7 @@ def config(
     runtime=forms_config.runtime,
     function_executor=forms_config.function_executor,
     cost_model=forms_config.cost_model,
+    partition_shape=forms_config.partition_shape,
 ):
     forms_config.cores = cores
     forms_config.scheduler = scheduler
@@ -64,6 +65,7 @@ def config(
     forms_config.runtime = runtime
     forms_config.function_executor = function_executor
     forms_config.cost_model = cost_model
+    forms_config.partition_shape = partition_shape
 
 
 def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):

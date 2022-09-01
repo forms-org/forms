@@ -24,31 +24,24 @@ df = None
 
 @pytest.fixture(autouse=True)
 def execute_before_and_after_one_test():
-    global df
     m = 100
     n = 5
+    global df
     df = pd.DataFrame(np.ones((m, n)))
 
     forms.config(
+        cores=4,
         scheduler=Schedulers.SIMPLE.name.lower(),
         enable_logical_rewriting=False,
         enable_physical_opt=False,
+        partition_shape=(4, 4),
     )
-
     yield
 
 
-def test_one_worker():
-    forms.config(cores=1)
-    computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
-    expected_df = pd.DataFrame(np.full(100, 12.0))
-    expected_df.iloc[98:100, 0] = np.NaN
-    assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
-
-
-def test_multiple_workers():
-    forms.config(cores=4)
-    computed_df = forms.compute_formula(df, "=SUM(A1:B3, A1:C2)")
-    expected_df = pd.DataFrame(np.full(100, 12.0))
+def test_remote_partition():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A1:B3)")
+    expected_df = pd.DataFrame(np.full(100, 6.0))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)

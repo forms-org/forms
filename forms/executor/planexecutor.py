@@ -15,9 +15,10 @@
 from time import sleep
 
 from forms.executor.executionnode import from_plan_to_execution_tree
-from forms.executor.scheduler import *
+from forms.scheduler.scheduler import *
 from forms.planner.plannode import PlanNode
 from forms.core.config import FormSConfig
+from forms.scheduler.utils import create_scheduler_by_name
 from forms.utils.reference import axis_along_column
 from forms.utils.functions import FunctionExecutor
 
@@ -50,10 +51,12 @@ class PlanExecutor(ABC):
             self.forms_config.scheduler, self.compiler, exec_config, exec_tree
         )
 
+        physical_subtree_list_dict = {}
         remote_object_dict = {}
         while not scheduler.is_finished():
             next_subtree, physical_subtree_list = scheduler.next_subtree()
             if next_subtree is not None:
+                physical_subtree_list_dict[next_subtree] = physical_subtree_list
                 remote_object_dict[next_subtree] = [
                     self.runtime.submit_one_func(self.execute_one_subtree, physical_subtree)
                     for physical_subtree in physical_subtree_list
@@ -71,11 +74,11 @@ class PlanExecutor(ABC):
             ]
             for exec_subtree in finished_exec_subtrees:
                 intermediate_result = self.collect_results(
-                    remote_object_dict[exec_subtree], exec_config.axis
+                    remote_object_dict[exec_subtree],
+                    physical_subtree_list_dict[exec_subtree],
+                    exec_config.axis,
                 )
                 scheduler.finish_subtree(exec_subtree, intermediate_result)
-                if not scheduler.is_finished():
-                    self.distribute_results(intermediate_result)
                 del remote_object_dict[exec_subtree]
 
             sleep(self.schedule_interval)
@@ -83,11 +86,7 @@ class PlanExecutor(ABC):
         return scheduler.get_results()
 
     @abstractmethod
-    def collect_results(self, futures, axis: int) -> Table:
-        pass
-
-    @abstractmethod
-    def distribute_results(self, table: Table):
+    def collect_results(self, futures, physical_subtree_list, axis: int) -> Table:
         pass
 
     @abstractmethod

@@ -41,7 +41,7 @@ class DaskRuntime(BaseRuntime):
     def __init__(self, forms_config: FormSConfig):
         super().__init__(forms_config)
         self.client = Client(processes=True, n_workers=self.forms_config.cores)
-        self.broadcast = True
+        self.broadcast = False
 
     def distribute_data(self, data) -> RemoteObject:
         return DaskObject(self.client.scatter([data], broadcast=self.broadcast)[0])
