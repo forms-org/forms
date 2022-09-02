@@ -13,21 +13,24 @@
 #  limitations under the License.
 
 import pandas as pd
+import numpy as np
 
 from time import time
 
+from forms.executor.dfexecutor.remotedf import partition_df, find_rows_and_cols, RemoteDF
 from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
 from forms.executor.dfexecutor.basicfuncexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
+from forms.utils.reference import axis_along_row
 from forms.core.config import FormSConfig
 from forms.runtime.runtime import create_runtime_by_name
 from forms.executor.compiler import DFCompiler
 
 
-def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
+def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
     new_children = []
     for child in physical_subtree.children:
         if isinstance(child, FunctionExecutionNode):
@@ -39,7 +42,8 @@ def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> Table:
     link_parent_to_children(physical_subtree, new_children)
 
     function_executor = find_function_executor(physical_subtree.function)
-    return function_executor(physical_subtree)
+    res_table = function_executor(physical_subtree)
+    return res_table.get_table_content()
 
 
 class DFPlanExecutor(PlanExecutor):
@@ -50,8 +54,20 @@ class DFPlanExecutor(PlanExecutor):
         self.execute_one_subtree = execute_one_subtree
 
     def df_execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
+        num_row_partitions = self.forms_config.partition_shape[0]
+        num_col_partitions = self.forms_config.partition_shape[1]
+        partitions = partition_df(df, num_row_partitions, num_col_partitions)
+        rows, cols = find_rows_and_cols(partitions)
+
         start = time()
-        df_table = DFTable(df, self.runtime.distribute_data(df))
+        remote_object_array = np.array(
+            [
+                [self.runtime.distribute_data(one_partition) for one_partition in one_row]
+                for one_row in partitions
+            ]
+        )
+        remote_df = RemoteDF(remote_object_array, rows, cols)
+        df_table = DFTable(df, remote_df)
         print(f"Distributing data time: {time() - start}")
         start = time()
         res_table = super().execute_formula_plan(df_table, formula_plan)
@@ -59,17 +75,28 @@ class DFPlanExecutor(PlanExecutor):
 
         assert isinstance(res_table, DFTable)
 
-        return res_table.df
+        return res_table.get_table_content()
 
-    def collect_results(self, remote_object_list, axis: int) -> Table:
-        df_list = [remote_obj.get_content().get_table_content() for remote_obj in remote_object_list]
-        res_df = pd.concat(df_list, axis=axis, ignore_index=True)
-        return DFTable(res_df)
+    def collect_results(self, remote_object_list, physical_subtree_list, axis: int) -> Table:
+        shape = (len(remote_object_list), 1) if axis == axis_along_row else (1, len(remote_object_list))
+        remote_object_array = np.array(remote_object_list).reshape(shape)
 
-    def distribute_results(self, table: Table):
-        if table is not None:
-            df_remote_object = self.runtime.distribute_data(table.get_table_content())
-            table.remote_object = df_remote_object
+        exec_context_list = [physical_subtree.exec_context for physical_subtree in physical_subtree_list]
+        num_formulae_array = np.array(
+            [
+                exec_context.end_formula_idx - exec_context.start_formula_idx
+                for exec_context in exec_context_list
+            ]
+        ).reshape(shape)
+        ones_array = np.ones(shape)
+
+        rows, cols = (
+            (num_formulae_array, ones_array)
+            if axis == axis_along_row
+            else (ones_array, num_formulae_array)
+        )
+        remote_df = RemoteDF(remote_object_array, rows, cols)
+        return DFTable(remote_df=remote_df)
 
     def clean_up(self):
         self.runtime.shut_down()

@@ -20,9 +20,12 @@ import forms as fs
 
 
 def test_multicore(cores: int):
-    df = pd.DataFrame(np.random.randint(0, 100, size=(100000, 5)))
-    formula = "=SUM(A1:C3)"
-    function_executor = "df_formulas_executor"
+    # df = pd.DataFrame(np.random.randint(0, 100, size=(10000, 5)))
+    df = pd.DataFrame(np.ones((10000, 5)))
+    # formula = '=SUMIF(A1:A100, ">0")'
+    formula = "=SUM(A1:A3)"
+    # function_executor = "df_formulas_executor"
+    function_executor = "df_pandas_executor"
     fs.config(cores=cores, function_executor=function_executor)
     print(cores)
     return fs.compute_formula(df, formula)

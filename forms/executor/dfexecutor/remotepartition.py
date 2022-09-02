@@ -11,26 +11,11 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-from abc import abstractmethod, ABC
-
-
-class RemoteObject(ABC):
-    def __init__(self, object_ref):
-        self.object_ref = object_ref
-
-    @abstractmethod
-    def get_computed_result(self):
-        pass
-
-    @abstractmethod
-    def is_object_computed(self):
-        pass
+from forms.runtime.remoteobject import RemoteObject
 
 
-class DaskObject(RemoteObject):
-    def get_computed_result(self):
-        return self.object_ref.result()
-
-    def is_object_computed(self):
-        return self.object_ref.done()
+class RemotePartition:
+    def __init__(self, rows: int, cols: int, remote_obj: RemoteObject):
+        self.rows = rows
+        self.cols = cols
+        self.remote_obj = remote_obj
