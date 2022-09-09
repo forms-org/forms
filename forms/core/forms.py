@@ -101,6 +101,6 @@ def print_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
                 ]
         else:
             df_copy.index = [str(i) for i in range(1, len(df_copy.index) + 1)]
-        return df_copy
+        print(df.to_string())
     except FormSException:
         traceback.print_exception(*sys.exc_info())
