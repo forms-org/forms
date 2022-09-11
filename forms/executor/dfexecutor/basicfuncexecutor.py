@@ -72,7 +72,9 @@ def construct_df_table(array):
 
 
 def get_value_rr(df: pd.DataFrame, window_size: int, func1, func2) -> pd.DataFrame:
-    return df.agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
+    return (
+        df.dropna().agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
+    )
 
 
 def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
@@ -80,11 +82,19 @@ def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
 
 
 def get_value_fr(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna()
+    return df.dropna().agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna()
 
 
 def get_value_rf(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.iloc[::-1].agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna().iloc[::-1]
+    return (
+        df.dropna()
+        .iloc[::-1]
+        .agg(func1, axis=1)
+        .expanding(min_window_size)
+        .agg(func2)
+        .dropna()
+        .iloc[::-1]
+    )
 
 
 def fill_in_nan(value, n_formula: int) -> pd.DataFrame:
@@ -103,7 +113,7 @@ def compute_min(values, literal):
 
 
 def compute_sum(values, literal):
-    return sum(values) + literal
+    return np.sum(values, initial=literal, axis=0)
 
 
 def distributive_function_executor(
@@ -143,6 +153,7 @@ def distributive_function_executor(
                     end_idx = child.exec_context.end_formula_idx
                     n_formula = end_idx - start_idx
                     axis = child.exec_context.axis
+                    value = None
                     # TODO: add support for axis_along_column
                     if axis == axis_along_row:
                         df = df.iloc[:, ref.col : ref.last_col + 1]
@@ -151,8 +162,9 @@ def distributive_function_executor(
                             df = df.iloc[start_idx + ref.row : end_idx + ref.last_row]
                             value = get_value_rr(df, window_size, func_first_axis, func_second_axis)
                         elif out_ref_type == RefType.FF:
+                            # treat FF-type as literal value
                             single_value = func_ff(df.iloc[ref.row : ref.last_row + 1].values.flatten())
-                            value = get_value_ff(single_value, n_formula)
+                            literal = func_literal((literal, single_value))
                         elif out_ref_type == RefType.FR:
                             df = df.iloc[ref.row : end_idx + ref.last_row]
                             value = get_value_fr(
@@ -163,12 +175,17 @@ def distributive_function_executor(
                             value = get_value_rf(
                                 df, window_size - end_idx, func_first_axis, func_second_axis
                             )
-                        value.index = range(value.index.size)
-                        value = fill_in_nan(value, n_formula)
-                    values.append(pd.DataFrame(value))
+                        if out_ref_type != RefType.FF:
+                            value.index = range(value.index.size)
+                            value = fill_in_nan(value, n_formula)
+                    if value is not None:
+                        values.append(pd.DataFrame(value))
                 elif isinstance(child, LitExecutionNode):
                     literal = func_literal((literal, child.literal))
-            return construct_df_table(func_all(values, literal))
+            result = func_all(values, literal)
+            if not isinstance(result, np.ndarray):
+                result = [result]
+            return construct_df_table(result)
     else:
         assert len(physical_subtree.children) == 1
         child = physical_subtree.children[0]
