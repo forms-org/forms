@@ -63,3 +63,7 @@ class CostModelNotSupportedException(FormSException):
 
 class NonScalarNotSupportedException(FormSException):
     """Exception raised for non-scalar output"""
+
+
+class PhaseNotSupportedException(FormSException):
+    """Exception raised for unsupported Phase"""

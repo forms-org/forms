@@ -30,8 +30,15 @@ def execute_before_and_after_one_test():
     yield
 
 
-def test_compute_sum_if():
-    global df
+def test_compute_sum_if_ff():
     computed_df = forms.compute_formula(df, "=SUMIF(A$1:A$40, C1, B$1:B$40)")
     expected_df = pd.DataFrame(np.full(40, 10.0))
     assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_sum_if_rr():
+    global df
+    computed_df = forms.compute_formula(df, "=SUMIF(A1:A5, C1, B1:B5)")
+    expected_df = pd.DataFrame(np.full(40, 2.0))
+    expected_df.iloc[36:40, 0] = np.NaN
+    assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)

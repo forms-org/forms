@@ -28,40 +28,84 @@ def execute_before_and_after_one_test():
     df = pd.DataFrame(np.ones((m, n)))
 
     forms.config(
-        cores=4, scheduler="frrftwophase", enable_logical_rewriting=False, enable_physical_opt=True
+        cores=4, scheduler="prioritized", enable_logical_rewriting=False, enable_physical_opt=True
     )
     yield
 
 
-def test_compute_2_phase_sum_fr():
+def test_compute_ff_2_phase():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(MAX(A$1:B$2), COUNT(A$1:A1))")
+    expected_df = pd.DataFrame(np.arange(2, 102, 1))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_only_ff():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A$2:B$3)")
+    expected_df = pd.DataFrame(np.full(100, 4))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_multiple_ff():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A$2:B$3, B$1:B$100, SUM(C$10:C$19))")
+    expected_df = pd.DataFrame(np.full(100, 114))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_multiple_2_phase():
+    global df
+    computed_df = forms.compute_formula(df, "=MAX(SUM(A$2:B3), SUM(A$1:A1))")
+    expected_df = pd.DataFrame(np.arange(4, 200, 2))
+    assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
+
+
+def test_compute_multiple_ff_multiple_2_phase():
+    global df
+    computed_df = forms.compute_formula(
+        df, "=SUM(A$2:B3) + SUM(C$10:C$19) + MAX(SUM(A$2:B3), SUM(A$1:A1)) "
+    )
+    expected_df = pd.DataFrame(np.arange(18, 407, 4))
+    assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
+
+
+def test_compute_only_simple():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A2:B3) + A1")
+    expected_df = pd.DataFrame(np.full(98, 5))
+    assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
+
+
+def test_compute_only_2_phase_sum_fr():
     global df
     computed_df = forms.compute_formula(df, "=SUM(A$2:B3)")
     expected_df = pd.DataFrame(np.arange(4, 200, 2))
     assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
 
 
-def test_compute_2_phase_sum_rf():
+def test_compute_only_2_phase_sum_rf():
     global df
     computed_df = forms.compute_formula(df, "=SUM(A2:B$99)")
     expected_df = pd.DataFrame(np.arange(196, 2, -2))
     assert np.array_equal(computed_df.iloc[0:97].values, expected_df.values)
 
 
-def test_compute_2_phase_count_fr():
+def test_compute_only_2_phase_count_fr():
     global df
     computed_df = forms.compute_formula(df, "=COUNT(A$1:B3)")
     expected_df = pd.DataFrame(np.arange(6, 202, 2))
     assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
 
 
-def test_compute_2_phase_count_rf():
+def test_compute_only_2_phase_count_rf():
     global df
     computed_df = forms.compute_formula(df, "=COUNT(A1:A$100)")
     expected_df = pd.DataFrame(np.arange(100, 0, -1))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
-def test_compute_2_phase_max_fr():
+def test_compute_only_2_phase_max_fr():
     global df
     computed_df = forms.compute_formula(df, "=MAX(A$1:B3)")
     expected_df = pd.DataFrame(np.full(100, 1))
@@ -69,14 +113,14 @@ def test_compute_2_phase_max_fr():
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
 
 
-def test_compute_2_phase_min_rf():
+def test_compute_only_2_phase_min_rf():
     global df
     computed_df = forms.compute_formula(df, "=MIN(A1:A$100)")
     expected_df = pd.DataFrame(np.full(100, 1))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
-def test_compute_2_phase_avg_rf():
+def test_compute_only_2_phase_avg_rf():
     global df
     computed_df = forms.compute_formula(df, "=AVERAGE(A1:A$100)")
     expected_df = pd.DataFrame(np.full(100, 1))

@@ -16,18 +16,18 @@ from enum import Enum, auto
 from forms.executor.compiler import BaseCompiler
 from forms.executor.executionnode import ExecutionNode
 from forms.executor.utils import ExecutionConfig
-from forms.scheduler.dfscheduler.dfscheduler import DFSimpleScheduler, RFFRTwoPhaseScheduler
+from forms.scheduler.dfscheduler.dfscheduler import DFSimpleScheduler, PrioritizedScheduler
 from forms.utils.exceptions import SchedulerNotSupportedException
 
 
 class Schedulers(Enum):
     SIMPLE = auto()
-    FRRFTWOPHASE = auto()
+    PRIORITIZED = auto()
 
 
 scheduler_class_dict = {
     Schedulers.SIMPLE.name.lower(): DFSimpleScheduler,
-    Schedulers.FRRFTWOPHASE.name.lower(): RFFRTwoPhaseScheduler,
+    Schedulers.PRIORITIZED.name.lower(): PrioritizedScheduler,
 }
 
 
