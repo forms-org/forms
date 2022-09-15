@@ -26,12 +26,16 @@
 
 from abc import ABC, abstractmethod
 
+import numpy as np
+import pandas as pd
+
 from forms.core.config import forms_config
 from forms.executor.compiler import BaseCompiler
 from forms.executor.costmodel import create_cost_model_by_name
 from forms.executor.executionnode import ExecutionNode, RefExecutionNode
-from forms.executor.table import Table
+from forms.executor.table import Table, DFTable
 from forms.executor.utils import ExecutionConfig
+from forms.utils.reference import RefType, axis_along_row
 
 
 class BaseScheduler(ABC):
@@ -56,4 +60,12 @@ class BaseScheduler(ABC):
 
     def get_results(self) -> Table:
         assert isinstance(self.execution_tree, RefExecutionNode)
-        return self.execution_tree.table
+        table = self.execution_tree.table
+        if self.execution_tree.out_ref_type == RefType.FF:
+            # construct a table with the same value
+            num_of_formulae = self.exec_config.num_of_formulae
+            shape = (
+                (num_of_formulae, 1) if self.exec_config.axis == axis_along_row else (1, num_of_formulae)
+            )
+            table = DFTable(df=pd.DataFrame(np.full(shape, table.get_table_content().iloc[0, 0])))
+        return table

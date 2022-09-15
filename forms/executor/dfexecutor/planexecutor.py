@@ -35,7 +35,7 @@ def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> pd.DataFrame
     for child in physical_subtree.children:
         if isinstance(child, FunctionExecutionNode):
             df_table = execute_one_subtree(child)
-            ref_node = create_intermediate_ref_node(df_table, child)
+            ref_node = create_intermediate_ref_node(DFTable(df=df_table), child)
             new_children.append(ref_node)
         else:
             new_children.append(child)
