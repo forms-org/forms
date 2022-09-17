@@ -5,6 +5,7 @@ __pycache__/
 .vscode/
 doc/_build
 ./venv
+venv
 # Jupyter Widget
 node_modules/
 dist/
