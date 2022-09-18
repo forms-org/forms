@@ -43,17 +43,16 @@ def formulas_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
                 # TODO: add support for axis_along_column
                 if axis == axis_along_row:
                     df = df.iloc[:, ref.col : ref.last_col + 1]
-                    # window_size = ref.last_row - ref.row + 1
-                    if out_ref_type == RefType.RR:
+                    if out_ref_type == RefType.RR and idx + ref.last_row + 1 <= len(df):
                         window = df.iloc[idx + ref.row : idx + ref.last_row + 1].to_numpy()
                     elif out_ref_type == RefType.FF:
                         window = df.iloc[ref.row : ref.last_row + 1].to_numpy()
-                    elif out_ref_type == RefType.FR:
+                    elif out_ref_type == RefType.FR and idx + ref.last_row + 1 <= len(df):
                         window = df.iloc[ref.row : idx + ref.last_row + 1].to_numpy()
-                    else:  # out_ref_type == RefType.RF
-                        window = df.iloc[ref.row + idx : ref.last_row + 1].values.to_numpy()
+                    elif out_ref_type == RefType.RF and ref.row + idx < ref.last_row + 1:
+                        window = df.iloc[ref.row + idx : ref.last_row + 1].to_numpy()
                 values.append(window)
-        res = func(*values)
+        res = np.nan if any(value is None for value in values) else func(*values)
         if isinstance(res, np.ndarray):
             if res.size != 1:
                 raise NonScalarNotSupportedException("A formula should only compute a scalar")

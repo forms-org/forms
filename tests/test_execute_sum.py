@@ -60,7 +60,8 @@ def test_execute_sum_simple_formula_rr():
 # try to mock forms.compute_formula(df, "=SUM(A$1:B$3)")
 def test_execute_sum_simple_formula_ff():
     result = compute_one_formula(Ref(0, 0, 2, 1), RefType.FF)
-    real_result = pd.DataFrame(np.full(50, 6.0))
+    # according to current semantics, ff will only return one single value for all column
+    real_result = pd.DataFrame([6.0])
     assert np.array_equal(result.df.values, real_result.values)
 
 

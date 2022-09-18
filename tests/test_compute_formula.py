@@ -45,6 +45,13 @@ def test_compute_sum():
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
 
 
+def test_compute_sum_ff():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A$1:B$3)")
+    expected_df = pd.DataFrame(np.full(100, 6.0))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
 def test_compute_literal():
     global df
     computed_df = forms.compute_formula(df, "=SUM(A1:B3, 10)")
