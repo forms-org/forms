@@ -22,6 +22,15 @@ from forms.utils.functions import Function
 from forms.utils.reference import axis_along_row, RefType
 from forms.utils.optimizations import FRRFOptimization
 from forms.executor.dfexecutor.formulasexecutor import formulas_executor
+from forms.executor.dfexecutor.mathfuncexecutor import is_odd_df_executor, sin_df_executor
+from forms.executor.dfexecutor.utils import (
+    construct_df_table,
+    fill_in_nan,
+    get_value_ff,
+    get_value_fr,
+    get_value_rf,
+    get_value_rr,
+)
 
 
 def max_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -65,43 +74,6 @@ def multiply_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 def divide_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = get_arithmetic_function_values(physical_subtree)
     return construct_df_table(values[0] / values[1])
-
-
-def construct_df_table(array):
-    return DFTable(df=pd.DataFrame(array))
-
-
-def get_value_rr(df: pd.DataFrame, window_size: int, func1, func2) -> pd.DataFrame:
-    return (
-        df.dropna().agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
-    )
-
-
-def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
-    return pd.DataFrame(np.full(n_formula, single_value))
-
-
-def get_value_fr(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.dropna().agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna()
-
-
-def get_value_rf(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return (
-        df.dropna()
-        .iloc[::-1]
-        .agg(func1, axis=1)
-        .expanding(min_window_size)
-        .agg(func2)
-        .dropna()
-        .iloc[::-1]
-    )
-
-
-def fill_in_nan(value, n_formula: int) -> pd.DataFrame:
-    if n_formula > len(value):
-        extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
-        value = pd.concat([value, extra], ignore_index=True)
-    return value
 
 
 def compute_max(values, literal):
@@ -303,6 +275,8 @@ function_to_executor_dict = {
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
     Function.DIVIDE: divide_df_executor,
+    Function.ISODD: is_odd_df_executor,
+    Function.SIN: sin_df_executor,
     Function.FORMULAS: formulas_executor,
 }
 
