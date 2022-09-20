@@ -22,25 +22,28 @@ df = None
 
 @pytest.fixture(autouse=True)
 def execute_before_and_after_one_test():
-    m = 10000
-    n = 100
     global df
-    df = pd.DataFrame(np.ones((m, n)))
-
-    forms.config(
-        cores=4,
-        scheduler="simple",
-        enable_logical_rewriting=False,
-        enable_physical_opt=False,
-        enable_communication_opt=True,
-        partition_shape=(4, 4),
+    df = pd.DataFrame(
+        {
+            "col1": ["A", "B", "C", "D"] * 10,
+            "col2": [1] * 40,
+            "col3": ["A", "B", "C", "D"] * 10,
+            "col4": [1, 2, 3, 4] * 10,
+        }
     )
+    forms.config(cores=4, function_executor="df_pandas_executor")
     yield
 
 
-def test_compute_sum():
+def test_compute_is_odd():
     global df
-    computed_df = forms.compute_formula(df, "=SUM(A1:B3, SUM(A$1))")
-    expected_df = pd.DataFrame(np.full(10000, 7.0))
-    expected_df.iloc[-2:, 0] = np.NaN
-    assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
+    computed_df = forms.compute_formula(df, "=ISODD(D1)")
+    expected_df = pd.DataFrame(np.array([True, False] * 20))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_sin():
+    global df
+    computed_df = forms.compute_formula(df, "=SIN(B1)")
+    expected_df = pd.DataFrame(np.full(40, 0.841))
+    assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)

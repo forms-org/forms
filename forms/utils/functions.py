@@ -32,6 +32,8 @@ class Function(Enum):
     SUMIF = "sumif"
     COUNTIF = "countif"
     AVERAGEIF = "averageif"
+    ISODD = "isodd"
+    SIN = "sin"
     FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 
@@ -58,6 +60,8 @@ pandas_supported_functions = {
     Function.MAX,
     Function.COUNT,
     Function.AVG,
+    Function.ISODD,
+    Function.SIN,
 }
 
 formulas_unsupported_functions = set()

@@ -70,12 +70,13 @@ def config(
     forms_config.partition_shape = partition_shape
 
 
-def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
+def print_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
+    df_copy = df.copy(deep=True)
     try:
         # Flatten cols into tuple format if multi-index
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = df.columns.to_flat_index()
-        for i, label in enumerate(df.columns):
+        if isinstance(df_copy.columns, pd.MultiIndex):
+            df_copy.columns = df_copy.columns.to_flat_index()
+        for i, label in enumerate(df_copy.columns):
             res = ""
             # We want A = 1 instead of 0
             i += 1
@@ -87,19 +88,21 @@ def to_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
             # Preserve labels
             if keep_original_labels:
                 res = res + " (" + str(label) + ")"
-            df.rename(columns={label: res}, inplace=True)
+            df_copy.rename(columns={label: res}, inplace=True)
 
         # Preserve labels
         if keep_original_labels:
             # Flatten rows if multi-index
-            if isinstance(df.index, pd.MultiIndex):
-                df.index = [
-                    str(i + 1) + " (" + ".".join(col) + ")" for i, col in enumerate(df.index.values)
+            if isinstance(df_copy.index, pd.MultiIndex):
+                df_copy.index = [
+                    str(i + 1) + " (" + ".".join(col) + ")" for i, col in enumerate(df_copy.index.values)
                 ]
             else:
-                df.index = [str(i + 1) + " (" + str(col) + ")" for i, col in enumerate(df.index.values)]
+                df_copy.index = [
+                    str(i + 1) + " (" + str(col) + ")" for i, col in enumerate(df_copy.index.values)
+                ]
         else:
-            df.index = [str(i) for i in range(1, len(df.index) + 1)]
-        return df
+            df_copy.index = [str(i) for i in range(1, len(df_copy.index) + 1)]
+        print(df.to_string())
     except FormSException:
         traceback.print_exception(*sys.exc_info())

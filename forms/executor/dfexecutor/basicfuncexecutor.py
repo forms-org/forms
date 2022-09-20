@@ -22,6 +22,15 @@ from forms.utils.functions import Function
 from forms.utils.reference import axis_along_row, RefType
 from forms.utils.optimizations import FRRFOptimization
 from forms.executor.dfexecutor.formulasexecutor import formulas_executor
+from forms.executor.dfexecutor.mathfuncexecutor import is_odd_df_executor, sin_df_executor
+from forms.executor.dfexecutor.utils import (
+    construct_df_table,
+    fill_in_nan,
+    get_value_ff,
+    get_value_fr,
+    get_value_rf,
+    get_value_rr,
+)
 
 
 def max_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -67,43 +76,6 @@ def divide_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return construct_df_table(values[0] / values[1])
 
 
-def construct_df_table(array):
-    return DFTable(df=pd.DataFrame(array))
-
-
-def get_value_rr(df: pd.DataFrame, window_size: int, func1, func2) -> pd.DataFrame:
-    return (
-        df.dropna().agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
-    )
-
-
-def get_value_ff(single_value, n_formula: int) -> pd.DataFrame:
-    return pd.DataFrame(np.full(n_formula, single_value))
-
-
-def get_value_fr(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return df.dropna().agg(func1, axis=1).expanding(min_window_size).agg(func2).dropna()
-
-
-def get_value_rf(df: pd.DataFrame, min_window_size: int, func1, func2) -> pd.DataFrame:
-    return (
-        df.dropna()
-        .iloc[::-1]
-        .agg(func1, axis=1)
-        .expanding(min_window_size)
-        .agg(func2)
-        .dropna()
-        .iloc[::-1]
-    )
-
-
-def fill_in_nan(value, n_formula: int) -> pd.DataFrame:
-    if n_formula > len(value):
-        extra = pd.DataFrame(np.full(n_formula - len(value), np.nan))
-        value = pd.concat([value, extra], ignore_index=True)
-    return value
-
-
 def compute_max(values, literal):
     return np.max(values, initial=literal, axis=0)
 
@@ -116,7 +88,7 @@ def compute_sum(values, literal):
     return np.sum(values, initial=literal, axis=0)
 
 
-def get_indexes(ref_node: RefExecutionNode):
+def get_reference_indices(ref_node: RefExecutionNode):
     start_idx = ref_node.exec_context.start_formula_idx
     end_idx = ref_node.exec_context.end_formula_idx
     n_formula = end_idx - start_idx
@@ -139,7 +111,7 @@ def get_indexes(ref_node: RefExecutionNode):
         row = ref.row
         col = ref.col
         if out_ref_type == RefType.RR:
-            return start_idx + ref.row, end_idx + ref.last_row, col, col + col_width
+            return start_idx + row, end_idx + ref.last_row, col, col + col_width
         elif out_ref_type == RefType.FF:
             return row, row + row_length, col, col + col_width
         elif out_ref_type == RefType.FR:
@@ -166,7 +138,7 @@ def distributive_function_executor(
             for child in physical_subtree.children:
                 if isinstance(child, RefExecutionNode):
                     df = child.table.get_table_content()
-                    row, last_row, col, last_col = get_indexes(child)
+                    row, last_row, col, last_col = get_reference_indices(child)
                     value = func_ff(df.iloc[row:last_row, col:last_col].values.flatten())
                     values.append(value)
                 elif isinstance(child, LitExecutionNode):
@@ -183,7 +155,7 @@ def distributive_function_executor(
                     end_idx = child.exec_context.end_formula_idx
                     n_formula = end_idx - start_idx
                     axis = child.exec_context.axis
-                    row, last_row, col, last_col = get_indexes(child)
+                    row, last_row, col, last_col = get_reference_indices(child)
                     df = df.iloc[row:last_row, col:last_col]
                     value = None
                     # TODO: add support for axis_along_column
@@ -283,7 +255,7 @@ def get_arithmetic_function_values(physical_subtree: FunctionExecutionNode) -> l
         for child in physical_subtree.children:
             if isinstance(child, RefExecutionNode):
                 df = child.table.get_table_content()
-                row, last_row, col, last_col = get_indexes(child)
+                row, last_row, col, last_col = get_reference_indices(child)
                 values.append(df.iloc[row:last_row, col:last_col].values.flatten())
             elif isinstance(child, LitExecutionNode):
                 values.append(child.literal)
@@ -297,7 +269,7 @@ def get_arithmetic_function_values(physical_subtree: FunctionExecutionNode) -> l
                 n_formula = end_idx - start_idx
                 axis = child.exec_context.axis
                 if axis == axis_along_row:
-                    row, last_row, col, last_col = get_indexes(child)
+                    row, last_row, col, last_col = get_reference_indices(child)
                     df = df.iloc[row:last_row, col:last_col]
                     if out_ref_type == RefType.RR:
                         value = df
@@ -329,6 +301,8 @@ function_to_executor_dict = {
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
     Function.DIVIDE: divide_df_executor,
+    Function.ISODD: is_odd_df_executor,
+    Function.SIN: sin_df_executor,
     Function.FORMULAS: formulas_executor,
 }
 
