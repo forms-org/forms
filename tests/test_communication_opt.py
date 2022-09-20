@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 
 import forms
+from forms.core.config import forms_config
 
 df = None
 
@@ -44,3 +45,29 @@ def test_compute_sum():
     expected_df = pd.DataFrame(np.full(10000, 7.0))
     expected_df.iloc[-2:, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
+
+
+def test_compute_ff():
+    global df
+    computed_df = forms.compute_formula(df, "=SUM(A$2:B$3)")
+    expected_df = pd.DataFrame(np.full(10000, 4))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_prioritized_2_phase():
+    global df
+    forms_config.scheduler = "prioritized"
+    forms_config.enable_physical_opt = True
+    computed_df = forms.compute_formula(df, "=MAX(SUM(A$2:B3), SUM(A$1:A1))")
+    expected_df = pd.DataFrame(np.arange(4, 20000, 2))
+    assert np.array_equal(computed_df.iloc[0:9998].values, expected_df.values)
+
+
+def test_compute_formulas():
+    df = pd.DataFrame(
+        {"col1": ["A", "B", "C", "D"] * 10, "col2": [1] * 40, "col3": ["A", "B", "C", "D"] * 10}
+    )
+    forms_config.function_executor = "df_formulas_executor"
+    computed_df = forms.compute_formula(df, "=SUMIF(A$1:A$40, C1, B$1:B$40)")
+    expected_df = pd.DataFrame(np.full(40, 10.0))
+    assert np.array_equal(computed_df.values, expected_df.values)

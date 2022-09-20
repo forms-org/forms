@@ -28,7 +28,12 @@ def execute_before_and_after_one_test():
     df = pd.DataFrame(np.ones((m, n)))
 
     forms.config(
-        cores=4, scheduler="prioritized", enable_logical_rewriting=False, enable_physical_opt=True
+        cores=4,
+        scheduler="prioritized",
+        enable_logical_rewriting=False,
+        enable_physical_opt=True,
+        enable_communication_opt=True,
+        partition_shape=(4, 4),
     )
     yield
 

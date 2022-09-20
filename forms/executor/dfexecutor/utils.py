@@ -17,9 +17,10 @@ import numpy as np
 
 from forms.core.config import forms_config
 from forms.executor.dfexecutor.remotedf import RemoteDF
-from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode
+from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
 from forms.executor.table import DFTable
-from forms.utils.reference import RefType
+from forms.utils.optimizations import FRRFOptimization
+from forms.utils.reference import RefType, axis_along_row
 
 
 class Range:
@@ -205,6 +206,16 @@ def min_cost(ranges: list):
             r.ref_node.table = table
 
 
+def remote_access_planning(exec_subtree: FunctionExecutionNode) -> FunctionExecutionNode:
+    if forms_config.enable_communication_opt:
+        start_idx = exec_subtree.exec_context.start_formula_idx
+        end_idx = exec_subtree.exec_context.end_formula_idx
+        refs = get_refs(exec_subtree)
+        ranges = [get_range(ref, start_idx, end_idx) for ref in refs]
+        min_cost(ranges)
+    return exec_subtree
+
+
 def construct_df_table(array):
     return DFTable(df=pd.DataFrame(array))
 
@@ -232,11 +243,120 @@ def fill_in_nan(value, n_formula: int) -> pd.DataFrame:
     return value
 
 
-def remote_access_planning(exec_subtree: FunctionExecutionNode) -> FunctionExecutionNode:
-    if forms_config.enable_communication_opt:
-        start_idx = exec_subtree.exec_context.start_formula_idx
-        end_idx = exec_subtree.exec_context.end_formula_idx
-        refs = get_refs(exec_subtree)
-        ranges = [get_range(ref, start_idx, end_idx) for ref in refs]
-        min_cost(ranges)
-    return exec_subtree
+def get_reference_indices(ref_node: RefExecutionNode):
+    start_idx = ref_node.exec_context.start_formula_idx
+    end_idx = ref_node.exec_context.end_formula_idx
+    n_formula = end_idx - start_idx
+    out_ref_type = ref_node.out_ref_type
+    ref = ref_node.ref
+    row_length = ref.last_row + 1 - ref.row
+    col_width = ref.last_col + 1 - ref.col
+    if ref_node.exec_context.enable_communication_opt:
+        row = ref_node.row_offset
+        col = ref_node.col_offset
+        if out_ref_type == RefType.RR:
+            return row, col, row + n_formula - 1 + row_length, col + col_width
+        elif out_ref_type == RefType.FF:
+            return row, col, row + row_length, col + col_width
+        elif out_ref_type == RefType.FR:
+            return row, col, row + row_length - 1 + end_idx, col + col_width
+        elif out_ref_type == RefType.RF:
+            return row, col, row + row_length - start_idx, col + col_width
+    else:
+        row = ref.row
+        col = ref.col
+        if out_ref_type == RefType.RR:
+            return start_idx + row, col, end_idx + ref.last_row, col + col_width
+        elif out_ref_type == RefType.FF:
+            return row, col, row + row_length, col + col_width
+        elif out_ref_type == RefType.FR:
+            return row, col, ref.last_row + end_idx, col + col_width
+        elif out_ref_type == RefType.RF:
+            return row + start_idx, col, ref.last_row + 1, col + col_width
+
+
+def get_reference_indices_for_single_index(ref_node: RefExecutionNode, idx: int):
+    ref = ref_node.ref
+    table = ref_node.table
+    row_length = ref.last_row + 1 - ref.row
+    col_width = ref.last_col + 1 - ref.col
+    row = ref_node.row_offset if ref_node.exec_context.enable_communication_opt else ref.row
+    col = ref_node.col_offset if ref_node.exec_context.enable_communication_opt else ref.col
+    out_ref_type = ref_node.out_ref_type
+    if out_ref_type == RefType.RR and idx + ref.last_row + 1 <= table.get_num_of_rows():
+        return row + idx, col, row + idx + row_length, col + col_width
+    elif out_ref_type == RefType.FF:
+        return row, col, row + row_length, col + col_width
+    elif out_ref_type == RefType.FR and idx + ref.last_row + 1 <= table.get_num_of_rows():
+        return row, col, row + row_length + idx, col + col_width
+    elif out_ref_type == RefType.RF and ref.row + idx < ref.last_row + 1:
+        return row + idx, col, row + row_length, col + col_width
+    return None
+
+
+def get_reference_indices_2_phase_rf_fr(ref_node: RefExecutionNode):
+    ref = ref_node.ref
+    row_length = ref.last_row + 1 - ref.row
+    col_width = ref.last_col + 1 - ref.col
+    row = ref_node.row_offset if ref_node.exec_context.enable_communication_opt else ref.row
+    col = ref_node.col_offset if ref_node.exec_context.enable_communication_opt else ref.col
+    out_ref_type = ref_node.out_ref_type
+    start_idx = ref_node.exec_context.start_formula_idx
+    end_idx = ref_node.exec_context.end_formula_idx
+    all_formula_idx = ref_node.exec_context.all_formula_idx
+    if ref_node.exec_context.enable_communication_opt:
+        if out_ref_type == RefType.FR:
+            return (
+                row if start_idx == 0 else start_idx + row + row_length - 1,
+                col,
+                end_idx + row + row_length - 1,
+                col + col_width,
+            )
+        elif out_ref_type == RefType.RF:
+            return (
+                row,
+                col,
+                row + row_length - start_idx
+                if end_idx == all_formula_idx[-1]
+                else row + end_idx - start_idx,
+                col + col_width,
+            )
+    else:
+        if out_ref_type == RefType.FR:
+            return (
+                row if start_idx == 0 else start_idx + row + row_length - 1,
+                col,
+                end_idx + row + row_length - 1,
+                col + col_width,
+            )
+        elif out_ref_type == RefType.RF:
+            return (
+                row + start_idx,
+                col,
+                row + row_length if end_idx == all_formula_idx[-1] else row + end_idx,
+                col + col_width,
+            )
+    return None
+
+
+def get_single_value(child):
+    value = pd.DataFrame([])
+    if isinstance(child, RefExecutionNode):
+        df = child.table.get_table_content()
+        out_ref_type = child.out_ref_type
+        start_idx = child.exec_context.start_formula_idx
+        end_idx = child.exec_context.end_formula_idx
+        n_formula = end_idx - start_idx
+        axis = child.exec_context.axis
+        if axis == axis_along_row:
+            start_row, start_column, end_row, end_column = get_reference_indices(child)
+            df = df.iloc[start_row:end_row, start_column:end_column]
+            if out_ref_type == RefType.RR:
+                value = df
+                value.index, value.columns = [range(value.index.size), range(value.columns.size)]
+                value = fill_in_nan(value, n_formula)
+            elif out_ref_type == RefType.FF:
+                value = get_value_ff(df, n_formula)
+    elif isinstance(child, LitExecutionNode):
+        value = child.literal
+    return value

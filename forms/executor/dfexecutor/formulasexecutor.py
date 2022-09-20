@@ -14,10 +14,11 @@
 import pandas as pd
 import numpy as np
 
+from forms.executor.dfexecutor.utils import get_reference_indices_for_single_index
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode
 from forms.utils.optimizations import FRRFOptimization
-from forms.utils.reference import axis_along_row, RefType
+from forms.utils.reference import axis_along_row
 from forms.utils.exceptions import NonScalarNotSupportedException
 
 
@@ -32,25 +33,22 @@ def formulas_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
         values = []
         for child in physical_subtree.children:
             if isinstance(child, RefExecutionNode):
-                ref = child.ref
                 df = child.table.get_table_content()
-                out_ref_type = child.out_ref_type
-                idx = (
-                    idx - start_formula_idx if child.exec_context.start_formula_idx == 0 else idx
+                index = (
+                    idx - start_formula_idx
+                    if child.exec_context.start_formula_idx == 0
+                    or child.exec_context.enable_communication_opt
+                    else idx
                 )  # check intermediate node
                 window = None
                 axis = child.exec_context.axis
                 # TODO: add support for axis_along_column
                 if axis == axis_along_row:
-                    df = df.iloc[:, ref.col : ref.last_col + 1]
-                    if out_ref_type == RefType.RR and idx + ref.last_row + 1 <= len(df):
-                        window = df.iloc[idx + ref.row : idx + ref.last_row + 1].to_numpy()
-                    elif out_ref_type == RefType.FF:
-                        window = df.iloc[ref.row : ref.last_row + 1].to_numpy()
-                    elif out_ref_type == RefType.FR and idx + ref.last_row + 1 <= len(df):
-                        window = df.iloc[ref.row : idx + ref.last_row + 1].to_numpy()
-                    elif out_ref_type == RefType.RF and ref.row + idx < ref.last_row + 1:
-                        window = df.iloc[ref.row + idx : ref.last_row + 1].to_numpy()
+                    indices = get_reference_indices_for_single_index(child, index)
+                    if indices is not None:
+                        start_row, start_column, end_row, end_column = indices
+                        df = df.iloc[start_row:end_row, start_column:end_column]
+                        window = df.to_numpy()
                 values.append(window)
         res = np.nan if any(value is None for value in values) else func(*values)
         if isinstance(res, np.ndarray):
