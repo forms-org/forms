@@ -22,6 +22,7 @@ class FormSConfig:
         self.runtime = "dask"
         self.function_executor = "df_pandas_executor"
         self.cost_model = "simple"
+        self.enable_communication_opt = False
         self.partition_shape = (1, 1)
 
 

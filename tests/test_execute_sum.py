@@ -74,7 +74,7 @@ def test_execute_sum_simple_formula_fr():
 
 # try to mock forms.compute_formula(df, "=SUM(A1:B$100)")
 def test_execute_sum_simple_formula_rf():
-    result = compute_one_formula(Ref(0, 0, 100, 1), RefType.RF)
+    result = compute_one_formula(Ref(0, 0, 99, 1), RefType.RF)
     real_result = pd.DataFrame(np.arange(100, 0, -2))
     assert np.array_equal(result.df.values, real_result.values)
 
