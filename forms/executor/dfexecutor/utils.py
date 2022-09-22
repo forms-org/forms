@@ -19,7 +19,6 @@ from forms.core.config import forms_config
 from forms.executor.dfexecutor.remotedf import RemoteDF
 from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
 from forms.executor.table import DFTable
-from forms.utils.optimizations import FRRFOptimization
 from forms.utils.reference import RefType, axis_along_row
 
 
@@ -298,13 +297,13 @@ def get_reference_indices_2_phase_rf_fr(ref_node: RefExecutionNode):
     ref = ref_node.ref
     row_length = ref.last_row + 1 - ref.row
     col_width = ref.last_col + 1 - ref.col
-    row = ref_node.row_offset if ref_node.exec_context.enable_communication_opt else ref.row
-    col = ref_node.col_offset if ref_node.exec_context.enable_communication_opt else ref.col
     out_ref_type = ref_node.out_ref_type
     start_idx = ref_node.exec_context.start_formula_idx
     end_idx = ref_node.exec_context.end_formula_idx
     all_formula_idx = ref_node.exec_context.all_formula_idx
     if ref_node.exec_context.enable_communication_opt:
+        row = ref_node.row_offset
+        col = ref_node.col_offset
         if out_ref_type == RefType.FR:
             return (
                 row if start_idx == 0 else start_idx + row + row_length - 1,
@@ -322,6 +321,8 @@ def get_reference_indices_2_phase_rf_fr(ref_node: RefExecutionNode):
                 col + col_width,
             )
     else:
+        row = ref.row
+        col = ref.col
         if out_ref_type == RefType.FR:
             return (
                 row if start_idx == 0 else start_idx + row + row_length - 1,
