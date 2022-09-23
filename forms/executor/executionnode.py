@@ -75,6 +75,8 @@ class RefExecutionNode(ExecutionNode):
         super().__init__(out_ref_type, out_ref_axis)
         self.table = table
         self.ref = ref
+        self.row_offset = None
+        self.col_offset = None
 
     def gen_exec_subtree(self):
         ref_node = RefExecutionNode(
@@ -85,6 +87,10 @@ class RefExecutionNode(ExecutionNode):
 
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
+
+    def set_offset(self, row_offset, col_offset):
+        self.row_offset = row_offset
+        self.col_offset = col_offset
 
     def collect_ref_nodes_in_order(self) -> list:
         return [self]

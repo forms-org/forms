@@ -14,4 +14,4 @@
 
 # Register APIs
 from ._version import __version__, version_info
-from forms.core.forms import compute_formula, config, to_spreadsheet_view
+from forms.core.forms import compute_formula, config, print_spreadsheet_view

@@ -125,6 +125,7 @@ class FFPhase(BasePhase):
                     self.exec_config.axis,
                 )
             )
+            subtree = remote_access_planning(subtree)
             self.scheduled_idx += 1
             if self.scheduled_idx == len(self.ff_trees):
                 self.phase_scheduled = True
@@ -255,7 +256,6 @@ class RFFRPhaseTwo(BasePhase):
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
                 exec_subtree_list[i].exec_context.set_all_formula_idx(partition_plan)
-                exec_subtree_list[i] = remote_access_planning(exec_subtree_list[i])
             exec_subtree_list = [
                 self.compiler.compile(exec_subtree_list[i], self.exec_config.function_executor)
                 for i in range(cores)
