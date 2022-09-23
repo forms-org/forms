@@ -32,8 +32,31 @@ class Function(Enum):
     SUMIF = "sumif"
     COUNTIF = "countif"
     AVERAGEIF = "averageif"
+    ABS = "abs"
+    ACOS = "acos"
+    ACOSH = "acosh"
+    ASIN = "asin"
+    ASINH = "asinh"
+    ATAN = "atan"
+    ATANH = "atanh"
+    COS = "cos"
+    COSH = "cosh"
+    DEGREES = "degrees"
+    EXP = "exp"
+    FACT = "fact"
+    INT = "int"
+    ISEVEN = "iseven"
     ISODD = "isodd"
+    LN = "ln"
+    LOG10 = "log10"
+    RADIANS = "radians"
+    SIGN = "sign"
     SIN = "sin"
+    SINH = "sinh"
+    SQRT = "sqrt"
+    SQRTPI = "sqrtpi"
+    TAN = "tan"
+    TANH = "tanh"
     FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 
@@ -60,8 +83,31 @@ pandas_supported_functions = {
     Function.MAX,
     Function.COUNT,
     Function.AVG,
+    Function.ABS,
+    Function.ACOS,
+    Function.ACOSH,
+    Function.ASIN,
+    Function.ASINH,
+    Function.ATAN,
+    Function.ATANH,
+    Function.COS,
+    Function.COSH,
+    Function.DEGREES,
+    Function.EXP,
+    Function.FACT,
+    Function.INT,
+    Function.ISEVEN,
     Function.ISODD,
+    Function.LN,
+    Function.LOG10,
+    Function.RADIANS,
+    Function.SIGN,
     Function.SIN,
+    Function.SINH,
+    Function.SQRT,
+    Function.SQRTPI,
+    Function.TAN,
+    Function.TANH,
 }
 
 formulas_unsupported_functions = set()
