@@ -43,24 +43,37 @@ def find_rows_and_cols(partitions: np.ndarray):
 
 
 class RemoteDF:
-    def __init__(self, remote_obj_array: np.ndarray, rows: np.ndarray, cols: np.ndarray):
-        shape = remote_obj_array.shape
-        remote_partitions = np.empty(shape=shape, dtype=RemotePartition)
-        total_rows = 0
-        total_cols = 0
-        for i in range(shape[0]):
-            for j in range(shape[1]):
-                num_row = rows[i][j]
-                num_col = cols[i][j]
-                remote_obj = remote_obj_array[i][j]
-                remote_partitions[i][j] = RemotePartition(num_row, num_col, remote_obj)
-                if i == 0:
-                    total_cols += num_col
-                if j == 0:
-                    total_rows += num_row
-        self.remote_partitions = remote_partitions
-        self.num_rows = total_rows
-        self.num_cols = total_cols
+    def __init__(
+        self,
+        remote_obj_array: np.ndarray = None,
+        rows: np.ndarray = None,
+        cols: np.ndarray = None,
+        remote_partitions: np.ndarray = None,
+        num_rows: int = None,
+        num_cols: int = None,
+    ):
+        if remote_partitions is not None:
+            self.remote_partitions = remote_partitions
+            self.num_rows = num_rows
+            self.num_cols = num_cols
+        else:
+            shape = remote_obj_array.shape
+            remote_partitions = np.empty(shape=shape, dtype=RemotePartition)
+            total_rows = 0
+            total_cols = 0
+            for i in range(shape[0]):
+                for j in range(shape[1]):
+                    num_row = rows[i][j]
+                    num_col = cols[i][j]
+                    remote_obj = remote_obj_array[i][j]
+                    remote_partitions[i][j] = RemotePartition(num_row, num_col, remote_obj)
+                    if i == 0:
+                        total_cols += num_col
+                    if j == 0:
+                        total_rows += num_row
+            self.remote_partitions = remote_partitions
+            self.num_rows = total_rows
+            self.num_cols = total_cols
 
     def get_df_content(self) -> pd.DataFrame:
         return pd.concat(

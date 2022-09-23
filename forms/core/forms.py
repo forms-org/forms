@@ -56,6 +56,7 @@ def config(
     runtime=forms_config.runtime,
     function_executor=forms_config.function_executor,
     cost_model=forms_config.cost_model,
+    enable_communication_opt=forms_config.enable_communication_opt,
     partition_shape=forms_config.partition_shape,
 ):
     forms_config.cores = cores
@@ -65,6 +66,7 @@ def config(
     forms_config.runtime = runtime
     forms_config.function_executor = function_executor
     forms_config.cost_model = cost_model
+    forms_config.enable_communication_opt = enable_communication_opt
     forms_config.partition_shape = partition_shape
 
 
