@@ -68,7 +68,7 @@ def exp_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 
 def fact_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    return math_df_executor(physical_subtree, math.factorial)
+    return math_df_executor(physical_subtree, lambda x: math.factorial(int(x)))
 
 
 def int_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
