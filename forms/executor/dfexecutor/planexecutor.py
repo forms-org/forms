@@ -26,8 +26,8 @@ from forms.executor.dfexecutor.basicfuncexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.reference import axis_along_row
 from forms.core.config import FormSConfig
-from forms.runtime.runtime import create_runtime_by_name
 from forms.executor.compiler import DFCompiler
+from forms.core.globals import forms_global
 
 
 def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
@@ -50,7 +50,7 @@ class DFPlanExecutor(PlanExecutor):
     def __init__(self, forms_config: FormSConfig):
         super().__init__(forms_config)
         self.compiler = DFCompiler()
-        self.runtime = create_runtime_by_name(forms_config.runtime, forms_config)
+        self.runtime = forms_global.get_runtime(forms_config.runtime, forms_config)
         self.execute_one_subtree = execute_one_subtree
 
     def df_execute_formula_plan(self, df: pd.DataFrame, formula_plan: PlanNode) -> pd.DataFrame:
@@ -99,4 +99,4 @@ class DFPlanExecutor(PlanExecutor):
         return DFTable(remote_df=remote_df)
 
     def clean_up(self):
-        self.runtime.shut_down()
+        pass
