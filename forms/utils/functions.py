@@ -52,11 +52,23 @@ class Function(Enum):
     RADIANS = "radians"
     SIGN = "sign"
     SIN = "sin"
+    TRIM = "trim"
     SINH = "sinh"
     SQRT = "sqrt"
     SQRTPI = "sqrtpi"
     TAN = "tan"
     TANH = "tanh"
+    LEN = "len"
+    LOWER = "lower"
+    UPPER = "upper"
+    EXACT = "exact"
+    FIND = "find"
+    LEFT = "left"
+    RIGHT = "right"
+    MID = "mid"
+    REPLACE = "replace"
+    CONCATENATE = "concatenate"
+    CONCAT = "concat"
     FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 

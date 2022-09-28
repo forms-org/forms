@@ -65,5 +65,9 @@ class NonScalarNotSupportedException(FormSException):
     """Exception raised for non-scalar output"""
 
 
+class EmptyStringNotSupportedException(FormSException):
+    """Exception raised for empty text function output"""
+
+
 class PhaseNotSupportedException(FormSException):
     """Exception raised for unsupported Phase"""

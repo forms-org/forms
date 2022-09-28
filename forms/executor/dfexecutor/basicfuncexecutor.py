@@ -50,6 +50,14 @@ from forms.executor.dfexecutor.mathfuncexecutor import (
     tanh_df_executor,
 )
 
+from forms.executor.dfexecutor.mathfuncexecutor import is_odd_df_executor, sin_df_executor
+from forms.executor.dfexecutor.textfunctionexecutor import (
+    len_executor,
+    upper_executor,
+    lower_executor,
+    trim_executor,
+    concatenate_executor,
+)
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     fill_in_nan,
@@ -262,7 +270,6 @@ distributive_function_to_parameters_dict = {
     Function.SUM: [sum] * 4 + [compute_sum, 0],
 }
 
-
 function_to_executor_dict = {
     Function.MAX: max_df_executor,
     Function.MIN: min_df_executor,
@@ -298,6 +305,11 @@ function_to_executor_dict = {
     Function.SQRTPI: sqrt_pi_df_executor,
     Function.TAN: tan_df_executor,
     Function.TANH: tanh_df_executor,
+    Function.LEN: len_executor,
+    Function.LOWER: lower_executor,
+    Function.UPPER: upper_executor,
+    Function.TRIM: trim_executor,
+    Function.CONCATENATE: concatenate_executor,
     Function.FORMULAS: formulas_executor,
 }
 
