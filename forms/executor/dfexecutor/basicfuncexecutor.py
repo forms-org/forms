@@ -12,7 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import math
-
 import numpy as np
 import pandas as pd
 
@@ -22,17 +21,25 @@ from forms.utils.functions import Function
 from forms.utils.reference import axis_along_row, RefType
 from forms.utils.optimizations import FRRFOptimization
 from forms.executor.dfexecutor.formulasexecutor import formulas_executor
-from forms.executor.dfexecutor.mathfuncexecutor import (
+from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     abs_df_executor,
     acos_df_executor,
     acosh_df_executor,
+    acot_df_executor,
+    acoth_df_executor,
+    arabic_df_executor,
     asin_df_executor,
     asinh_df_executor,
     atan_df_executor,
     atanh_df_executor,
     cos_df_executor,
     cosh_df_executor,
+    cot_df_executor,
+    coth_df_executor,
+    csc_df_executor,
+    csch_df_executor,
     degrees_df_executor,
+    even_df_executor,
     exp_df_executor,
     fact_df_executor,
     int_df_executor,
@@ -40,7 +47,10 @@ from forms.executor.dfexecutor.mathfuncexecutor import (
     is_odd_df_executor,
     ln_df_executor,
     log10_df_executor,
+    odd_df_executor,
     radians_df_executor,
+    sec_df_executor,
+    sech_df_executor,
     sign_df_executor,
     sin_df_executor,
     sinh_df_executor,
@@ -49,6 +59,8 @@ from forms.executor.dfexecutor.mathfuncexecutor import (
     tan_df_executor,
     tanh_df_executor,
 )
+
+from forms.executor.dfexecutor.mathfuncexecutordouble import atan2_df_executor
 
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
@@ -264,6 +276,7 @@ distributive_function_to_parameters_dict = {
 
 
 function_to_executor_dict = {
+    # Basic functions
     Function.MAX: max_df_executor,
     Function.MIN: min_df_executor,
     Function.COUNT: count_df_executor,
@@ -273,16 +286,25 @@ function_to_executor_dict = {
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
     Function.DIVIDE: divide_df_executor,
+    # Single-parameter math functions
     Function.ABS: abs_df_executor,
     Function.ACOS: acos_df_executor,
     Function.ACOSH: acosh_df_executor,
+    Function.ACOT: acot_df_executor,
+    Function.ACOTH: acoth_df_executor,
+    Function.ARABIC: arabic_df_executor,
     Function.ASIN: asin_df_executor,
     Function.ASINH: asinh_df_executor,
     Function.ATAN: atan_df_executor,
     Function.ATANH: atanh_df_executor,
     Function.COS: cos_df_executor,
     Function.COSH: cosh_df_executor,
+    Function.COT: cot_df_executor,
+    Function.COTH: coth_df_executor,
+    Function.CSC: csc_df_executor,
+    Function.CSCH: csch_df_executor,
     Function.DEGREES: degrees_df_executor,
+    Function.EVEN: even_df_executor,
     Function.EXP: exp_df_executor,
     Function.FACT: fact_df_executor,
     Function.INT: int_df_executor,
@@ -290,7 +312,10 @@ function_to_executor_dict = {
     Function.ISODD: is_odd_df_executor,
     Function.LN: ln_df_executor,
     Function.LOG10: log10_df_executor,
+    Function.ODD: odd_df_executor,
     Function.RADIANS: radians_df_executor,
+    Function.SEC: sec_df_executor,
+    Function.SECH: sech_df_executor,
     Function.SIGN: sign_df_executor,
     Function.SIN: sin_df_executor,
     Function.SINH: sinh_df_executor,
@@ -298,6 +323,9 @@ function_to_executor_dict = {
     Function.SQRTPI: sqrt_pi_df_executor,
     Function.TAN: tan_df_executor,
     Function.TANH: tanh_df_executor,
+    # Double-parameter math functions
+    Function.ATAN2: atan2_df_executor,
+    # Generic formulas executor
     Function.FORMULAS: formulas_executor,
 }
 

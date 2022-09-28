@@ -33,6 +33,9 @@ def execute_before_and_after_one_test():
             "col6": [0] * 40,
             "col7": [0.4, 1.6, 2.9, 3.999] * 10,
             "col8": [0, 30, 60, 90] * 10,
+            "col9": ["I", "VI", "IX", "ML"] * 10,
+            "col10": [np.pi / 2] * 40,
+            "col11": [2] * 40,
         }
     )
     forms.config(cores=4, function_executor="df_pandas_executor")
@@ -57,6 +60,27 @@ def test_compute_acosh():
     global df
     computed_df = forms.compute_formula(df, "=ACOSH(B1)")
     expected_df = pd.DataFrame(np.array([0] * 40))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
+def test_compute_acot():
+    global df
+    computed_df = forms.compute_formula(df, "=ACOT(B1)")
+    expected_df = pd.DataFrame(np.array([np.pi / 4] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
+def test_compute_acoth():
+    global df
+    computed_df = forms.compute_formula(df, "=ACOTH(K1)")
+    expected_df = pd.DataFrame(np.array([0.549] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
+def test_compute_arabic():
+    global df
+    computed_df = forms.compute_formula(df, "=ARABIC(I1)")
+    expected_df = pd.DataFrame(np.array([1, 6, 9, 1050] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
@@ -85,7 +109,7 @@ def test_compute_atanh():
     global df
     computed_df = forms.compute_formula(df, "=ATANH(F1)")
     expected_df = pd.DataFrame(np.array([0] * 40))
-    assert np.array_equal(computed_df.values, expected_df.values)
+    assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
 
 
 def test_compute_cos():
@@ -102,11 +126,46 @@ def test_compute_cosh():
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
 
 
+def test_compute_cot():
+    global df
+    computed_df = forms.compute_formula(df, "=COT(J1)")
+    expected_df = pd.DataFrame(np.array([0] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
+def test_compute_coth():
+    global df
+    computed_df = forms.compute_formula(df, "=COTH(K1)")
+    expected_df = pd.DataFrame(np.array([1.037] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
+def test_compute_csc():
+    global df
+    computed_df = forms.compute_formula(df, "=CSC(B1)")
+    expected_df = pd.DataFrame(np.array([1.188] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
+def test_compute_csch():
+    global df
+    computed_df = forms.compute_formula(df, "=CSCH(B1)")
+    expected_df = pd.DataFrame(np.array([0.851] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+
 def test_compute_degrees():
     global df
     computed_df = forms.compute_formula(df, "=DEGREES(D1)")
     expected_df = pd.DataFrame(np.array([57.296, 114.592, 171.887, 229.183] * 10))
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
+
+
+def test_compute_even():
+    global df
+    computed_df = forms.compute_formula(df, "=EVEN(G1)")
+    expected_df = pd.DataFrame(np.array([2, 2, 4, 4] * 10))
+    assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_exp():
@@ -158,6 +217,13 @@ def test_compute_log10():
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
 
 
+def test_compute_odd():
+    global df
+    computed_df = forms.compute_formula(df, "=ODD(G1)")
+    expected_df = pd.DataFrame(np.array([1, 3, 3, 5] * 10))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
 def test_compute_radians():
     global df
     computed_df = forms.compute_formula(df, "=RADIANS(H1)")
@@ -165,11 +231,25 @@ def test_compute_radians():
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
 
 
+def test_compute_sec():
+    global df
+    computed_df = forms.compute_formula(df, "=SEC(B1)")
+    expected_df = pd.DataFrame(np.array([1.851] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
+
+
+def test_compute_sech():
+    global df
+    computed_df = forms.compute_formula(df, "=SECH(B1)")
+    expected_df = pd.DataFrame(np.array([0.648] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
+
+
 def test_compute_sign():
     global df
     computed_df = forms.compute_formula(df, "=SIGN(E1)")
     expected_df = pd.DataFrame(np.array([-1, 1] * 20))
-    assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
+    assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_sin():

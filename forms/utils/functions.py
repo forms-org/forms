@@ -20,6 +20,7 @@ from openpyxl.formula.tokenizer import Token
 
 # Function-related definitions
 class Function(Enum):
+    # Basic functions
     SUM = "sum"
     COUNT = "count"
     AVG = "average"
@@ -32,16 +33,26 @@ class Function(Enum):
     SUMIF = "sumif"
     COUNTIF = "countif"
     AVERAGEIF = "averageif"
+
+    # Single-parameter math functions
     ABS = "abs"
     ACOS = "acos"
     ACOSH = "acosh"
+    ACOT = "acot"
+    ACOTH = "acoth"
+    ARABIC = "arabic"
     ASIN = "asin"
     ASINH = "asinh"
     ATAN = "atan"
     ATANH = "atanh"
     COS = "cos"
     COSH = "cosh"
+    COT = "cot"
+    COTH = "coth"
+    CSC = "csc"
+    CSCH = "csch"
     DEGREES = "degrees"
+    EVEN = "even"
     EXP = "exp"
     FACT = "fact"
     INT = "int"
@@ -49,7 +60,10 @@ class Function(Enum):
     ISODD = "isodd"
     LN = "ln"
     LOG10 = "log10"
+    ODD = "odd"
     RADIANS = "radians"
+    SEC = "sec"
+    SECH = "sech"
     SIGN = "sign"
     SIN = "sin"
     SINH = "sinh"
@@ -57,7 +71,12 @@ class Function(Enum):
     SQRTPI = "sqrtpi"
     TAN = "tan"
     TANH = "tanh"
-    FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
+
+    # Double-parameter math functions
+    ATAN2 = "atan2"
+
+    # This is a generic function for supporting formula execution based on the formulas lib
+    FORMULAS = "formulas"
 
 
 def from_function_str(function_str: str) -> Function:
@@ -74,6 +93,7 @@ algebraic_functions = {Function.AVG}
 algebraic_functions_if = {}
 
 pandas_supported_functions = {
+    # Basic functions
     Function.PLUS,
     Function.MINUS,
     Function.MULTIPLY,
@@ -83,16 +103,25 @@ pandas_supported_functions = {
     Function.MAX,
     Function.COUNT,
     Function.AVG,
+    # Single-parameter math functions
     Function.ABS,
     Function.ACOS,
     Function.ACOSH,
+    Function.ACOT,
+    Function.ACOTH,
+    Function.ARABIC,
     Function.ASIN,
     Function.ASINH,
     Function.ATAN,
     Function.ATANH,
     Function.COS,
     Function.COSH,
+    Function.COT,
+    Function.COTH,
+    Function.CSC,
+    Function.CSCH,
     Function.DEGREES,
+    Function.EVEN,
     Function.EXP,
     Function.FACT,
     Function.INT,
@@ -100,7 +129,10 @@ pandas_supported_functions = {
     Function.ISODD,
     Function.LN,
     Function.LOG10,
+    Function.ODD,
     Function.RADIANS,
+    Function.SEC,
+    Function.SECH,
     Function.SIGN,
     Function.SIN,
     Function.SINH,
@@ -108,6 +140,8 @@ pandas_supported_functions = {
     Function.SQRTPI,
     Function.TAN,
     Function.TANH,
+    # Double-parameter math functions
+    Function.ATAN2,
 }
 
 formulas_unsupported_functions = set()
