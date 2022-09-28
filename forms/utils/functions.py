@@ -85,6 +85,7 @@ pandas_supported_functions = {
     Function.COUNT,
     Function.AVG,
     Function.MEDIAN,
+    Function.SUMIF,
     Function.ABS,
     Function.ACOS,
     Function.ACOSH,
