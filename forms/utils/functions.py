@@ -52,23 +52,24 @@ class Function(Enum):
     RADIANS = "radians"
     SIGN = "sign"
     SIN = "sin"
-    TRIM = "trim"
     SINH = "sinh"
     SQRT = "sqrt"
     SQRTPI = "sqrtpi"
     TAN = "tan"
     TANH = "tanh"
-    LEN = "len"
-    LOWER = "lower"
-    UPPER = "upper"
+    CONCAT = "concat"
+    CONCATENATE = "concatenate"
     EXACT = "exact"
     FIND = "find"
     LEFT = "left"
-    RIGHT = "right"
+    LEN = "len"
+    LOWER = "lower"
     MID = "mid"
     REPLACE = "replace"
-    CONCATENATE = "concatenate"
-    CONCAT = "concat"
+    RIGHT = "right"
+    TRIM = "trim"
+    UPPER = "upper"
+    VALUE = "value"
     FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 
@@ -120,6 +121,19 @@ pandas_supported_functions = {
     Function.SQRTPI,
     Function.TAN,
     Function.TANH,
+    Function.CONCAT,
+    Function.CONCATENATE,
+    Function.EXACT,
+    Function.FIND,
+    Function.LEFT,
+    Function.LEN,
+    Function.LOWER,
+    Function.MID,
+    Function.REPLACE,
+    Function.RIGHT,
+    Function.TRIM,
+    Function.UPPER,
+    Function.VALUE,
 }
 
 formulas_unsupported_functions = set()

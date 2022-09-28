@@ -155,6 +155,11 @@ def upper_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.upper())
 
 
+# TODO
+def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    return apply_single_value_func(physical_subtree, lambda x: x.upper())
+
+
 def get_string_function_value(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
     assert len(physical_subtree.children) == 1
     return get_single_value(physical_subtree.children[0])

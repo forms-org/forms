@@ -52,11 +52,19 @@ from forms.executor.dfexecutor.mathfuncexecutor import (
 
 from forms.executor.dfexecutor.mathfuncexecutor import is_odd_df_executor, sin_df_executor
 from forms.executor.dfexecutor.textfunctionexecutor import (
-    len_executor,
-    upper_executor,
-    lower_executor,
-    trim_executor,
+    concat_executor,
     concatenate_executor,
+    exact_executor,
+    find_executor,
+    left_executor,
+    len_executor,
+    lower_executor,
+    mid_executor,
+    replace_executor,
+    right_executor,
+    trim_executor,
+    upper_executor,
+    value_executor,
 )
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
@@ -305,11 +313,19 @@ function_to_executor_dict = {
     Function.SQRTPI: sqrt_pi_df_executor,
     Function.TAN: tan_df_executor,
     Function.TANH: tanh_df_executor,
+    Function.CONCAT: concat_executor,
+    Function.CONCATENATE: concatenate_executor,
+    Function.EXACT: exact_executor,
+    Function.FIND: find_executor,
+    Function.LEFT: left_executor,
     Function.LEN: len_executor,
     Function.LOWER: lower_executor,
-    Function.UPPER: upper_executor,
+    Function.MID: mid_executor,
+    Function.REPLACE: replace_executor,
+    Function.RIGHT: right_executor,
     Function.TRIM: trim_executor,
-    Function.CONCATENATE: concatenate_executor,
+    Function.UPPER: upper_executor,
+    Function.VALUE: value_executor,
     Function.FORMULAS: formulas_executor,
 }
 
