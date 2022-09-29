@@ -97,6 +97,108 @@ def average_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     )
 
 
+def median_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    assert len(physical_subtree.children) == 1
+    child = physical_subtree.children[0]
+    result = None
+    if physical_subtree.out_ref_type == RefType.FF:
+        # all children must be either FF-type RefNode or LiteralNode
+        df = child.table.get_table_content()
+        start_row, start_column, end_row, end_column = get_reference_indices(child)
+        result = np.median(df.iloc[start_row:end_row, start_column:end_column].values.flatten())
+        # construct a one-cell dataframe table
+        return construct_df_table([result])
+    else:
+        ref = child.ref
+        df = child.table.get_table_content()
+        out_ref_type = child.out_ref_type
+        start_idx = child.exec_context.start_formula_idx
+        end_idx = child.exec_context.end_formula_idx
+        n_formula = end_idx - start_idx
+        axis = child.exec_context.axis
+        start_row, start_column, end_row, end_column = get_reference_indices(child)
+        df = df.iloc[start_row:end_row, start_column:end_column]
+        # TODO: add support for axis_along_column
+        if axis == axis_along_row:
+            window_size = ref.last_row - ref.row + 1
+            step = df.shape[1]
+            if out_ref_type == RefType.RR:
+                new_df = pd.concat([pd.Series([np.NaN]), df.stack()])
+                window_size = window_size * step
+                result = new_df.rolling(window_size, step=step).median().dropna()
+            elif out_ref_type == RefType.FR:
+                window_size = (window_size + start_idx) * step
+                result = df.stack().expanding(window_size).median().dropna()[::step]
+            elif out_ref_type == RefType.RF:
+                window_size = (window_size - end_idx + 1) * step
+                result = (
+                    df.stack().iloc[::-1].expanding(window_size).median().dropna()[::step].iloc[::-1]
+                )
+            result.index = range(result.index.size)
+            result = fill_in_nan(result, n_formula)
+            return construct_df_table(result)
+
+
+operator_dict = {
+    "=": np.equal,
+    "<": np.less,
+    "<=": np.less_equal,
+    ">": np.greater,
+    ">=": np.greater_equal,
+}
+
+
+def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    assert len(physical_subtree.children) == 2
+    ref_node = physical_subtree.children[0]
+    criteria = physical_subtree.children[1]
+    assert isinstance(ref_node, RefExecutionNode)
+    assert isinstance(criteria, LitExecutionNode)
+    literal_str = criteria.literal.replace('"', "")
+    op = "".join(c for c in literal_str if not c.isdigit())
+    val = "".join(c for c in literal_str if c.isdigit())
+    val = float(val)
+    assert op in operator_dict.keys()
+    if physical_subtree.out_ref_type == RefType.FF:
+        df = ref_node.table.get_table_content()
+        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+        value = df.iloc[start_row:end_row, start_column:end_column].values.flatten()
+        result = np.sum(operator_dict[op](value, val) * value)
+        # construct a one-cell dataframe table
+        return construct_df_table([result])
+    else:
+        ref = ref_node.ref
+        df = ref_node.table.get_table_content()
+        out_ref_type = ref_node.out_ref_type
+        start_idx = ref_node.exec_context.start_formula_idx
+        end_idx = ref_node.exec_context.end_formula_idx
+        n_formula = end_idx - start_idx
+        axis = ref_node.exec_context.axis
+        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+        df = df.iloc[start_row:end_row, start_column:end_column]
+        df = df[operator_dict[op](df, val)].fillna(0)
+        # TODO: add support for axis_along_column
+        if axis == axis_along_row:
+            window_size = ref.last_row - ref.row + 1
+            if out_ref_type == RefType.RR:
+                result = df.rolling(window_size).sum().dropna().sum(axis=1).dropna()
+            elif out_ref_type == RefType.FR:
+                result = df.expanding(window_size + start_idx).sum().dropna().sum(axis=1).dropna()
+            elif out_ref_type == RefType.RF:
+                result = (
+                    df.iloc[::-1]
+                    .expanding(window_size - end_idx + 1)
+                    .sum()
+                    .dropna()
+                    .sum(axis=1)
+                    .dropna()
+                    .iloc[::-1]
+                )
+            result.index = range(result.index.size)
+            result = fill_in_nan(result, n_formula)
+            return construct_df_table(result)
+
+
 def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = get_arithmetic_function_values(physical_subtree)
     return construct_df_table(values[0] + values[1])
@@ -281,7 +383,9 @@ function_to_executor_dict = {
     Function.MIN: min_df_executor,
     Function.COUNT: count_df_executor,
     Function.AVG: average_df_executor,
+    Function.MEDIAN: median_df_executor,
     Function.SUM: sum_df_executor,
+    Function.SUMIF: sumif_df_executor,
     Function.PLUS: plus_df_executor,
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
