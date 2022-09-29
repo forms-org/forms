@@ -9,3 +9,5 @@ dask
 openpyxl
 pynverse
 formulas
+roman
+mpmath
