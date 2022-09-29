@@ -76,8 +76,7 @@ class Function(Enum):
     # Double-parameter math functions
     ATAN2 = "atan2"
 
-    # This is a generic function for supporting formula execution based on the formulas lib
-    FORMULAS = "formulas"
+    # Text Functions
     CONCAT = "concat"
     CONCATENATE = "concatenate"
     EXACT = "exact"
