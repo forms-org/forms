@@ -124,6 +124,10 @@ class FunctionNode(PlanNode):
             raise FunctionNotSupportedException(
                 f"Function {self.function} is not supported by formula executors"
             )
+        if forms_config.enable_sumif_opt and self.function is not Function.SUMIF:
+            raise FunctionNotSupportedException(
+                f"Function {self.function} does not support SUMIF optimization"
+            )
 
     def replicate_node(self):
         function_node = FunctionNode(self.function, self.out_ref_axis)

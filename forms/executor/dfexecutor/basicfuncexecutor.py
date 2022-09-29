@@ -59,6 +59,7 @@ from forms.executor.dfexecutor.utils import (
     get_reference_indices,
     get_single_value,
     get_reference_indices_2_phase_rf_fr,
+    get_reference_indices_for_single_index,
 )
 
 
@@ -147,44 +148,62 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     val = "".join(c for c in literal_str if c.isdigit())
     val = float(val)
     assert op in operator_dict.keys()
-    if physical_subtree.out_ref_type == RefType.FF:
-        df = ref_node.table.get_table_content()
-        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
-        value = df.iloc[start_row:end_row, start_column:end_column].values.flatten()
-        result = np.sum(operator_dict[op](value, val) * value)
-        # construct a one-cell dataframe table
-        return construct_df_table([result])
+    ref = ref_node.ref
+    out_ref_type = ref_node.out_ref_type
+    start_idx = ref_node.exec_context.start_formula_idx
+    end_idx = ref_node.exec_context.end_formula_idx
+    n_formula = end_idx - start_idx
+    axis = ref_node.exec_context.axis
+    if not physical_subtree.exec_context.enable_sumif_opt:
+        # baseline implementation
+        results = []
+        for index in range(start_idx, end_idx):
+            value = None
+            df = ref_node.table.get_table_content()
+            axis = ref_node.exec_context.axis
+            # TODO: add support for axis_along_column
+            if axis == axis_along_row:
+                indices = get_reference_indices_for_single_index(ref_node, index)
+                if indices is not None:
+                    start_row, start_column, end_row, end_column = indices
+                    df = df.iloc[start_row:end_row, start_column:end_column]
+                    value = df.to_numpy()
+                result = np.nan if value is None else np.sum(operator_dict[op](value, val) * value)
+                results.append(result)
+        return construct_df_table(results)
     else:
-        ref = ref_node.ref
-        df = ref_node.table.get_table_content()
-        out_ref_type = ref_node.out_ref_type
-        start_idx = ref_node.exec_context.start_formula_idx
-        end_idx = ref_node.exec_context.end_formula_idx
-        n_formula = end_idx - start_idx
-        axis = ref_node.exec_context.axis
-        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
-        df = df.iloc[start_row:end_row, start_column:end_column]
-        df = df[operator_dict[op](df, val)].fillna(0)
-        # TODO: add support for axis_along_column
-        if axis == axis_along_row:
-            window_size = ref.last_row - ref.row + 1
-            if out_ref_type == RefType.RR:
-                result = df.rolling(window_size).sum().dropna().sum(axis=1).dropna()
-            elif out_ref_type == RefType.FR:
-                result = df.expanding(window_size + start_idx).sum().dropna().sum(axis=1).dropna()
-            elif out_ref_type == RefType.RF:
-                result = (
-                    df.iloc[::-1]
-                    .expanding(window_size - end_idx + 1)
-                    .sum()
-                    .dropna()
-                    .sum(axis=1)
-                    .dropna()
-                    .iloc[::-1]
-                )
-            result.index = range(result.index.size)
-            result = fill_in_nan(result, n_formula)
-            return construct_df_table(result)
+        if physical_subtree.out_ref_type == RefType.FF:
+            df = ref_node.table.get_table_content()
+            start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+            value = df.iloc[start_row:end_row, start_column:end_column].values.flatten()
+            result = np.sum(operator_dict[op](value, val) * value)
+            # construct a one-cell dataframe table
+            return construct_df_table([result])
+        else:
+            df = ref_node.table.get_table_content()
+            start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+            df = df.iloc[start_row:end_row, start_column:end_column]
+            df = df[operator_dict[op](df, val)].fillna(0)
+            # TODO: add support for axis_along_column
+            if axis == axis_along_row:
+                window_size = ref.last_row - ref.row + 1
+                if out_ref_type == RefType.RR:
+                    result = df.rolling(window_size).sum().dropna().sum(axis=1).dropna()
+                elif out_ref_type == RefType.FR:
+                    result = df.expanding(window_size + start_idx).sum().dropna().sum(axis=1).dropna()
+                elif out_ref_type == RefType.RF:
+                    result = (
+                        df.iloc[::-1]
+                        .expanding(window_size - end_idx + 1)
+                        .sum()
+                        .dropna()
+                        .sum(axis=1)
+                        .dropna()
+                        .iloc[::-1]
+                    )
+                result.index = range(result.index.size)
+                result = fill_in_nan(result, n_formula)
+                return construct_df_table(result)
 
 
 def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -363,7 +382,6 @@ distributive_function_to_parameters_dict = {
     Function.COUNT: ["count", sum, np.ma.count, lambda x: x[0] + 1, compute_sum, 0],
     Function.SUM: [sum] * 4 + [compute_sum, 0],
 }
-
 
 function_to_executor_dict = {
     Function.MAX: max_df_executor,
