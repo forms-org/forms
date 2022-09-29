@@ -25,6 +25,7 @@ class Function(Enum):
     AVG = "average"
     MIN = "min"
     MAX = "max"
+    MEDIAN = "median"
     PLUS = "+"
     MINUS = "-"
     MULTIPLY = "*"
@@ -83,6 +84,8 @@ pandas_supported_functions = {
     Function.MAX,
     Function.COUNT,
     Function.AVG,
+    Function.MEDIAN,
+    Function.SUMIF,
     Function.ABS,
     Function.ACOS,
     Function.ACOSH,
