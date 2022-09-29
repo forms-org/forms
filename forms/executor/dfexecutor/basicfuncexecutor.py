@@ -188,16 +188,15 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
             if axis == axis_along_row:
                 window_size = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.RR:
-                    result = df.rolling(window_size).sum().dropna().sum(axis=1).dropna()
+                    result = df.sum(axis=1).rolling(window_size).sum().dropna()
                 elif out_ref_type == RefType.FR:
-                    result = df.expanding(window_size + start_idx).sum().dropna().sum(axis=1).dropna()
+                    result = df.sum(axis=1).expanding(window_size + start_idx).sum().dropna()
                 elif out_ref_type == RefType.RF:
                     result = (
                         df.iloc[::-1]
+                        .sum(axis=1)
                         .expanding(window_size - end_idx + 1)
                         .sum()
-                        .dropna()
-                        .sum(axis=1)
                         .dropna()
                         .iloc[::-1]
                     )
@@ -271,6 +270,7 @@ def distributive_function_executor(
                     out_ref_type = child.out_ref_type
                     start_idx = child.exec_context.start_formula_idx
                     end_idx = child.exec_context.end_formula_idx
+                    along_row_first = child.exec_context.along_row_first
                     n_formula = end_idx - start_idx
                     axis = child.exec_context.axis
                     start_row, start_column, end_row, end_column = get_reference_indices(child)
@@ -280,18 +280,28 @@ def distributive_function_executor(
                     if axis == axis_along_row:
                         window_size = ref.last_row - ref.row + 1
                         if out_ref_type == RefType.RR:
-                            value = get_value_rr(df, window_size, func_first_axis, func_second_axis)
+                            value = get_value_rr(
+                                df, window_size, func_first_axis, func_second_axis, along_row_first
+                            )
                         elif out_ref_type == RefType.FF:
                             # treat FF-type as literal value
                             single_value = func_ff(df.values.flatten())
                             literal = func_literal((literal, single_value))
                         elif out_ref_type == RefType.FR:
                             value = get_value_fr(
-                                df, window_size + start_idx, func_first_axis, func_second_axis
+                                df,
+                                window_size + start_idx,
+                                func_first_axis,
+                                func_second_axis,
+                                along_row_first,
                             )
                         elif out_ref_type == RefType.RF:
                             value = get_value_rf(
-                                df, window_size - end_idx + 1, func_first_axis, func_second_axis
+                                df,
+                                window_size - end_idx + 1,
+                                func_first_axis,
+                                func_second_axis,
+                                along_row_first,
                             )
                         if out_ref_type != RefType.FF:
                             value.index = range(value.index.size)
@@ -312,6 +322,7 @@ def distributive_function_executor(
         out_ref_type = child.out_ref_type
         start_idx = child.exec_context.start_formula_idx
         end_idx = child.exec_context.end_formula_idx
+        along_row_first = child.exec_context.along_row_first
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
         all_formula_idx = child.exec_context.all_formula_idx
@@ -322,7 +333,11 @@ def distributive_function_executor(
                 h = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.FR:
                     value = get_value_fr(
-                        df, h if start_idx == 0 else 1, func_first_axis, func_second_axis
+                        df,
+                        h if start_idx == 0 else 1,
+                        func_first_axis,
+                        func_second_axis,
+                        along_row_first,
                     )
                 else:  # RefType.RF
                     value = get_value_rf(
@@ -330,6 +345,7 @@ def distributive_function_executor(
                         max(1, h - end_idx) if end_idx == all_formula_idx[-1] else 1,
                         func_first_axis,
                         func_second_axis,
+                        along_row_first,
                     )
                 value.index = range(value.index.size)
                 value = fill_in_nan(value, n_formula)

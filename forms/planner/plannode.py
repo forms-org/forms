@@ -21,6 +21,7 @@ from forms.utils.functions import (
     pandas_supported_functions,
     formulas_supported_functions,
     FunctionExecutor,
+    distributive_functions,
 )
 from forms.utils.exceptions import InvalidArithmeticInputException, FunctionNotSupportedException
 from forms.utils.treenode import TreeNode
@@ -127,6 +128,10 @@ class FunctionNode(PlanNode):
         if forms_config.enable_sumif_opt and self.function is not Function.SUMIF:
             raise FunctionNotSupportedException(
                 f"Function {self.function} does not support SUMIF optimization"
+            )
+        if forms_config.along_row_first and self.function not in distributive_functions:
+            raise FunctionNotSupportedException(
+                f"Function {self.function} does not support along row direction first"
             )
 
     def replicate_node(self):

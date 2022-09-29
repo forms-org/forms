@@ -58,6 +58,7 @@ def config(
     cost_model=forms_config.cost_model,
     enable_communication_opt=forms_config.enable_communication_opt,
     enable_sumif_opt=forms_config.enable_sumif_opt,
+    along_row_first=forms_config.along_row_first,
     partition_shape=forms_config.partition_shape,
 ):
     forms_config.cores = cores
@@ -69,6 +70,7 @@ def config(
     forms_config.cost_model = cost_model
     forms_config.enable_communication_opt = enable_communication_opt
     forms_config.enable_sumif_opt = enable_sumif_opt
+    forms_config.along_row_first = along_row_first
     forms_config.partition_shape = partition_shape
 
 
