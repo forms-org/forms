@@ -20,7 +20,7 @@ from forms.executor.executionnode import (
     RefExecutionNode,
     FunctionExecutionNode,
 )
-from forms.executor.dfexecutor.mathfuncexecutor import (
+from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     abs_df_executor,
     acos_df_executor,
     acosh_df_executor,

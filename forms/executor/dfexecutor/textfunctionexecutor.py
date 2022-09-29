@@ -168,17 +168,8 @@ def get_string_function_value(physical_subtree: FunctionExecutionNode) -> pd.Dat
 def get_string_function_values(physical_subtree: FunctionExecutionNode) -> list:
     values = []
     assert len(physical_subtree.children) >= 2
-    if physical_subtree.out_ref_type == RefType.FF:
-        for child in physical_subtree.children:
-            if isinstance(child, RefExecutionNode):
-                df = child.table.get_table_content()
-                start_row, start_column, end_row, end_column = get_reference_indices(child)
-                values.append(df.iloc[start_row:end_row, start_column:end_column].values.flatten())
-            elif isinstance(child, LitExecutionNode):
-                values.append(child.literal)
-    else:
-        for child in physical_subtree.children:
-            values.append(get_single_value(child))
+    for child in physical_subtree.children:
+        values.append(get_single_value(child))
     return values
 
 
