@@ -76,8 +76,21 @@ class Function(Enum):
     # Double-parameter math functions
     ATAN2 = "atan2"
 
-    # This is a generic function for supporting formula execution based on the formulas lib
-    FORMULAS = "formulas"
+    # Text Functions
+    CONCAT = "concat"
+    CONCATENATE = "concatenate"
+    EXACT = "exact"
+    FIND = "find"
+    LEFT = "left"
+    LEN = "len"
+    LOWER = "lower"
+    MID = "mid"
+    REPLACE = "replace"
+    RIGHT = "right"
+    TRIM = "trim"
+    UPPER = "upper"
+    VALUE = "value"
+    FORMULAS = "formulas"  # This is a generic function for supporting formula execution based on the formulas lib
 
 
 def from_function_str(function_str: str) -> Function:
@@ -146,6 +159,19 @@ pandas_supported_functions = {
     Function.TANH,
     # Double-parameter math functions
     Function.ATAN2,
+    Function.CONCAT,
+    Function.CONCATENATE,
+    Function.EXACT,
+    Function.FIND,
+    Function.LEFT,
+    Function.LEN,
+    Function.LOWER,
+    Function.MID,
+    Function.REPLACE,
+    Function.RIGHT,
+    Function.TRIM,
+    Function.UPPER,
+    Function.VALUE,
 }
 
 formulas_unsupported_functions = set()

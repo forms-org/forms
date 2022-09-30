@@ -62,6 +62,22 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
 
 from forms.executor.dfexecutor.mathfuncexecutordouble import atan2_df_executor
 
+from forms.executor.dfexecutor.textfunctionexecutor import (
+    concat_executor,
+    concatenate_executor,
+    exact_executor,
+    find_executor,
+    left_executor,
+    len_executor,
+    lower_executor,
+    mid_executor,
+    replace_executor,
+    right_executor,
+    trim_executor,
+    upper_executor,
+    value_executor,
+)
+
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     fill_in_nan,
@@ -430,6 +446,19 @@ function_to_executor_dict = {
     # Double-parameter math functions
     Function.ATAN2: atan2_df_executor,
     # Generic formulas executor
+    Function.CONCAT: concat_executor,
+    Function.CONCATENATE: concatenate_executor,
+    Function.EXACT: exact_executor,
+    Function.FIND: find_executor,
+    Function.LEFT: left_executor,
+    Function.LEN: len_executor,
+    Function.LOWER: lower_executor,
+    Function.MID: mid_executor,
+    Function.REPLACE: replace_executor,
+    Function.RIGHT: right_executor,
+    Function.TRIM: trim_executor,
+    Function.UPPER: upper_executor,
+    Function.VALUE: value_executor,
     Function.FORMULAS: formulas_executor,
 }
 
