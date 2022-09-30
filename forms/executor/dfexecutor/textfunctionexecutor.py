@@ -36,23 +36,25 @@ from typing import Callable
 
 # TODO
 def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
-    def concat(s, *args):
-        return s + "".join(args)
+    def concat(s, to_concat):
+        return s + "".join(to_concat)
 
-    return construct_df_table(values[0].applymap(concat, values[1:]))
+    kwargs = {"to_concat": values[1:]}
+    return construct_df_table(values[0].applymap(concat, **kwargs))
 
 
-# TODO
 def concatenate_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
-    def concatenate(s, *args):
-        return s + "".join(args)
+    def concatenate(s, to_concatenate):
+        return s + "".join(to_concatenate)
 
-    return construct_df_table(values[0].applymap(concatenate, values[1:]))
+    kwargs = {"to_concat": values[1:]}
+    return construct_df_table(values[0].applymap(concatenate, **kwargs))
 
 
 # 2 parameters, s1 and s2 to compare
