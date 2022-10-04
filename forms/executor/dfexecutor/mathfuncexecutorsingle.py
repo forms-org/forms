@@ -18,7 +18,7 @@ from mpmath import acot, acoth, cot, coth, csc, csch, sec, sech, mpc, mpf
 import roman
 
 from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.executor.executionnode import FunctionExecutionNode, LitExecutionNode
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     get_single_value,
@@ -194,4 +194,6 @@ def get_math_single_function_values(physical_subtree: FunctionExecutionNode) -> 
     assert len(physical_subtree.children) == 1
     child = physical_subtree.children[0]
     value = get_single_value(child)
+    if isinstance(child, LitExecutionNode):
+        return pd.DataFrame([value])
     return value

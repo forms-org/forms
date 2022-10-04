@@ -75,6 +75,11 @@ class Function(Enum):
 
     # Double-parameter math functions
     ATAN2 = "atan2"
+    DECIMAL = "decimal"
+    MOD = "mod"
+    MROUND = "mround"
+    POWER = "power"
+    RANDBETWEEN = "randbetween"
 
     # This is a generic function for supporting formula execution based on the formulas lib
     FORMULAS = "formulas"
@@ -146,6 +151,11 @@ pandas_supported_functions = {
     Function.TANH,
     # Double-parameter math functions
     Function.ATAN2,
+    Function.DECIMAL,
+    Function.MOD,
+    Function.MROUND,
+    Function.POWER,
+    Function.RANDBETWEEN,
 }
 
 formulas_unsupported_functions = set()

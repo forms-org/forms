@@ -60,7 +60,14 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     tanh_df_executor,
 )
 
-from forms.executor.dfexecutor.mathfuncexecutordouble import atan2_df_executor
+from forms.executor.dfexecutor.mathfuncexecutordouble import (
+    atan2_df_executor,
+    decimal_df_executor,
+    mod_df_executor,
+    mround_df_executor,
+    power_df_executor,
+    rand_between_df_executor,
+)
 
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
@@ -429,6 +436,11 @@ function_to_executor_dict = {
     Function.TANH: tanh_df_executor,
     # Double-parameter math functions
     Function.ATAN2: atan2_df_executor,
+    Function.DECIMAL: decimal_df_executor,
+    Function.MOD: mod_df_executor,
+    Function.MROUND: mround_df_executor,
+    Function.POWER: power_df_executor,
+    Function.RANDBETWEEN: rand_between_df_executor,
     # Generic formulas executor
     Function.FORMULAS: formulas_executor,
 }
