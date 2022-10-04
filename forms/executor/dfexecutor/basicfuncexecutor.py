@@ -60,6 +60,7 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     tanh_df_executor,
 )
 
+
 from forms.executor.dfexecutor.mathfuncexecutordouble import (
     atan2_df_executor,
     decimal_df_executor,
@@ -67,6 +68,22 @@ from forms.executor.dfexecutor.mathfuncexecutordouble import (
     mround_df_executor,
     power_df_executor,
     rand_between_df_executor,
+)
+
+from forms.executor.dfexecutor.textfunctionexecutor import (
+    concat_executor,
+    concatenate_executor,
+    exact_executor,
+    find_executor,
+    left_executor,
+    len_executor,
+    lower_executor,
+    mid_executor,
+    replace_executor,
+    right_executor,
+    trim_executor,
+    upper_executor,
+    value_executor,
 )
 
 from forms.executor.dfexecutor.utils import (
@@ -78,6 +95,7 @@ from forms.executor.dfexecutor.utils import (
     get_reference_indices,
     get_single_value,
     get_reference_indices_2_phase_rf_fr,
+    get_reference_indices_for_single_index,
 )
 
 
@@ -166,44 +184,61 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     val = "".join(c for c in literal_str if c.isdigit())
     val = float(val)
     assert op in operator_dict.keys()
-    if physical_subtree.out_ref_type == RefType.FF:
-        df = ref_node.table.get_table_content()
-        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
-        value = df.iloc[start_row:end_row, start_column:end_column].values.flatten()
-        result = np.sum(operator_dict[op](value, val) * value)
-        # construct a one-cell dataframe table
-        return construct_df_table([result])
+    ref = ref_node.ref
+    out_ref_type = ref_node.out_ref_type
+    start_idx = ref_node.exec_context.start_formula_idx
+    end_idx = ref_node.exec_context.end_formula_idx
+    n_formula = end_idx - start_idx
+    axis = ref_node.exec_context.axis
+    if not physical_subtree.exec_context.enable_sumif_opt:
+        # baseline implementation
+        results = []
+        for index in range(start_idx, end_idx):
+            value = None
+            df = ref_node.table.get_table_content()
+            axis = ref_node.exec_context.axis
+            # TODO: add support for axis_along_column
+            if axis == axis_along_row:
+                indices = get_reference_indices_for_single_index(ref_node, index)
+                if indices is not None:
+                    start_row, start_column, end_row, end_column = indices
+                    df = df.iloc[start_row:end_row, start_column:end_column]
+                    value = df.to_numpy()
+                result = np.nan if value is None else np.sum(operator_dict[op](value, val) * value)
+                results.append(result)
+        return construct_df_table(results)
     else:
-        ref = ref_node.ref
-        df = ref_node.table.get_table_content()
-        out_ref_type = ref_node.out_ref_type
-        start_idx = ref_node.exec_context.start_formula_idx
-        end_idx = ref_node.exec_context.end_formula_idx
-        n_formula = end_idx - start_idx
-        axis = ref_node.exec_context.axis
-        start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
-        df = df.iloc[start_row:end_row, start_column:end_column]
-        df = df[operator_dict[op](df, val)].fillna(0)
-        # TODO: add support for axis_along_column
-        if axis == axis_along_row:
-            window_size = ref.last_row - ref.row + 1
-            if out_ref_type == RefType.RR:
-                result = df.rolling(window_size).sum().dropna().sum(axis=1).dropna()
-            elif out_ref_type == RefType.FR:
-                result = df.expanding(window_size + start_idx).sum().dropna().sum(axis=1).dropna()
-            elif out_ref_type == RefType.RF:
-                result = (
-                    df.iloc[::-1]
-                    .expanding(window_size - end_idx + 1)
-                    .sum()
-                    .dropna()
-                    .sum(axis=1)
-                    .dropna()
-                    .iloc[::-1]
-                )
-            result.index = range(result.index.size)
-            result = fill_in_nan(result, n_formula)
-            return construct_df_table(result)
+        if physical_subtree.out_ref_type == RefType.FF:
+            df = ref_node.table.get_table_content()
+            start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+            value = df.iloc[start_row:end_row, start_column:end_column].values.flatten()
+            result = np.sum(operator_dict[op](value, val) * value)
+            # construct a one-cell dataframe table
+            return construct_df_table([result])
+        else:
+            df = ref_node.table.get_table_content()
+            start_row, start_column, end_row, end_column = get_reference_indices(ref_node)
+            df = df.iloc[start_row:end_row, start_column:end_column]
+            df = df[operator_dict[op](df, val)].fillna(0)
+            # TODO: add support for axis_along_column
+            if axis == axis_along_row:
+                window_size = ref.last_row - ref.row + 1
+                if out_ref_type == RefType.RR:
+                    result = df.sum(axis=1).rolling(window_size).sum().dropna()
+                elif out_ref_type == RefType.FR:
+                    result = df.sum(axis=1).expanding(window_size + start_idx).sum().dropna()
+                elif out_ref_type == RefType.RF:
+                    result = (
+                        df.iloc[::-1]
+                        .sum(axis=1)
+                        .expanding(window_size - end_idx + 1)
+                        .sum()
+                        .dropna()
+                        .iloc[::-1]
+                    )
+                result.index = range(result.index.size)
+                result = fill_in_nan(result, n_formula)
+                return construct_df_table(result)
 
 
 def plus_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -271,6 +306,7 @@ def distributive_function_executor(
                     out_ref_type = child.out_ref_type
                     start_idx = child.exec_context.start_formula_idx
                     end_idx = child.exec_context.end_formula_idx
+                    along_row_first = child.exec_context.along_row_first
                     n_formula = end_idx - start_idx
                     axis = child.exec_context.axis
                     start_row, start_column, end_row, end_column = get_reference_indices(child)
@@ -280,18 +316,28 @@ def distributive_function_executor(
                     if axis == axis_along_row:
                         window_size = ref.last_row - ref.row + 1
                         if out_ref_type == RefType.RR:
-                            value = get_value_rr(df, window_size, func_first_axis, func_second_axis)
+                            value = get_value_rr(
+                                df, window_size, func_first_axis, func_second_axis, along_row_first
+                            )
                         elif out_ref_type == RefType.FF:
                             # treat FF-type as literal value
                             single_value = func_ff(df.values.flatten())
                             literal = func_literal((literal, single_value))
                         elif out_ref_type == RefType.FR:
                             value = get_value_fr(
-                                df, window_size + start_idx, func_first_axis, func_second_axis
+                                df,
+                                window_size + start_idx,
+                                func_first_axis,
+                                func_second_axis,
+                                along_row_first,
                             )
                         elif out_ref_type == RefType.RF:
                             value = get_value_rf(
-                                df, window_size - end_idx + 1, func_first_axis, func_second_axis
+                                df,
+                                window_size - end_idx + 1,
+                                func_first_axis,
+                                func_second_axis,
+                                along_row_first,
                             )
                         if out_ref_type != RefType.FF:
                             value.index = range(value.index.size)
@@ -312,6 +358,7 @@ def distributive_function_executor(
         out_ref_type = child.out_ref_type
         start_idx = child.exec_context.start_formula_idx
         end_idx = child.exec_context.end_formula_idx
+        along_row_first = child.exec_context.along_row_first
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
         all_formula_idx = child.exec_context.all_formula_idx
@@ -322,7 +369,11 @@ def distributive_function_executor(
                 h = ref.last_row - ref.row + 1
                 if out_ref_type == RefType.FR:
                     value = get_value_fr(
-                        df, h if start_idx == 0 else 1, func_first_axis, func_second_axis
+                        df,
+                        h if start_idx == 0 else 1,
+                        func_first_axis,
+                        func_second_axis,
+                        along_row_first,
                     )
                 else:  # RefType.RF
                     value = get_value_rf(
@@ -330,6 +381,7 @@ def distributive_function_executor(
                         max(1, h - end_idx) if end_idx == all_formula_idx[-1] else 1,
                         func_first_axis,
                         func_second_axis,
+                        along_row_first,
                     )
                 value.index = range(value.index.size)
                 value = fill_in_nan(value, n_formula)
@@ -383,7 +435,6 @@ distributive_function_to_parameters_dict = {
     Function.SUM: [sum] * 4 + [compute_sum, 0],
 }
 
-
 function_to_executor_dict = {
     # Basic functions
     Function.MAX: max_df_executor,
@@ -397,6 +448,20 @@ function_to_executor_dict = {
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
     Function.DIVIDE: divide_df_executor,
+    # Text functions
+    Function.CONCAT: concat_executor,
+    Function.CONCATENATE: concatenate_executor,
+    Function.EXACT: exact_executor,
+    Function.FIND: find_executor,
+    Function.LEFT: left_executor,
+    Function.LEN: len_executor,
+    Function.LOWER: lower_executor,
+    Function.MID: mid_executor,
+    Function.REPLACE: replace_executor,
+    Function.RIGHT: right_executor,
+    Function.TRIM: trim_executor,
+    Function.UPPER: upper_executor,
+    Function.VALUE: value_executor,
     # Single-parameter math functions
     Function.ABS: abs_df_executor,
     Function.ACOS: acos_df_executor,

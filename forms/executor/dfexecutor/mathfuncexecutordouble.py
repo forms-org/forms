@@ -19,20 +19,21 @@ from baseconvert import base
 
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode, LitExecutionNode
+
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     get_single_value,
 )
 
 
+def atan2_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    return math_double_df_executor(physical_subtree, np.arctan2)
+
+
 def decimal_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_double_df_executor(
         physical_subtree, lambda x, y: float(base(str(x), int(y), 10, string=True))
     )
-
-
-def atan2_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    return math_double_df_executor(physical_subtree, np.arctan2)
 
 
 def mod_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -72,6 +73,5 @@ def get_math_double_function_values(physical_subtree: FunctionExecutionNode) -> 
     values = []
     assert len(physical_subtree.children) == 2
     for child in physical_subtree.children:
-        value = get_single_value(child)
-        values.append(value)
+        values.append(get_single_value(child))
     return values

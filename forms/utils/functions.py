@@ -35,6 +35,21 @@ class Function(Enum):
     COUNTIF = "countif"
     AVERAGEIF = "averageif"
 
+    # Text Functions
+    CONCAT = "concat"
+    CONCATENATE = "concatenate"
+    EXACT = "exact"
+    FIND = "find"
+    LEFT = "left"
+    LEN = "len"
+    LOWER = "lower"
+    MID = "mid"
+    REPLACE = "replace"
+    RIGHT = "right"
+    TRIM = "trim"
+    UPPER = "upper"
+    VALUE = "value"
+
     # Single-parameter math functions
     ABS = "abs"
     ACOS = "acos"
@@ -112,6 +127,20 @@ pandas_supported_functions = {
     Function.AVG,
     Function.MEDIAN,
     Function.SUMIF,
+    # Text Functions
+    Function.CONCAT,
+    Function.CONCATENATE,
+    Function.EXACT,
+    Function.FIND,
+    Function.LEFT,
+    Function.LEN,
+    Function.LOWER,
+    Function.MID,
+    Function.REPLACE,
+    Function.RIGHT,
+    Function.TRIM,
+    Function.UPPER,
+    Function.VALUE,
     # Single-parameter math functions
     Function.ABS,
     Function.ACOS,

@@ -31,6 +31,8 @@ class ExecutionContext:
         self.compiled_formula_func = None
         self.function_executor = None
         self.enable_communication_opt = forms_config.enable_communication_opt
+        self.enable_sumif_opt = forms_config.enable_sumif_opt
+        self.along_row_first = forms_config.along_row_first
 
     def set_all_formula_idx(self, all_formula_idx: list):
         """
