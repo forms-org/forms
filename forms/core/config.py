@@ -23,6 +23,8 @@ class FormSConfig:
         self.function_executor = "df_pandas_executor"
         self.cost_model = "simple"
         self.enable_communication_opt = False
+        self.enable_sumif_opt = False
+        self.along_row_first = False
         self.partition_shape = (1, 1)
 
 
