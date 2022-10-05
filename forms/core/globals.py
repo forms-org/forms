@@ -18,11 +18,18 @@ from forms.runtime.runtime import create_runtime_by_name
 class FormSGlobal:
     def __init__(self):
         self.run_time = None
+        self.metrics = {}
 
     def get_runtime(self, runtime_name, forms_config):
         if self.run_time is None:
             self.run_time = create_runtime_by_name(runtime_name, forms_config)
         return self.run_time
+
+    def put_one_metric(self, key, value):
+        self.metrics[key] = value
+
+    def get_metrics(self):
+        return self.metrics
 
 
 forms_global = FormSGlobal()
