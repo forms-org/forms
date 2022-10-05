@@ -36,6 +36,7 @@ def execute_before_and_after_one_test():
             "col9": ["I", "VI", "IX", "ML"] * 10,
             "col10": [np.pi / 2] * 40,
             "col11": [2] * 40,
+            "col12": [16] * 40,
         }
     )
     forms.config(cores=4, function_executor="df_pandas_executor")
@@ -46,6 +47,9 @@ def test_compute_abs():
     global df
     computed_df = forms.compute_formula(df, "=ABS(E1)")
     expected_df = pd.DataFrame(np.array([1, 2, 3, 4] * 10))
+    assert np.array_equal(computed_df.values, expected_df.values)
+    computed_df = forms.compute_formula(df, "=ABS(5)")
+    expected_df = pd.DataFrame(np.array([5] * 40))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
