@@ -1,0 +1,3 @@
+﻿filename,formula_str
+New Braunfels Temp and Precip since 1900.csv,=SUM(A2:A366)
+New Braunfels Temp and Precip since 1900.csv,=AVG(B2:B366)
