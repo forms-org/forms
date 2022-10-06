@@ -21,13 +21,13 @@ if __name__ == "__main__":
     parser.add_argument("--enable_communication_opt", type=bool, default=False)
     parser.add_argument("--enable_sumif_opt", type=bool, default=False)
     parser.add_argument("--along_row_first", type=bool, default=False)
-    parser.add_argument("--partition_shape", type=tuple, default=(1, 1))
+    parser.add_argument("--partition_shape", type=tuple, default=(256, 1))
     parser.add_argument("--row_num", type=int)
     parser.add_argument("--output_path", type=str, required=True)
 
     args = parser.parse_args()
     filename = args.filename
-    formula_str = args.formula_str
+    formula_str = args.formula_str.strip()
     dir = os.path.dirname(os.path.abspath(__file__))
     filepath = os.path.join(dir, "spreadsheets")
     filepath = os.path.join(filepath, filename)
