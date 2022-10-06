@@ -17,6 +17,7 @@ import traceback
 import sys
 
 from forms.core.config import forms_config
+from forms.core.globals import forms_global
 
 from forms.parser.parser import parse_formula
 from forms.planner.planrewriter import PlanRewriter
@@ -110,3 +111,7 @@ def print_spreadsheet_view(df: pd.DataFrame, keep_original_labels=False):
         print(df.to_string())
     except FormSException:
         traceback.print_exception(*sys.exc_info())
+
+
+def export_metrics():
+    return forms_global.get_metrics()
