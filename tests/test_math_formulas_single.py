@@ -48,7 +48,7 @@ def test_compute_abs():
     computed_df = forms.compute_formula(df, "=ABS(E1)")
     expected_df = pd.DataFrame(np.array([1, 2, 3, 4] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
-    computed_df = forms.compute_formula(df, "=ABS(5)")
+    computed_df = forms.compute_formula(df, "=ABS(-5)")
     expected_df = pd.DataFrame(np.array([5] * 40))
     assert np.array_equal(computed_df.values, expected_df.values)
 

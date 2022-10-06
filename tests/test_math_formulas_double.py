@@ -81,6 +81,9 @@ def test_compute_power():
     computed_df = forms.compute_formula(df, "=POWER(D1, 3)")
     expected_df = pd.DataFrame(np.array([1, 8, 27, 64] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
+    computed_df = forms.compute_formula(df, "=POWER(-5, 3)")
+    expected_df = pd.DataFrame(np.array([-125] * 40))
+    assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_rand_between():
