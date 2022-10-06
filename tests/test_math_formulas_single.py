@@ -221,6 +221,13 @@ def test_compute_log10():
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
 
 
+def test_compute_negate():
+    global df
+    computed_df = forms.compute_formula(df, "=-D1")
+    expected_df = pd.DataFrame(np.array([-1, -2, -3, -4] * 10))
+    assert np.array_equal(computed_df.values, expected_df.values)
+
+
 def test_compute_odd():
     global df
     computed_df = forms.compute_formula(df, "=ODD(G1)")
