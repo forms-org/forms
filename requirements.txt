@@ -11,3 +11,4 @@ pynverse
 formulas
 roman
 mpmath
+baseconvert
