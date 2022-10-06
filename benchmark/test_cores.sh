@@ -5,8 +5,9 @@ declare -a CORES_OPTIONS=(1 2 4 8 16 32)
 declare -a ROW_OPTIONS=(10000 20000 40000)
 
 INPUT=spreadsheet_formula.csv
-sed 1d $INPUT | while IFS=, read -r filename formula_str
 n=0
+echo $n
+sed 1d $INPUT | while IFS="," read -r filename formula_str
 do
   echo $filename
   echo $formula_str
