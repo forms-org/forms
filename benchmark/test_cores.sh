@@ -3,11 +3,9 @@
 declare -a RUN_OPTIONS=(1 2 3)
 declare -a CORES_OPTIONS=(1 2 4 8 16 32)
 declare -a EXECUTORS=("df_pandas_executor" "df_formulas_executor")
-declare filename='weather90000.csv'
+declare filename='weather.csv'
 
 INPUT=spreadsheet_formula.csv
-n=0
-echo $n
 sed 1d $INPUT | while IFS="," read -r formula_str
 do
   echo $formula_str
