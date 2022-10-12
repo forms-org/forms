@@ -13,7 +13,7 @@ do
   n=$(($n+1))
 	for RUN in "${RUN_OPTIONS[@]}"
   do
-    FILE_DIR="results/TEST-REWRITE-1/NO-REWRITE/${n}PLUS//RUN${RUN}"
+    FILE_DIR="results/TEST-REWRITE-1/NO-REWRITE/${n}PLUS/RUN${RUN}"
     mkdir -p $FILE_DIR
     rm -f $FILE_DIR/*
     python3 test_driver.py \

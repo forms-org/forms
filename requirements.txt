@@ -12,3 +12,4 @@ formulas
 roman
 mpmath
 baseconvert
+seaborn

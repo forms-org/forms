@@ -76,6 +76,7 @@ class Function(Enum):
     ISODD = "isodd"
     LN = "ln"
     LOG10 = "log10"
+    NEGATE = "operator-prefix_-"
     ODD = "odd"
     RADIANS = "radians"
     SEC = "sec"
@@ -167,6 +168,7 @@ pandas_supported_functions = {
     Function.ISODD,
     Function.LN,
     Function.LOG10,
+    Function.NEGATE,
     Function.ODD,
     Function.RADIANS,
     Function.SEC,

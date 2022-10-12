@@ -48,7 +48,7 @@ def test_compute_abs():
     computed_df = forms.compute_formula(df, "=ABS(E1)")
     expected_df = pd.DataFrame(np.array([1, 2, 3, 4] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
-    computed_df = forms.compute_formula(df, "=ABS(5)")
+    computed_df = forms.compute_formula(df, "=ABS(-5)")
     expected_df = pd.DataFrame(np.array([5] * 40))
     assert np.array_equal(computed_df.values, expected_df.values)
 
@@ -219,6 +219,13 @@ def test_compute_log10():
     computed_df = forms.compute_formula(df, "=LOG10(D1)")
     expected_df = pd.DataFrame(np.array([0, 0.301, 0.477, 0.602] * 10))
     assert np.allclose(computed_df.values, expected_df.values, rtol=1e-03)
+
+
+def test_compute_negate():
+    global df
+    computed_df = forms.compute_formula(df, "=-D1")
+    expected_df = pd.DataFrame(np.array([-1, -2, -3, -4] * 10))
+    assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_odd():
