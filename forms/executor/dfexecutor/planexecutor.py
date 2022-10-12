@@ -76,8 +76,8 @@ class DFPlanExecutor(PlanExecutor):
         print(f"Execution time: {execution_time}")
 
         assert isinstance(res_table, DFTable)
-        forms_global.put_one_metric('distributing_data_time', distributing_data_time)
-        forms_global.put_one_metric('execution_time', execution_time)
+        forms_global.put_one_metric("distributing_data_time", distributing_data_time)
+        forms_global.put_one_metric("execution_time", execution_time)
         return res_table.get_table_content()
 
     def collect_results(self, remote_object_list, physical_subtree_list, axis: int) -> Table:

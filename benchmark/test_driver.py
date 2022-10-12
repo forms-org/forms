@@ -70,7 +70,7 @@ if __name__ == "__main__":
         "timecost_in_ms": (time_end - time_start) * 1000,
     }
     output_path = os.path.join(dir, args.output_path)
-    result.to_csv(os.path.join(output_path, "result.csv"))
+    # result.to_csv(os.path.join(output_path, "result.csv"))
     config_path = os.path.join(output_path, "config.json")
     with open(config_path, "w") as outfile:
         outfile.write(json.dumps(config, indent=4))

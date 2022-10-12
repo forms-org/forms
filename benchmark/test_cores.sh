@@ -3,12 +3,14 @@
 declare -a RUN_OPTIONS=(1 2 3)
 declare -a CORES_OPTIONS=(1 2 4 8 16 32)
 declare -a EXECUTORS=("df_pandas_executor" "df_formulas_executor")
-declare filename='weather.csv'
+declare FILENAME='weather.csv'
+declare FORMULA=formula_in_all_types.csv
+declare ROWS=1000000
 
-INPUT=spreadsheet_formula.csv
-sed 1d $INPUT | while IFS="," read -r formula_str
+n=0
+sed 1d $FORMULA | while IFS="," read -r FORMULA_STR
 do
-  echo $formula_str
+  echo $FORMULA_STR
   n=$(($n+1))
 	for RUN in "${RUN_OPTIONS[@]}"
   do
@@ -16,14 +18,15 @@ do
     do
       for EXECUTOR in "${EXECUTORS[@]}"
       do
-        FILE_DIR="results/TEST-CORES/${n}/${EXECUTOR}/RUN${RUN}/${CORES}CORES"
+        FILE_DIR="results/TEST-CORES/${n}/${EXECUTOR}/${CORES}CORES/RUN${RUN}"
         mkdir -p $FILE_DIR
         rm -f $FILE_DIR/*
         python3 test_driver.py \
-              --filename "$filename" \
-              --formula_str "$formula_str" \
+              --filename "$FILENAME" \
+              --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
               --function_executor "$EXECUTOR" \
+              --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
         echo "finished $FILE_DIR"
       done
