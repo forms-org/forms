@@ -18,7 +18,7 @@ from mpmath import acot, acoth, cot, coth, csc, csch, sec, sech, mpc, mpf
 import roman
 
 from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.executor.executionnode import FunctionExecutionNode, LitExecutionNode
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     get_single_value,
@@ -125,6 +125,10 @@ def log10_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_single_df_executor(physical_subtree, math.log10)
 
 
+def negate_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    return math_single_df_executor(physical_subtree, lambda x: -x)
+
+
 def odd_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_single_df_executor(physical_subtree, lambda x: math.ceil(x) // 2 * 2 + 1)
 
@@ -194,4 +198,6 @@ def get_math_single_function_values(physical_subtree: FunctionExecutionNode) -> 
     assert len(physical_subtree.children) == 1
     child = physical_subtree.children[0]
     value = get_single_value(child)
+    if isinstance(child, LitExecutionNode):
+        return pd.DataFrame([value])
     return value

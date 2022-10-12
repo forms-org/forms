@@ -47,6 +47,7 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     is_odd_df_executor,
     ln_df_executor,
     log10_df_executor,
+    negate_df_executor,
     odd_df_executor,
     radians_df_executor,
     sec_df_executor,
@@ -60,7 +61,15 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     tanh_df_executor,
 )
 
-from forms.executor.dfexecutor.mathfuncexecutordouble import atan2_df_executor
+
+from forms.executor.dfexecutor.mathfuncexecutordouble import (
+    atan2_df_executor,
+    decimal_df_executor,
+    mod_df_executor,
+    mround_df_executor,
+    power_df_executor,
+    rand_between_df_executor,
+)
 
 from forms.executor.dfexecutor.textfunctionexecutor import (
     concat_executor,
@@ -440,6 +449,20 @@ function_to_executor_dict = {
     Function.MINUS: minus_df_executor,
     Function.MULTIPLY: multiply_df_executor,
     Function.DIVIDE: divide_df_executor,
+    # Text functions
+    Function.CONCAT: concat_executor,
+    Function.CONCATENATE: concatenate_executor,
+    Function.EXACT: exact_executor,
+    Function.FIND: find_executor,
+    Function.LEFT: left_executor,
+    Function.LEN: len_executor,
+    Function.LOWER: lower_executor,
+    Function.MID: mid_executor,
+    Function.REPLACE: replace_executor,
+    Function.RIGHT: right_executor,
+    Function.TRIM: trim_executor,
+    Function.UPPER: upper_executor,
+    Function.VALUE: value_executor,
     # Single-parameter math functions
     Function.ABS: abs_df_executor,
     Function.ACOS: acos_df_executor,
@@ -466,6 +489,7 @@ function_to_executor_dict = {
     Function.ISODD: is_odd_df_executor,
     Function.LN: ln_df_executor,
     Function.LOG10: log10_df_executor,
+    Function.NEGATE: negate_df_executor,
     Function.ODD: odd_df_executor,
     Function.RADIANS: radians_df_executor,
     Function.SEC: sec_df_executor,
@@ -479,20 +503,12 @@ function_to_executor_dict = {
     Function.TANH: tanh_df_executor,
     # Double-parameter math functions
     Function.ATAN2: atan2_df_executor,
+    Function.DECIMAL: decimal_df_executor,
+    Function.MOD: mod_df_executor,
+    Function.MROUND: mround_df_executor,
+    Function.POWER: power_df_executor,
+    Function.RANDBETWEEN: rand_between_df_executor,
     # Generic formulas executor
-    Function.CONCAT: concat_executor,
-    Function.CONCATENATE: concatenate_executor,
-    Function.EXACT: exact_executor,
-    Function.FIND: find_executor,
-    Function.LEFT: left_executor,
-    Function.LEN: len_executor,
-    Function.LOWER: lower_executor,
-    Function.MID: mid_executor,
-    Function.REPLACE: replace_executor,
-    Function.RIGHT: right_executor,
-    Function.TRIM: trim_executor,
-    Function.UPPER: upper_executor,
-    Function.VALUE: value_executor,
     Function.FORMULAS: formulas_executor,
 }
 
