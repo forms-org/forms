@@ -37,7 +37,7 @@ setup(
     keywords=["Spreadsheet", "Analytics", "Data Science", "Data Analysis", "Formula"],
     include_data_package=True,
     packages=find_packages(),  # Required
-    python_requires=">=3.5,<3.9",
+    python_requires=">=3.5",
     install_requires=install_requires,
     extras_require={"test": ["pytest"]},
 )
