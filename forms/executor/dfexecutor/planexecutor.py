@@ -68,13 +68,16 @@ class DFPlanExecutor(PlanExecutor):
         )
         remote_df = RemoteDF(remote_object_array, rows, cols)
         df_table = DFTable(df, remote_df)
-        print(f"Distributing data time: {time() - start}")
+        distributing_data_time = time() - start
+        print(f"Distributing data time: {distributing_data_time}")
         start = time()
         res_table = super().execute_formula_plan(df_table, formula_plan)
-        print(f"Execution time: {time() - start}")
+        execution_time = time() - start
+        print(f"Execution time: {execution_time}")
 
         assert isinstance(res_table, DFTable)
-
+        forms_global.put_one_metric('distributing_data_time', distributing_data_time)
+        forms_global.put_one_metric('execution_time', execution_time)
         return res_table.get_table_content()
 
     def collect_results(self, remote_object_list, physical_subtree_list, axis: int) -> Table:

@@ -2,13 +2,13 @@
 
 declare -a RUN_OPTIONS=(1 2 3)
 declare -a CORES_OPTIONS=(1 2 4 8 16 32)
+declare filename='weather90000.csv'
 
 INPUT=spreadsheet_formula.csv
 n=0
 echo $n
-sed 1d $INPUT | while IFS="," read -r filename formula_str
+sed 1d $INPUT | while IFS="," read -r formula_str
 do
-  echo $filename
   echo $formula_str
   n=$(($n+1))
 	for RUN in "${RUN_OPTIONS[@]}"

@@ -6,7 +6,7 @@ import time
 
 import pandas as pd
 import forms as fs
-
+from forms.core.globals import forms_global
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Test Driver for FormS")
@@ -47,19 +47,21 @@ if __name__ == "__main__":
         partition_shape=args.partition_shape,
     )
     time_start = time.time()
-    print(formula_str)
     result = fs.compute_formula(df, formula_str)
+    metrics = forms_global.get_metrics()
     time_end = time.time()
-    log = {
+    config = {
         "timestamp": str(datetime.now()),
         "cores": args.cores,
         "row_num": df.shape[0],
         "filename": args.filename,
         "formula_str": args.formula_str,
+        "distributing_data_time_in_ms": metrics["distributing_data_time"] * 1000,
+        "execution_time_in_ms": metrics["execution_time"] * 1000,
         "timecost_in_ms": (time_end - time_start) * 1000,
     }
     output_path = os.path.join(dir, args.output_path)
-    result.to_csv(os.path.join(output_path, 'result.csv'))
-    output_path = os.path.join(output_path, 'config.json')
-    with open(output_path, "w") as outfile:
-        outfile.write(json.dumps(log, indent=4))
+    result.to_csv(os.path.join(output_path, "result.csv"))
+    config_path = os.path.join(output_path, "config.json")
+    with open(config_path, "w") as outfile:
+        outfile.write(json.dumps(config, indent=4))
