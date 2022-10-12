@@ -15,8 +15,7 @@ import numpy as np
 import pandas as pd
 from random import randrange
 from typing import Callable
-
-# from baseconvert import base
+from baseconvert import base
 
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode, LitExecutionNode
@@ -32,10 +31,9 @@ def atan2_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 
 def decimal_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    return math_double_df_executor(physical_subtree, np.arctan2)
-    # return math_double_df_executor(
-    #    physical_subtree, lambda x, y: float(base(str(x), int(y), 10, string=True))
-    # )
+    return math_double_df_executor(
+        physical_subtree, lambda x, y: float(base(str(x), int(y), 10, string=True))
+    )
 
 
 def mod_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:

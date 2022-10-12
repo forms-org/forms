@@ -17,7 +17,7 @@ do
     FILE_DIR="results/TEST-REWRITE-4/NO-REWRITE/${range}kRANGE/RUN${RUN}"
     mkdir -p $FILE_DIR
     rm -f $FILE_DIR/*
-    python3 test_driver.py \
+    timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
@@ -28,7 +28,7 @@ do
     FILE_DIR="results/TEST-REWRITE-4/REWRITE/${range}kRANGE/RUN${RUN}"
     mkdir -p $FILE_DIR
     rm -f $FILE_DIR/*
-    python3 test_driver.py \
+    timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \

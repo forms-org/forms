@@ -7,7 +7,7 @@ declare FILENAME='weather.csv'
 declare FORMULA=formula_in_all_types.csv
 declare ROWS=1000000
 
-n=0
+n=5
 sed 1d $FORMULA | while IFS="," read -r FORMULA_STR
 do
   echo $FORMULA_STR
@@ -21,7 +21,7 @@ do
         FILE_DIR="results/TEST-CORES/${n}/${EXECUTOR}/${CORES}CORES/RUN${RUN}"
         mkdir -p $FILE_DIR
         rm -f $FILE_DIR/*
-        python3 test_driver.py \
+        timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \

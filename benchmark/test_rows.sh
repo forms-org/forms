@@ -21,7 +21,7 @@ do
         FILE_DIR="results/TEST-ROWS/${n}/${EXECUTOR}/${ROWS}ROWS/RUN${RUN}"
         mkdir -p $FILE_DIR
         rm -f $FILE_DIR/*
-        python3 test_driver.py \
+        timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$formula_str" \
               --cores "$CORES" \
