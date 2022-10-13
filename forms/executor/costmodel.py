@@ -13,6 +13,7 @@
 #  limitations under the License.
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+from time import time
 
 from pynverse import inversefunc
 
@@ -30,6 +31,7 @@ from forms.utils.reference import RefType
 class BaseCostModel(ABC):
     def __init__(self, num_of_formulae: int):
         self.num_of_formulae = num_of_formulae
+        self.time_cost = 0
 
     @abstractmethod
     def cost(self, subtree: ExecutionNode, cores: int):
@@ -54,9 +56,12 @@ class SimpleCostModel(BaseCostModel, ABC):
         return self.num_of_formulae
 
     def get_partition_plan(self, subtree: ExecutionNode, cores: int):
+        start_time = time()
         num_of_formulae = self.num_of_formulae
         partitions = [int(i * num_of_formulae / cores) for i in range(cores)]
         partitions.append(num_of_formulae)
+        end_time = time()
+        self.time_cost += end_time - start_time
         return partitions
 
 
@@ -108,6 +113,7 @@ class LoadBalanceCostModel(BaseCostModel, ABC):
         return self.f_compute(subtree, self.num_of_formulae)
 
     def get_partition_plan(self, subtree: ExecutionNode, cores: int):
+        start_time = time()
         Q = inversefunc(lambda p: self.F(subtree, p, self.num_of_formulae))
         partitions = [0]
         for i in range(1, cores):
@@ -115,6 +121,8 @@ class LoadBalanceCostModel(BaseCostModel, ABC):
             res = Q(p)
             partitions.append(int(res))
         partitions.append(self.num_of_formulae)
+        end_time = time()
+        self.time_cost += end_time - start_time
         return partitions
 
 
