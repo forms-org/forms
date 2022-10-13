@@ -1,33 +1,33 @@
-2022-10-13 03:38:37,943 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-1f73dad36a4a2fe6994fd454b52918f6
+2022-10-13 06:41:54,212 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-afd66ba81657eda30f900b99213e234e
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9ac8893910>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f92b8251ed0>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-2022-10-13 03:38:37,953 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f7311106df186ba081fa547e121c391a
+2022-10-13 06:41:54,214 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-538a179bc1e0b6c7e979ca966a9be46d
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f95ce5873d0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff270627910>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-2022-10-13 03:38:37,955 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-620fdd75bf0f0b67a9a1d58bec07295f
+2022-10-13 06:41:54,222 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-00c89f94082e65828d197474f576699a
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff45a6daa70>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f76d9fcb940>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-2022-10-13 03:38:37,955 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-fe8485c8d9013e909bc98565ffb56827
+2022-10-13 06:41:54,222 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-3d1108fa4467242acfc66ed5db8f8f45
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f69f08eafe0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe09288df00>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-Distributing data time: 0.8151993751525879
-Execution time: 0.16640305519104004
+Distributing data time: 0.8206093311309814
+Execution time: 0.17145586013793945
 Traceback (most recent call last):
   File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
     result = fs.compute_formula(df, formula_str)

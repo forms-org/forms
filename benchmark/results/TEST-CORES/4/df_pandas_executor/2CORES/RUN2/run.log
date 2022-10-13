@@ -1,19 +1,19 @@
-2022-10-13 03:31:57,505 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8ba7f4dd2e57fd5a10f1021b15b6d0ea
+2022-10-13 06:35:13,836 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a465fb28338ee722642732d52bf70869
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f689a88f5b0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb954a8b970>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-2022-10-13 03:31:57,506 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8f310dbbfd7e1a7102510311673b0884
+2022-10-13 06:35:13,845 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c266a753b6c2843c3157a46eef16cd1d
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f358e7275b0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1899fee860>)
 kwargs:    {}
 Exception: 'AssertionError()'
 
-Distributing data time: 0.8113093376159668
-Execution time: 0.15199613571166992
+Distributing data time: 0.8054044246673584
+Execution time: 0.16192173957824707
 Traceback (most recent call last):
   File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
     result = fs.compute_formula(df, formula_str)
