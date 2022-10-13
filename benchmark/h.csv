@@ -1,6 +1,0 @@
-formula_str
-=SUM(I1:I7)
-=MAX(I1:I7)
-=AVERAGE(I1:I7)
-=SUMIF(I1:I7, ">0.5")
-=MEDIAN(I1:I7)

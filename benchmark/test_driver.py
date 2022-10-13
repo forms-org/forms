@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser.add_argument("--enable_physical_opt", type=bool, default=False)
     parser.add_argument("--function_executor", type=str, default="df_pandas_executor")
     parser.add_argument("--cost_model", type=str, default="simple")
-    parser.add_argument("--enable_communication_opt", type=bool, default=False)
+    parser.add_argument("--enable_communication_opt", type=bool, default=True)
     parser.add_argument("--enable_sumif_opt", type=bool, default=False)
     parser.add_argument("--along_row_first", type=bool, default=False)
     parser.add_argument("--partition_shape", type=tuple, default=(256, 1))
