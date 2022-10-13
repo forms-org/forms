@@ -1,33 +1,34 @@
-2022-10-13 06:41:47,315 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-7a75f77047d7d00103d7e7f311882f03
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8f83617250>)
-kwargs:    {}
-Exception: 'AssertionError()'
-
-Distributing data time: 0.8479092121124268
-Execution time: 0.14618229866027832
-Traceback (most recent call last):
-  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
-    result = fs.compute_formula(df, formula_str)
-  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
-    res = plan_executor.df_execute_formula_plan(df, root)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
-    return res_table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 187, in sumif_df_executor
-    assert op in operator_dict.keys()
-AssertionError
+2022-10-13 07:38:37,777 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-vpmmvysl', purging
+2022-10-13 07:38:37,777 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-lrd8d6_r', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2ef9n1vh', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-0kd5w9uq', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-jtx9a5dg', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-_u6g40el', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-9a6pv5t4', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-8unnumr8', purging
+2022-10-13 07:38:37,778 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2skns28a', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-pr4wx6gt', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-i9b0yn3f', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-330solm0', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-oe3wax2f', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-yuapdava', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-r1nq69wu', purging
+2022-10-13 07:38:37,779 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-web7eqyn', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-tdxirw8f', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-7bcyic8g', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-5tdxn6a8', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-wu4kezfc', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ix8doa7u', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-jxmdwbqi', purging
+2022-10-13 07:38:37,780 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-0q4np4ce', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-5c03__oy', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2oh8stl5', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-qfjqjfjq', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-qwmlvylt', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ejvw7sot', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-kt3ru8qu', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-4qq5hpwg', purging
+2022-10-13 07:38:37,781 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-bskk2stc', purging
+2022-10-13 07:38:37,782 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-3uvspijp', purging
+/usr/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 6 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
