@@ -2,7 +2,7 @@
 
 declare -a RUN_OPTIONS=(1 2 3)
 declare -a ROWS_OPTIONS=(200000 400000 600000 800000 1000000)
-declare -a EXECUTORS=("df_pandas_executor" "df_formulas_executor")
+declare -a EXECUTORS=("df_pandas_executor")
 declare FILENAME='weather.csv'
 declare FORMULA=formula_in_all_types.csv
 declare CORES=32
