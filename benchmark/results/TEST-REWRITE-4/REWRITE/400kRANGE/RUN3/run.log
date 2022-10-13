@@ -1,0 +1,254 @@
+2022-10-12 22:50:04,563 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-878539319a661ca690a253bf6bb41a20
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f215aa1aa40>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,585 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d4c68ea6e5d68e4dedda8fa2ba291911
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff074d06800>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,623 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-082df4573902da9130cce81a6da791eb
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9e96142b60>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,635 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5d1c352632199180fa8a4f53fc5c1293
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f72f31ca950>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,667 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ba41c19555cd285c4a159f22eae72a82
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7d0866eb90>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,673 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-441cb597a0d02c7e49a7b594837f8a14
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd4063de5f0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,687 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-9706ab50e7b74f115f5c4cbcf1e3a20e
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f89b946aef0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,708 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4ea217b7feeeb9a70ff030d844debafe
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f197f8deb90>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,724 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f3ead41e8052a87b675c78de9e30d149
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f76915debf0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,728 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-032f18ae57cade94a58db6589f6dd95d
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8ecd2dd9f0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,732 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b88a0274b1ecfcae1a1db3c29b3b6833
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f55612a2b60>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,737 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-20fa318ff677597a8875bea0c710a770
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f683f4b2560>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,739 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5dad8cefca1447a9c3df566a7888a5c0
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7feb46515960>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,739 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c0fe800f2c4f4069cd8dd800f45eecbb
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4c640eabc0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,762 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-befaa71a3fae12d828982dd1263e144d
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe4f04d6b60>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,775 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-dec065b94021b823a511e011ea57bbfd
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4b7ccc1d50>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,775 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-01c5d7ebc8e25f1742a25648e2865c42
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f02a5df5930>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,787 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-251c6245aa71ec30501cb780cf7c482c
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0d39e1e710>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,790 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-cfad2462d2a106cc87d889fa1f8ab33a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3b397fef50>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,790 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8a1ff792d83e847e9e8354d01eabbed4
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0791b6a560>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,800 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c58b0283d411bfede3f093c2409243ea
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8c3b336bc0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,830 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a05a7a50c76c01a237b96087032204b1
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa1536c2a40>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,846 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-460043d58c7cc9060d6440667b1b085b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fefaceaabc0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,851 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8364a03d7f996df5c6be08e42292c5cf
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4d62e02b90>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,855 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-af6d43d7a1ae04efc54815e03e387336
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0bce9e2920>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,861 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-be4500fde0553cd5ec6c2e1a4f460553
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbd4beceb90>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,874 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e4953cf4a7faa55de49ddeadac5ed25a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0de4326e30>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,876 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-1e7b8018859ed608e9ea911268da029b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9ae7b5aad0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,877 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e1ab6b04224827934dc1d0af08cb6efe
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7feb40f76ad0>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,879 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-99886935ac90562b7d6fe51dd7febab0
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa7c3c3a320>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,882 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-3e17d23d8b7f9510f549ba27f9a777ea
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2487aedd80>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+2022-10-12 22:50:04,885 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-91be55eb628434b39481b5e7ff4860b6
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f295f24eb60>)
+kwargs:    {}
+Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+
+Distributing data time: 0.9691369533538818
+Execution time: 2.5139577388763428
+Traceback (most recent call last):
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
+    df_table = execute_one_subtree(child)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 116, in sum_df_executor
+    return distributive_function_executor(physical_subtree, Function.SUM)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 325, in distributive_function_executor
+    single_value = func_ff(df.values.flatten())
+TypeError: unsupported operand type(s) for +: 'int' and 'str'

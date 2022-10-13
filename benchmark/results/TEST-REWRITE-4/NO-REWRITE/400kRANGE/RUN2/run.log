@@ -1,0 +1,287 @@
+2022-10-12 22:49:37,862 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-cce6632043573ebef92fbecfc2edf3dc
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f160961e590>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:37,888 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-3d4a18f04ede81392bfbc117cf750a1b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1c0a12ab90>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:37,925 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0f486596d1b457912b2688ac93b22692
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd9f513ef20>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,145 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8920b9828ab5391a3170d0eee8e218e2
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fabf41b6560>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,322 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-42ffadcb9a72a05b2ccc168729f01682
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd076c6eb00>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,451 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ed7c658e8939a566807527857113ae3a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3b90d2ea70>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,473 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e219ead1a9c3f5d09979f3d53ac383dc
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f472d712560>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,501 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-7ca8e08afdfb597490f6dd7b4f932167
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd9c941aaa0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,528 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-78b354d0532d4323c11a272746b2e308
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6c947ee920>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,585 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-eed521e7b0889c4fb57675c8c42535e5
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdcc4dfaf20>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,699 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-3d20c446b020aa754782611ee02c4cbc
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f87e3b3eb00>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,823 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-02de8eb5cb7c9785107a364b91bffe28
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6d084a2ad0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,843 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a87bdb5758e3b7e5dd3d152b6aa2a3a5
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa340816b30>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,869 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-29676c8c42c7474a717150b111befe81
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f12a890eef0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,910 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d98552fcaa8b99ba2c93cf9be754b395
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7faadfdf5960>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:38,938 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-bd7da4d065af193d5cf29e6ba6f17212
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f42744c2560>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,003 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0f1a52103e272a2339a5283a769f46a7
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f05c2d62560>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,055 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8ee58e2e11de118458cc838ad724425b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc9a9f2e530>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,055 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a113d478c1d9789e0203c12950862319
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f46bb726ef0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,115 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-9bf92d69bfc6604c81d30df4d62f790f
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdc10f627d0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,124 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e5a9a5215da503d803ce38fee36572e2
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f198b986ad0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,202 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-90bfd2627556465eda6c624323df1ea4
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f93018221d0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,313 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-50a18da1d811f0291b94080e2d2dc330
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2ef67f6b90>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,335 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b586bd2a7b470448342e04d9ca5d6098
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2578486b00>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,352 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4ce82252b695fb3945a54dbc132c3b4b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff86ea2eef0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,378 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e0854ddec2fd0745c1a567173c0f810a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f26f4d66bc0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,399 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-31f8c0dd7a305a481139021878fd2826
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f86ca146a40>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,411 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-51984934bb0a20052ae948f619ca1480
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f201fa76bc0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,420 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c2fb3a0f6ce1790965ea7523e6d50865
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f29632c1a20>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,426 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-09906764b395d7e58309325c753a0941
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6002a7a7a0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,438 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-fe9be59b0bfe0b82b8662a7405611250
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6aaa8e2b90>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+2022-10-12 22:49:39,515 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e6e3fd7d1f7cdb43581054f41fea4e18
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0b04cf2ad0>)
+kwargs:    {}
+Exception: "DataError('No numeric types to aggregate')"
+
+Distributing data time: 0.9650895595550537
+Execution time: 6.732333660125732
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 404, in _prep_values
+    values = ensure_float64(values)
+  File "pandas/_libs/algos_common_helper.pxi", line 42, in pandas._libs.algos.ensure_float64
+ValueError: could not convert string to float: 'SEVERE WINTER STORM'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 483, in _apply_series
+    values = self._prep_values(obj._values)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 406, in _prep_values
+    raise TypeError(f"cannot handle this type -> {values.dtype}") from err
+TypeError: cannot handle this type -> object
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 116, in sum_df_executor
+    return distributive_function_executor(physical_subtree, Function.SUM)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 320, in distributive_function_executor
+    value = get_value_rr(
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/utils.py", line 226, in get_value_rr
+    df.agg(func1, axis=1).rolling(window_size, min_periods=window_size).agg(func2).dropna()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 1921, in aggregate
+    return super().aggregate(func, *args, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 709, in aggregate
+    result = ResamplerWindowApply(self, func, args=args, kwargs=kwargs).agg()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/apply.py", line 177, in agg
+    return getattr(obj, f)()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 2084, in sum
+    return super().sum(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 1476, in sum
+    return self._apply(window_func, name="sum", numeric_only=numeric_only, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 663, in _apply
+    return self._apply_blockwise(homogeneous_func, name, numeric_only)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 503, in _apply_blockwise
+    return self._apply_series(homogeneous_func, name)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/pandas/core/window/rolling.py", line 485, in _apply_series
+    raise DataError("No numeric types to aggregate") from err
+pandas.errors.DataError: No numeric types to aggregate

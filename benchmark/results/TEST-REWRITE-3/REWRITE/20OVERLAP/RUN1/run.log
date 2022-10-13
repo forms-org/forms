@@ -1,0 +1,253 @@
+=SUMIF(E1:E20, ">0.5")
+2022-10-13 00:27:11,288 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-9f6abff8690656ac51e01b6c3aa15086
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3808162ad0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,289 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f165740b01c6abaa77333acca10fbea4
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f73b2f3aaa0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,290 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-186fd3b3b0b115d6aa3e355715e77a0c
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8b10d32a40>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,290 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-deaef8fa4cf47b966848d18d601d5bb8
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc7b0d0e350>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,291 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-628a8f1fbc4b45c1315d683cb30bace1
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f246222eb00>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,291 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-58ea8c0eeaa4ede4fa179b964109a3e4
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7efd414caad0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,292 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-840141d4cef6e69bbb00a0211b89ca69
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9f1124eef0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,292 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-fe01a0c4d77eefcf0f69fa9e2c27b102
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdab6392b90>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,292 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d7c4e5a8adff8ff6a8819314f6c404e9
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f73fd902320>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,292 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-556df0089fd3f31673f522f5ea8548f2
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0787d468f0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,292 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-708242fa32ac675512f075498ec8682f
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f625244ef20>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,293 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-2cd350ebf5ad0ffe7c793cd6e391d7ac
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe903a1e2f0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,293 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-fd602fc08f11a4d6fce2595848e2eac8
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb72449a920>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,293 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8327a647f8f1da0ba49efe07cab93b93
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f17be61abc0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,294 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-086f065172f8d839c3e7f04911f44ea9
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4fb8e1e740>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,294 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-247654614d594fa548daa40cd570674a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7f11566e30>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,295 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ffc909aceda51f0542d84d9f89d2541e
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f5533621d50>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,296 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c94a92ee9fcbe9a581fe0dc7f52241fb
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbaf334ab90>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,296 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8ec0d9104b246af4dbef51002b3de414
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff6a633e3e0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,296 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0fe35ec316b705237e77f482821f66f5
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcaa1b72560>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,298 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-9e316ed4458b0e295fad30e109e706fd
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6ecc3f6b90>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,298 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d604cadac0fc10d3ab370f43fd63899e
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ffa2b1d6ad0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,298 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-dd488daa995127645954ea110775d825
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f96a33f5d80>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,299 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5c7f9d66efbf6cbc5d9f48b10b9ba6ab
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f65b1a26620>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,300 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0894e6399f22a9f1483d39769acaa11a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1b7b5d2500>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,300 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0fe6275ea14a50feec9e957f757285cf
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4581a51a20>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,301 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-cfc53877a682bde82e4e0c02723f69ae
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f24221f2b60>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,303 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-bfedb6b7045078ef74cedf1f14c59e0c
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6c8ade5d80>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,305 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ffb27c50dc58ab0abb66b0c402f7c622
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcabf2e2bc0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,310 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-05330d43e1461fcf14d4c70dea136ce1
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f49faba5cc0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,310 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d8ba72a275e040debe9cdf9cae45dfea
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe11cb326e0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 00:27:11,311 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4297a67a88402ab7c1e523322348d640
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3257716b00>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+Distributing data time: 0.9610192775726318
+Execution time: 0.6104695796966553
+Traceback (most recent call last):
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 51, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
+    df_table = execute_one_subtree(child)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 187, in sumif_df_executor
+    assert op in operator_dict.keys()
+AssertionError

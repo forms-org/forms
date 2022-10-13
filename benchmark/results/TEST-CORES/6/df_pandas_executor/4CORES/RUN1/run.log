@@ -1,0 +1,4 @@
+2022-10-12 17:23:52,001 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ltry9wme', purging
+2022-10-12 17:23:52,001 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-r6_b27l4', purging
+Distributing data time: 0.8127810955047607
+Execution time: 0.9934079647064209

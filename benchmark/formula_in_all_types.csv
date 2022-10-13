@@ -1,11 +1,6 @@
 ﻿formula_str
-=SUM(I1:I7)
-=MAX(I1:I7)
-=AVERAGE(I1:I7)
-=SUMIF(I1:I7, '>0.5')
-=MEDIAN(I1:I7)
 =SUM(I$1:I1)
 =MAX(I$1:I1)
 =AVERAGE(I$1:I1)
-=SUMIF(I$1:I1, '>0.5')
+=SUMIF(I$1:I1, ">0.5")
 =MEDIAN(I$1:I1)
