@@ -1,0 +1,6 @@
+2022-10-13 12:13:58,613 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2ja5lwry', purging
+2022-10-13 12:13:58,613 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-dp_a67ps', purging
+2022-10-13 12:13:58,613 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-0gvmx5z1', purging
+2022-10-13 12:13:58,613 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2ncjg1c5', purging
+Distributing data time: 4.756063222885132
+Execution time: 149.8264832496643
