@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 
 import forms
+from tests.test_config import test_df
 
 df = pd.DataFrame([])
 
@@ -23,22 +24,7 @@ df = pd.DataFrame([])
 @pytest.fixture(autouse=True)
 def execute_before_and_after_one_test():
     global df
-    df = pd.DataFrame(
-        {
-            "col1": ["A", "B", "C", "D"] * 10,
-            "col2": [1] * 40,
-            "col3": ["A", "B", "C", "D"] * 10,
-            "col4": [1, 2, 3, 4] * 10,
-            "col5": [-1, 2, -3, 4] * 10,
-            "col6": [0] * 40,
-            "col7": [0.4, 1.6, 2.9, 3.999] * 10,
-            "col8": [0, 30, 60, 90] * 10,
-            "col9": ["I", "VI", "IX", "ML"] * 10,
-            "col10": [np.pi / 2] * 40,
-            "col11": [2] * 40,
-            "col12": [16] * 40,
-        }
-    )
+    df = test_df
     forms.config(cores=4, function_executor="df_pandas_executor")
     yield
 
