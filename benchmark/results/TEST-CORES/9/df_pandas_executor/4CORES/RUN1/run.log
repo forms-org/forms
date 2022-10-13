@@ -1,0 +1,54 @@
+2022-10-13 03:38:15,478 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f211d6f92051d99e70ae5be401d28b7b
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f28efbf5f30>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:38:15,486 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-00248ac743d175b409f97989b9d465b9
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f517b5cf400>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:38:15,487 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8a42945ae5cdc8984f874ff43b90458f
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8ea7dbdf00>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:38:15,489 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d890a6b81e40058d7bb27c694257841a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f12e3113d00>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+Distributing data time: 0.8119821548461914
+Execution time: 0.16814184188842773
+Traceback (most recent call last):
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 187, in sumif_df_executor
+    assert op in operator_dict.keys()
+AssertionError

@@ -1,3 +1,2 @@
-2022-10-12 19:34:01,797 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-blo2ty7o', purging
-Distributing data time: 0.8108365535736084
-Execution time: 0.921410083770752
+Distributing data time: 0.8121273517608643
+Execution time: 0.8837170600891113

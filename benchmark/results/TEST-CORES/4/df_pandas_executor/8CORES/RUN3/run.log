@@ -1,24 +1,82 @@
+2022-10-13 03:32:26,754 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-7952eee919729df2ce7100e65ff29a41
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0806797c70>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,756 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f8098f2c87e964a764a50f1bcffd79f1
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7efdacc63c70>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,756 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-7f09a37be4ba214bfc3852ab9814637f
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1403fe74f0>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,756 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-2f7e54ae88dbf0532cd5894b5b5bb313
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fea8ee8bc40>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,757 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-8675c81e8553ae5d2e38ff2bf19407ba
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f89e1967880>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,758 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-756373b65d8ef249e37fa3e0c315e114
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f812021bc40>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,758 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-6d9fd4b72d53cc17dc6a736ef74b8599
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f60180fbc70>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+2022-10-13 03:32:26,759 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b5708af3fb5e84f062964d3ab1f0fcd9
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb1053e7c40>)
+kwargs:    {}
+Exception: 'AssertionError()'
+
+Distributing data time: 0.8499627113342285
+Execution time: 0.17049193382263184
 Traceback (most recent call last):
-  File "/home/ubuntu/forms/forms/core/forms.py", line 35, in compute_formula
-    root = parse_formula(formula_str, axis)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 39, in parse_formula
-    return build_from_subexpression(tokens, pos)[0]
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 58, in build_from_subexpression
-    new_plan_node, cur_pos = build_from_func_subexpression(tokens, cur_pos)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 100, in build_from_func_subexpression
-    child_node, cur_pos = build_from_subexpression(tokens, cur_pos)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 62, in build_from_subexpression
-    new_plan_node, cur_pos = build_from_literal_and_reference(tokens, cur_pos)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 127, in build_from_literal_and_reference
-    ref, ref_type = parse_range(pos, cur_token)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 137, in parse_range
-    row, col, row_relative, col_relative = parse_ref_str(ref_list[0], cur_pos, cur_token)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 185, in parse_ref_str
-    raise_syntax_exception(cur_pos, cur_token)
-  File "/home/ubuntu/forms/forms/parser/parser.py", line 235, in raise_syntax_exception
-    raise FormulaStringSyntaxErrorException(f"Syntax Error at {cur_pos}: {cur_token.value}")
-forms.utils.exceptions.FormulaStringSyntaxErrorException: Syntax Error at 4: '>0.5'
-Traceback (most recent call last):
-  File "/home/ubuntu/forms/benchmark/test_driver.py", line 68, in <module>
-    "distributing_data_time_in_ms": metrics["distributing_data_time"] * 1000,
-KeyError: 'distributing_data_time'
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 187, in sumif_df_executor
+    assert op in operator_dict.keys()
+AssertionError
