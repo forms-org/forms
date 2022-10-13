@@ -181,8 +181,9 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert isinstance(ref_node, RefExecutionNode)
     assert isinstance(criteria, LitExecutionNode)
     literal_str = criteria.literal.replace('"', "")
-    op = "".join(c for c in literal_str if not c.isdigit())
-    val = "".join(c for c in literal_str if c.isdigit())
+    first_digit = next(i for i, c in enumerate(literal_str) if not c.isdigit())
+    op = literal_str[:first_digit+1]
+    val = literal_str[first_digit+1:]
     val = float(val)
     assert op in operator_dict.keys()
     ref = ref_node.ref
