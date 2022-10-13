@@ -1,2 +1,78 @@
-Distributing data time: 0.6833186149597168
-Execution time: 1.9474520683288574
+/home/ubuntu/.local/lib/python3.10/site-packages/distributed/node.py:183: UserWarning: Port 8787 is already in use.
+Perhaps you already have a cluster running?
+Hosting the HTTP server on port 40873 instead
+  warnings.warn(
+Distributing data time: 1.5889942646026611
+Execution time: 0.670814037322998
+2022-10-13 09:35:08,579 - distributed.worker - WARNING - Heartbeat to scheduler failed
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 225, in read
+    frames_nbytes = await stream.read_bytes(fmt_size)
+tornado.iostream.StreamClosedError: Stream is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/worker.py", line 1193, in heartbeat
+    response = await retry_operation(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 383, in retry_operation
+    return await retry(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 368, in retry
+    return await coro()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 1154, in send_recv_from_rpc
+    return await send_recv(comm=comm, op=key, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 919, in send_recv
+    response = await comm.read(deserializers=deserializers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 241, in read
+    convert_stream_closed_error(self, e)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 144, in convert_stream_closed_error
+    raise CommClosedError(f"in {obj}: {exc}") from exc
+distributed.comm.core.CommClosedError: in <TCP (closed) ConnectionPool.heartbeat_worker local=tcp://127.0.0.1:33454 remote=tcp://127.0.0.1:39137>: Stream is closed
+2022-10-13 09:35:08,602 - distributed.worker - WARNING - Heartbeat to scheduler failed
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 225, in read
+    frames_nbytes = await stream.read_bytes(fmt_size)
+tornado.iostream.StreamClosedError: Stream is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/worker.py", line 1193, in heartbeat
+    response = await retry_operation(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 383, in retry_operation
+    return await retry(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 368, in retry
+    return await coro()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 1154, in send_recv_from_rpc
+    return await send_recv(comm=comm, op=key, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 919, in send_recv
+    response = await comm.read(deserializers=deserializers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 241, in read
+    convert_stream_closed_error(self, e)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 144, in convert_stream_closed_error
+    raise CommClosedError(f"in {obj}: {exc}") from exc
+distributed.comm.core.CommClosedError: in <TCP (closed) ConnectionPool.heartbeat_worker local=tcp://127.0.0.1:33444 remote=tcp://127.0.0.1:39137>: Stream is closed
+2022-10-13 09:35:08,616 - distributed.worker - WARNING - Heartbeat to scheduler failed
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 225, in read
+    frames_nbytes = await stream.read_bytes(fmt_size)
+tornado.iostream.StreamClosedError: Stream is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/worker.py", line 1193, in heartbeat
+    response = await retry_operation(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 383, in retry_operation
+    return await retry(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 368, in retry
+    return await coro()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 1154, in send_recv_from_rpc
+    return await send_recv(comm=comm, op=key, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/core.py", line 919, in send_recv
+    response = await comm.read(deserializers=deserializers)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 241, in read
+    convert_stream_closed_error(self, e)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/comm/tcp.py", line 144, in convert_stream_closed_error
+    raise CommClosedError(f"in {obj}: {exc}") from exc
+distributed.comm.core.CommClosedError: in <TCP (closed) ConnectionPool.heartbeat_worker local=tcp://127.0.0.1:33456 remote=tcp://127.0.0.1:39137>: Stream is closed

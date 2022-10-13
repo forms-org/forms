@@ -1,12 +1,12 @@
 {
-    "timestamp": "2022-10-13 01:07:49.880284",
+    "timestamp": "2022-10-13 09:36:04.579390",
     "cores": 32,
     "scheduler": "simple",
     "enable_logical_rewriting": false,
     "enable_physical_opt": false,
     "function_executor": "df_pandas_executor",
     "cost_model": "simple",
-    "enable_communication_opt": false,
+    "enable_communication_opt": true,
     "enable_sumif_opt": false,
     "along_row_first": false,
     "partition_shape": [
@@ -16,7 +16,8 @@
     "row_num": 400000,
     "filename": "weather.csv",
     "formula_str": "=SUM(I1:I7)",
-    "distributing_data_time_in_ms": 683.9444637298584,
-    "execution_time_in_ms": 1960.340976715088,
-    "timecost_in_ms": 4012.1467113494873
+    "distributing_data_time_in_ms": 672.1837520599365,
+    "execution_time_in_ms": 329.8373222351074,
+    "planning_time": 0.01621246337890625,
+    "timecost_in_ms": 2369.605779647827
 }
