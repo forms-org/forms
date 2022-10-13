@@ -67,7 +67,7 @@ if __name__ == "__main__":
         "formula_str": args.formula_str,
         "distributing_data_time_in_ms": metrics["distributing_data_time"] * 1000,
         "execution_time_in_ms": metrics["execution_time"] * 1000,
-        "planning_time": metrics["planning_time"] * 1000,
+        "planning_time_in_ms": metrics["planning_time"] * 1000,
         "timecost_in_ms": (time_end - time_start) * 1000,
     }
     output_path = os.path.join(dir, args.output_path)

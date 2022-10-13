@@ -6,7 +6,6 @@ declare FILENAME='weather.csv'
 declare CORES=32
 declare FORMULA_STR="=MAX(E1, F\$1:F1)"
 
-echo FORMULA_STR
 for RUN in "${RUN_OPTIONS[@]}"
 do
   for ROWS in "${ROWS_OPTIONS[@]}"
