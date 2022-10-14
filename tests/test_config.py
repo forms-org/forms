@@ -12,6 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import numpy as np
+import pandas as pd
+
 from forms.core.forms import config
 from forms.core.config import forms_config
 
@@ -20,3 +23,21 @@ def test_config():
     config(2, "NotSimple")
     assert forms_config.cores == 2
     assert forms_config.scheduler == "NotSimple"
+
+
+test_df = pd.DataFrame(
+    {
+        "col1": ["A", "B", "C", "D"] * 10,
+        "col2": [1] * 40,
+        "col3": ["A", "B", "C", "D"] * 10,
+        "col4": [1, 2, 3, 4] * 10,
+        "col5": [-1, 2, -3, 4] * 10,
+        "col6": [0] * 40,
+        "col7": [0.4111, 1.6222, 2.93333333, 3.999] * 10,
+        "col8": [0, 30, 60, 90] * 10,
+        "col9": ["I", "VI", "IX", "ML"] * 10,
+        "col10": [np.pi / 2] * 40,
+        "col11": [2] * 40,
+        "col12": [16] * 40,
+    }
+)
