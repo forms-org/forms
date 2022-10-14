@@ -180,3 +180,17 @@ def test_execute_replace_rr():
     sub_result = replace_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  TeSt Suites"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
+
+
+def test_execute_value():
+    m = 100
+    n = 5
+    df = pd.DataFrame(np.full((m, n), "2.0"))
+    table2 = DFTable(df)
+    root = FunctionExecutionNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
+    child = RefExecutionNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    link_parent_to_children(root, [child])
+    child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = value_executor(root)
+    real_result = pd.DataFrame(np.full(50, fill_value="2"))
+    assert np.array_equal(sub_result.df.values, real_result.values)
