@@ -71,6 +71,7 @@ class Function(Enum):
     EVEN = "even"
     EXP = "exp"
     FACT = "fact"
+    FACTDOUBLE = "factdouble"
     INT = "int"
     ISEVEN = "iseven"
     ISODD = "isodd"
@@ -96,6 +97,20 @@ class Function(Enum):
     MROUND = "mround"
     POWER = "power"
     RANDBETWEEN = "randbetween"
+
+    # Variable-parameter math functions
+    CEILING = "ceiling"
+    CEILING_MATH = "ceiling.math"
+    CEILING_PRECISE = "ceiling.precise"
+    FLOOR = "floor"
+    FLOOR_MATH = "floor.math"
+    FLOOR_PRECISE = "floor.precise"
+    ISO_CEILING = "iso.ceiling"
+    ROMAN = "roman"
+    ROUND = "round"
+    ROUNDDOWN = "rounddown"
+    ROUNDUP = "roundup"
+    TRUNC = "trunc"
 
     # This is a generic function for supporting formula execution based on the formulas lib
     FORMULAS = "formulas"
@@ -163,6 +178,7 @@ pandas_supported_functions = {
     Function.EVEN,
     Function.EXP,
     Function.FACT,
+    Function.FACTDOUBLE,
     Function.INT,
     Function.ISEVEN,
     Function.ISODD,
@@ -187,6 +203,19 @@ pandas_supported_functions = {
     Function.MROUND,
     Function.POWER,
     Function.RANDBETWEEN,
+    # Variable-parameter math functions
+    Function.CEILING,
+    Function.CEILING_MATH,
+    Function.CEILING_PRECISE,
+    Function.FLOOR,
+    Function.FLOOR_MATH,
+    Function.FLOOR_PRECISE,
+    Function.ISO_CEILING,
+    Function.ROMAN,
+    Function.ROUND,
+    Function.ROUNDDOWN,
+    Function.ROUNDUP,
+    Function.TRUNC,
 }
 
 formulas_unsupported_functions = set()

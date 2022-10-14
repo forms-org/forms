@@ -15,6 +15,7 @@ import math
 import pandas as pd
 from typing import Callable
 from mpmath import acot, acoth, cot, coth, csc, csch, sec, sech, mpc, mpf
+from scipy.special import factorial2
 import roman
 
 from forms.executor.table import DFTable
@@ -103,6 +104,10 @@ def exp_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 def fact_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_single_df_executor(physical_subtree, lambda x: math.factorial(int(x)))
+
+
+def fact_double_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    return math_single_df_executor(physical_subtree, lambda x: factorial2(int(x), exact=True))
 
 
 def int_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:

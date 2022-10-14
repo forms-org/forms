@@ -17,7 +17,7 @@ from random import randrange
 from typing import Callable
 
 from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode, LitExecutionNode
+from forms.executor.executionnode import FunctionExecutionNode
 
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
