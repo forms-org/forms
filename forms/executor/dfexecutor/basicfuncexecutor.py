@@ -520,7 +520,7 @@ function_to_executor_dict = {
     Function.TANH: tanh_df_executor,
     # Double-parameter math functions
     Function.ATAN2: atan2_df_executor,
-    # Function.DECIMAL: decimal_df_executor,
+    Function.DECIMAL: decimal_df_executor,
     Function.MOD: mod_df_executor,
     Function.MROUND: mround_df_executor,
     Function.POWER: power_df_executor,
