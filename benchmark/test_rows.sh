@@ -1,11 +1,11 @@
 #!/bin/bash
 
 declare -a RUN_OPTIONS=(1 2 3)
-declare -a ROWS_OPTIONS=(200000 400000 600000 800000 1000000)
+declare -a ROWS_OPTIONS=(2000000 4000000 6000000 8000000 10000000)
 declare -a EXECUTORS=("df_pandas_executor")
-declare FILENAME='weather.csv'
+declare FILENAME='weather_10M.csv'
 declare FORMULA=formula_in_all_types.csv
-declare CORES=32
+declare CORES=16
 
 n=0
 sed 1d $FORMULA | while IFS="," read -r formula_str
