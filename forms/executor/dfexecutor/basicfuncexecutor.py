@@ -42,6 +42,7 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     even_df_executor,
     exp_df_executor,
     fact_df_executor,
+    fact_double_df_executor,
     int_df_executor,
     is_even_df_executor,
     is_odd_df_executor,
@@ -61,7 +62,6 @@ from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     tanh_df_executor,
 )
 
-
 from forms.executor.dfexecutor.mathfuncexecutordouble import (
     atan2_df_executor,
     decimal_df_executor,
@@ -70,6 +70,22 @@ from forms.executor.dfexecutor.mathfuncexecutordouble import (
     power_df_executor,
     rand_between_df_executor,
 )
+
+from forms.executor.dfexecutor.mathfuncexecutorvariable import (
+    ceiling_df_executor,
+    ceiling_math_df_executor,
+    ceiling_precise_df_executor,
+    floor_df_executor,
+    floor_math_df_executor,
+    floor_precise_df_executor,
+    iso_ceiling_df_executor,
+    roman_df_executor,
+    round_df_executor,
+    round_down_df_executor,
+    round_up_df_executor,
+    trunc_df_executor,
+)
+
 
 from forms.executor.dfexecutor.textfunctionexecutor import (
     concat_executor,
@@ -182,8 +198,8 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert isinstance(criteria, LitExecutionNode)
     literal_str = criteria.literal.replace('"', "")
     first_digit = next(i for i, c in enumerate(literal_str) if not c.isdigit())
-    op = literal_str[:first_digit+1]
-    val = literal_str[first_digit+1:]
+    op = literal_str[: first_digit + 1]
+    val = literal_str[first_digit + 1 :]
     val = float(val)
     assert op in operator_dict.keys()
     ref = ref_node.ref
@@ -485,6 +501,7 @@ function_to_executor_dict = {
     Function.EVEN: even_df_executor,
     Function.EXP: exp_df_executor,
     Function.FACT: fact_df_executor,
+    Function.FACTDOUBLE: fact_double_df_executor,
     Function.INT: int_df_executor,
     Function.ISEVEN: is_even_df_executor,
     Function.ISODD: is_odd_df_executor,
@@ -504,11 +521,24 @@ function_to_executor_dict = {
     Function.TANH: tanh_df_executor,
     # Double-parameter math functions
     Function.ATAN2: atan2_df_executor,
-    Function.DECIMAL: decimal_df_executor,
+    # Function.DECIMAL: decimal_df_executor,
     Function.MOD: mod_df_executor,
     Function.MROUND: mround_df_executor,
     Function.POWER: power_df_executor,
     Function.RANDBETWEEN: rand_between_df_executor,
+    # Variable-parameter math functions
+    Function.CEILING: ceiling_df_executor,
+    Function.CEILING_MATH: ceiling_math_df_executor,
+    Function.CEILING_PRECISE: ceiling_precise_df_executor,
+    Function.FLOOR: floor_df_executor,
+    Function.FLOOR_MATH: floor_math_df_executor,
+    Function.FLOOR_PRECISE: floor_precise_df_executor,
+    Function.ISO_CEILING: iso_ceiling_df_executor,
+    Function.ROMAN: roman_df_executor,
+    Function.ROUND: round_df_executor,
+    Function.ROUNDDOWN: round_down_df_executor,
+    Function.ROUNDUP: round_up_df_executor,
+    Function.TRUNC: trunc_df_executor,
     # Generic formulas executor
     Function.FORMULAS: formulas_executor,
 }

@@ -60,7 +60,7 @@ class BaseScheduler(ABC):
         return isinstance(self.execution_tree, RefExecutionNode)
 
     def get_results(self) -> Table:
-        forms_global.put_one_metric('planning_time', self.cost_model.time_cost)
+        forms_global.put_one_metric("planning_time", self.cost_model.time_cost)
         assert isinstance(self.execution_tree, RefExecutionNode)
         table = self.execution_tree.table
         if self.execution_tree.out_ref_type == RefType.FF:
