@@ -1,0 +1,142 @@
+2022-10-15 16:52:59,148 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c644c8dfe36df98bd30d9eef7d0aa7c1
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8c68f0f8e0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:52:59,287 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0728ccef7242845dea2e7cc5dc575e4d
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb2ac1d7670>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:52:59,440 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ec50d9cb9884527667e1030236da3201
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc84b3cf400>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:00,112 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b9e2ce064e0821dc848236647acc819d
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1380eae290>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:00,524 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4cdd91b3fed5c556cbfb96397bda85c6
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f5dad5c37f0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:00,645 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b659b297f6efeee39f437b53c59a74d2
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f563e5dfa90>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:01,417 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-304161e3e648b3ac1c1b7e012b4c741e
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe1655837f0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:01,546 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-89dbc1eaf541fde09a0f1c58ff144123
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f295459ba90>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:01,848 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-1ced3f5493400985d45127ae61a86280
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9df367bfd0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:01,978 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-3979076cb6bd25eef4f415bde66e1cb9
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2654263910>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:02,330 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-6b3237f50fdbaf954506f082591c1bda
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbb879404f0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:02,725 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f774a9f6242e25a65f38e9f30be7c996
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbb0956e590>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:03,520 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-fbd5c8610c0b1026e3389e8fd2924e35
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc9ace38550>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:03,602 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a1f32305fe6e50b146cfde230ac64ea7
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1b2195f7f0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:03,815 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ed7d26fda0368dc39f5aed0b2037aec2
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f20303762f0>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+2022-10-15 16:53:04,143 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-18daf93accac28d4f26d477686ec65f8
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4ce1880070>)
+kwargs:    {}
+Exception: 'TypeError("\'NoneType\' object is not reversible")'
+
+Distributing data time: 4.816166162490845
+Execution time: 6.013462066650391
+Traceback (most recent call last):
+  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
+    raise exc.with_traceback(tb)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
+    df_table = execute_one_subtree(child)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
+    return distributive_function_executor(physical_subtree, Function.MAX)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 421, in distributive_function_executor
+    for formula_idx in reversed(all_formula_idx):
+TypeError: 'NoneType' object is not reversible

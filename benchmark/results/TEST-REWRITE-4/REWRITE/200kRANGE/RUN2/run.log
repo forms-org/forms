@@ -1,229 +1,149 @@
-2022-10-12 22:48:51,696 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f715fb2bfed8b68bdd9903a457f505ab
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:45,638 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-e9f3da969250df532777d88ecef4ac2f
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9829792b60>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f71b80277f0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,798 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-5415aa8f56d6bc794bc3172add36e1a8
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:45,757 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0c507b3139c0566151b196d0ec8578eb
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7522f363e0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f983446b8b0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,801 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-9a60956b7d8441861be9dc3dc8428a51
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:45,855 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d6e1418cd3ae092f9abe858576a2189c
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7feb0458ef20>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0c4b0837f0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,877 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-bdc74f215d6f3e72154506ad545260fa
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:45,928 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-0e45527670aae1ed0838cad3cddbbf6a
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f07e9816bc0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7efe688b7b20>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,893 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-d5d584b927a3fb4c33ab29faac822127
+2022-10-15 17:47:45,947 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c75a7c9489c6eda32f0870828d2fde91
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2fd66e61a0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f26b1d1f8e0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,893 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-5b47af0f4ba4e6efb35c859cc004866c
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:45,988 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-017fd6643d0674aaf701dd6763a15b88
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f49c9f66500>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb93491b8e0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,894 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-31a7ee702561050d2da62a21c109a26f
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:46,009 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5e28d170f9a2e44da24594269008a189
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcac8a1e4d0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9801bef880>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,897 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-69a7f3c05c5fd5d102fed3e274868a98
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:46,066 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4bfaba29af62bee767420361236e18e4
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6ece8aeb90>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f275bd6f6d0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,907 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f1a1253cbdbd22d85bfe521e96f872f9
+2022-10-15 17:47:46,071 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-690fd774774240ae2682625c563e93d7
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7593466560>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff81a2833d0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,913 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-28cc0e304c98f73c702d48aba92a1cd4
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:46,085 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-1d93b6b81166d023cd071fd0a5abc1ed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1191b82f50>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f135484ba60>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,916 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-dffbd08e219734f9d18d92c1a424aff7
+2022-10-15 17:47:46,089 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5caab4ccacacc1d9ecdd9d6b963dc27b
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe2601fab00>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2a274ffe80>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,922 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-ad19feec3fbcba3ffd781bb1e1dc0542
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-15 17:47:46,107 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-a8d5d85b740c559f0703ec247a28a177
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f45fd2d2560>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f069fe308b0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,930 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-50e131395420b4ad7d95a0aa8922f343
+2022-10-15 17:47:46,107 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-4cd5b9fac04f5b948040897c6c93719b
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f60e2912920>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f5ed340f3a0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,936 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-3dcedcfa14c7b69ad1721c695d65719b
+2022-10-15 17:47:46,118 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-fbea250e6b9432a653f4b987e559f957
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f381fc4eef0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f673ffefa90>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,940 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-12d4b90d852a918fcec9c684c7997c83
+2022-10-15 17:47:46,145 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-9dcfd97bd17cbd8299754efac7d0bec0
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7feb7b572aa0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1055083ee0>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,956 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-bf33bb6671b2f0387c64e7bd393427a3
+2022-10-15 17:47:46,158 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c53a7e193edfbf7d08d89a8b655cb95e
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc9c02a2620>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f853e167d90>)
 kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-12 22:48:51,965 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-941a1609cb050019b05ab3b0ccf60d93
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3783a7eb90>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,981 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-ba70fb0db45c1c3544c35bf660e58b6c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1cbeb56770>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,982 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-d48dd661c2895544cd9dc15e42b4a75e
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff81233e5f0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,983 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-1255783468c21faba87a315eb7423565
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8dd4122b60>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,994 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b8d2c1b0e3a583fdd32da4fb6dd01f35
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb74376eb90>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,994 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-6099b89ce2d61016e84923439cc5e18e
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7f7eee2740>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:51,995 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-5650f28c16d0909fbc63da0c13f652bb
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8a4eb8a920>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,000 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-42da8bb4fcc49cec329f72c89f94306d
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa04ceb2ec0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,000 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-47d9e63203cd87d080e72a7bddf2f171
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7feeb4b76ef0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,012 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-00ac2c9ce389ba42f84496c504c14c81
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f074e6faad0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,060 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-911755fb97705ed2be985c8c8f44fe99
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4920df6b00>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,070 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f869911822a289bf0e54574327ca565a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcd8ecee6e0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,081 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-09891e8af83c0cfdd1be2da3d2f8ec64
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f44db19e8f0>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,101 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-cb37971d4badb6c53361e781c264b529
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f5315fd5a50>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,103 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-345d48ece24408afcb5f95a28fca9dd2
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f39827de710>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-2022-10-12 22:48:52,104 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-cca6b9279cc7250f8b0551b1a996b518
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe55996a560>)
-kwargs:    {}
-Exception: 'TypeError("unsupported operand type(s) for +: \'int\' and \'str\'")'
-
-Distributing data time: 0.9702801704406738
-Execution time: 2.507789134979248
+Distributing data time: 4.853671312332153
+Execution time: 1.241828441619873
 Traceback (most recent call last):
   File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
     result = fs.compute_formula(df, formula_str)
@@ -243,12 +163,18 @@ Traceback (most recent call last):
     return self.object_ref.result()
   File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
     raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
-    df_table = execute_one_subtree(child)
   File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
     res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 116, in sum_df_executor
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 132, in sum_df_executor
     return distributive_function_executor(physical_subtree, Function.SUM)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 325, in distributive_function_executor
-    single_value = func_ff(df.values.flatten())
-TypeError: unsupported operand type(s) for +: 'int' and 'str'
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 370, in distributive_function_executor
+    return construct_df_table(result)
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/utils.py", line 219, in construct_df_table
+    return DFTable(df=pd.DataFrame(array))
+  File "/usr/local/lib/python3.10/dist-packages/pandas/core/frame.py", line 761, in __init__
+    mgr = ndarray_to_mgr(
+  File "/usr/local/lib/python3.10/dist-packages/pandas/core/internals/construction.py", line 330, in ndarray_to_mgr
+    values = _prep_ndarraylike(values, copy=copy_on_sanitize)
+  File "/usr/local/lib/python3.10/dist-packages/pandas/core/internals/construction.py", line 584, in _prep_ndarraylike
+    raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+ValueError: Must pass 2-d input. shape=(1, 625000, 1)

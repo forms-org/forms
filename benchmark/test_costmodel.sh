@@ -8,7 +8,7 @@ declare CORES=16
 
 for ROWS in "${ROWS_OPTIONS[@]}"
   do
-  FORMULA_STR="MEDIAN(E1:F\$${ROWS})"
+  FORMULA_STR="=MEDIAN(E1:F\$${ROWS})"
 	for RUN in "${RUN_OPTIONS[@]}"
   do
     FILE_DIR="results/TEST-COSTMODEL/SIMPLE/${ROWS}ROWS/RUN${RUN}"

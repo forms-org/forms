@@ -1,0 +1,104 @@
+2022-10-15 15:05:22,563 - distributed.worker_memory - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 1.62 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:22,671 - distributed.worker_memory - WARNING - Worker is at 52% memory usage. Resuming worker. Process memory: 1.02 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:22,829 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-5abdce4d119c40e31b93570ce7b07e75
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f29e7f133d0>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:22,831 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ebda1a3c18517f023666a0227b1b97d8
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa27fe5bb50>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:22,841 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-261a4e4920667ecc88fd2c586603bf56
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8e409c37f0>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:22,842 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-7fe27cf632a5c1d637888a4ab202a70c
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9009b51f90>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:22,884 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-73b7a62eb6eaf665085d14cf2d5c17f4
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f41697ef640>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:23,047 - distributed.worker_memory - WARNING - Worker is at 81% memory usage. Pausing worker.  Process memory: 1.57 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,120 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.68 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,165 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.77 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,257 - distributed.worker_memory - WARNING - Worker is at 53% memory usage. Resuming worker. Process memory: 1.04 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,296 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-82526fd87009aae35b963952cb1bc37c
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa9b94eb3d0>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:23,316 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b7015b3b75bdd209c3b781baccb98ad8
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0259123ac0>)
+kwargs:    {}
+Exception: "KeyError('data')"
+
+2022-10-15 15:05:23,403 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.59 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,484 - distributed.worker_memory - WARNING - Worker is at 85% memory usage. Pausing worker.  Process memory: 1.66 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,498 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.71 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,503 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.73 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,586 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.14 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,622 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:38463 (pid=68943) exceeded 95% memory budget. Restarting...
+2022-10-15 15:05:23,688 - distributed.nanny - WARNING - Restarting worker
+Distributing data time: 5.059601068496704
+2022-10-15 15:05:23,757 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.54 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,845 - distributed.worker_memory - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 1.63 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,860 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.67 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,886 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.78 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:23,922 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:43533 (pid=68992) exceeded 95% memory budget. Restarting...
+2022-10-15 15:05:24,000 - distributed.nanny - WARNING - Restarting worker
+2022-10-15 15:05:24,281 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.68 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,356 - distributed.worker_memory - WARNING - Worker is at 89% memory usage. Pausing worker.  Process memory: 1.74 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,373 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.78 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,394 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.87 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,429 - distributed.worker_memory - WARNING - Worker is at 87% memory usage. Pausing worker.  Process memory: 1.70 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,494 - distributed.worker_memory - WARNING - Worker is at 58% memory usage. Resuming worker. Process memory: 1.14 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,498 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.84 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,498 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.84 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,518 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:34271 (pid=68922) exceeded 95% memory budget. Restarting...
+2022-10-15 15:05:24,593 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.38 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:24,597 - distributed.nanny - WARNING - Restarting worker
+2022-10-15 15:05:24,650 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b5c4d027d5c442c49927548915ba9a24
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa2fcfb58a0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-0d7e5af4f2b6189c07e03fc6036638aa')"
+
+2022-10-15 15:05:24,694 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.48 GiB -- Worker memory limit: 1.94 GiB
+2022-10-15 15:05:25,017 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ac5432d74c637dbc0bc818718376d1b6
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7248ceb820>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-ec07ba3c23a33b2190df3eb744d0739d')"
+
+2022-10-15 15:05:25,174 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-b6466067a8d232e669493f7ca313d7db
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f29e7f13af0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-0d7e5af4f2b6189c07e03fc6036638aa')"
+
+/usr/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 192 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
