@@ -32,7 +32,6 @@ do
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
-              --along_row_first False \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
