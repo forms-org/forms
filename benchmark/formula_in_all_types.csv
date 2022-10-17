@@ -7,3 +7,5 @@
 =MAX(I$1:I1)
 =AVERAGE(I$1:I1)
 =MEDIAN(I$1:I1)
+=SUMIF(I1:I7, '>0.5')
+=SUMIF(I$1:I1, '>0.5')
