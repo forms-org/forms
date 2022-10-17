@@ -1,2 +1,162 @@
-Distributing data time: 3.1510226726531982
-Execution time: 4.245789051055908
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-b_gmwx23', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-oavyo4p6', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-r54p60fp', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-0nu4rzzx', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-dpqsvg2o', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-z9xeyow1', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-eyt665gp', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-qltjedbv', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-vy8tatba', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-38j9bh1t', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-irwwij4m', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-4ldql46g', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-1uysb2em', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-evyn1vvs', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-_plmzx7x', purging
+distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-uqfjhe5k', purging
+distributed.worker - WARNING - Worker is at 88% memory usage. Pausing worker.  Process memory: 902.00 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Worker is at 59% memory usage. Resuming worker. Process memory: 607.45 MiB -- Worker memory limit: 1.00 GiB
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 619.54 MiB -- Worker memory limit: 1.00 GiB
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-bdb1fc19738f7f532ff5e3df552135b1
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-e70a9f951945ac69994d981d7626d283': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-e70a9f951945ac69994d981d7626d283
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-bdb1fc19738f7f532ff5e3df552135b1
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-e70a9f951945ac69994d981d7626d283': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-e70a9f951945ac69994d981d7626d283
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-bdb1fc19738f7f532ff5e3df552135b1
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-e70a9f951945ac69994d981d7626d283': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-e70a9f951945ac69994d981d7626d283
+NoneType: None
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-e70a9f951945ac69994d981d7626d283': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-e70a9f951945ac69994d981d7626d283': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-e70a9f951945ac69994d981d7626d283': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-bdb1fc19738f7f532ff5e3df552135b1': ()}
+distributed.nanny - WARNING - Restarting worker
+Distributing data time: 4.327823877334595
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb9646c72b0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-bdb1fc19738f7f532ff5e3df552135b1')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb39a50f7c0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-bdb1fc19738f7f532ff5e3df552135b1')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc33af8f7f0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe37e87e560>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9a6648cc10>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ffad93aec20>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-bdb1fc19738f7f532ff5e3df552135b1')"
+
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 914.63 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Worker is at 89% memory usage. Pausing worker.  Process memory: 914.63 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.96 GiB -- Worker memory limit: 1.00 GiB
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd54528dc60>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdb076c25f0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-3300530e31632b14ce675ae351bd76bd')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa10e40bcd0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb9d142a620>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
+
+distributed.nanny - WARNING - Restarting worker
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f94f442a3b0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-3300530e31632b14ce675ae351bd76bd')"
+
+Execution time: 9.698822975158691
+Traceback (most recent call last):
+  File "/Users/eve/Desktop/S/6.5/forms/benchmark/test_driver.py", line 50, in <module>
+    result = fs.compute_formula(df, formula_str)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/core/forms.py", line 44, in compute_formula
+    res = plan_executor.df_execute_formula_plan(df, root)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
+    return res_table.get_table_content()
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/Users/eve/Desktop/S/6.5/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/site-packages/distributed/client.py", line 274, in result
+    raise exc.with_traceback(tb)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
+    res_table = function_executor(physical_subtree)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
+    return distributive_function_executor(physical_subtree, Function.MAX)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 323, in distributive_function_executor
+    df = child.table.get_table_content()
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/table.py", line 55, in get_table_content
+    self.df = self.remote_df.get_df_content()
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
+    [
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
+    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+  File "/Users/eve/Desktop/S/6.5/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
+    return self.object_ref.result()
+  File "/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/site-packages/distributed/client.py", line 276, in result
+    raise result
+concurrent.futures._base.CancelledError: DataFrame-3300530e31632b14ce675ae351bd76bd

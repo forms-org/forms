@@ -21,14 +21,14 @@ do
         FILE_DIR="results/TEST-CORES/${n}/${EXECUTOR}/${CORES}CORES/RUN${RUN}"
         mkdir -p $FILE_DIR
         rm -f $FILE_DIR/*
-        if [ $n == 9 ] || [ $n == 10 ]
+        if [ $n == 1 ] || [ $n == 2 ]
         then
           timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
               --function_executor "$EXECUTOR" \
-              --enable_sumif_opt True\
+              --enable_sumif_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
         else

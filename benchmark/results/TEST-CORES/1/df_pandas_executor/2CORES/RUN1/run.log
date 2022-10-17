@@ -1,2 +1,6 @@
-Distributing data time: 4.6136369705200195
-Execution time: 2.674931049346924
+/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/site-packages/distributed/node.py:180: UserWarning: Port 8787 is already in use.
+Perhaps you already have a cluster running?
+Hosting the HTTP server on port 49638 instead
+  warnings.warn(
+Distributing data time: 9.064931869506836
+Execution time: 6.165942907333374

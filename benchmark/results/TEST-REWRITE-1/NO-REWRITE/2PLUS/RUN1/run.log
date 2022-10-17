@@ -1,2 +1,12 @@
-Distributing data time: 4.79980731010437
-Execution time: 0.7040820121765137
+Traceback (most recent call last):
+  File "/Users/eve/Desktop/S/6.5/forms/forms/core/forms.py", line 36, in compute_formula
+    root.validate(forms_config)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/planner/plannode.py", line 108, in validate
+    child.validate(forms_config)
+  File "/Users/eve/Desktop/S/6.5/forms/forms/planner/plannode.py", line 129, in validate
+    raise FunctionNotSupportedException(
+forms.utils.exceptions.FunctionNotSupportedException: Function Function.PLUS does not support SUMIF optimization
+Traceback (most recent call last):
+  File "/Users/eve/Desktop/S/6.5/forms/benchmark/test_driver.py", line 68, in <module>
+    "distributing_data_time_in_ms": metrics["distributing_data_time"] * 1000,
+KeyError: 'distributing_data_time'

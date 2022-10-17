@@ -21,6 +21,9 @@ do
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
+              --logical_rewriting \
+              --physical_opt \
+              --enable_sumif_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
@@ -32,8 +35,7 @@ do
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
-              --enable_logical_rewriting True \
-              --enable_physical_opt True \
+              --enable_sumif_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"

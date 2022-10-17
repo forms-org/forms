@@ -14,12 +14,12 @@ if __name__ == "__main__":
     parser.add_argument("--formula_str", type=str, required=True)
     parser.add_argument("--cores", type=int, required=True, default=1)
     parser.add_argument("--scheduler", type=str, default="prioritized")
-    parser.add_argument("--enable_logical_rewriting", type=bool, default=True)
-    parser.add_argument("--enable_physical_opt", type=bool, default=True)
+    parser.add_argument("--logical_rewriting", default=True, action='store_false')
+    parser.add_argument("--physical_opt", default=True, action='store_false')
     parser.add_argument("--function_executor", type=str, default="df_pandas_executor")
     parser.add_argument("--cost_model", type=str, default="loadbalance")
     parser.add_argument("--enable_communication_opt", type=bool, default=True)
-    parser.add_argument("--enable_sumif_opt", type=bool, default=False)
+    parser.add_argument("--enable_sumif_opt", action='store_true')
     parser.add_argument("--along_row_first", type=bool, default=False)
     parser.add_argument("--partition_shape", type=tuple, default=(256, 1))
     parser.add_argument("--row_num", type=int)
@@ -37,8 +37,8 @@ if __name__ == "__main__":
     fs.config(
         cores=args.cores,
         scheduler=args.scheduler,
-        enable_logical_rewriting=args.enable_logical_rewriting,
-        enable_physical_opt=args.enable_physical_opt,
+        enable_logical_rewriting=args.logical_rewriting,
+        enable_physical_opt=args.physical_opt,
         function_executor=args.function_executor,
         cost_model=args.cost_model,
         enable_communication_opt=args.enable_communication_opt,
@@ -54,8 +54,8 @@ if __name__ == "__main__":
         "timestamp": str(datetime.now()),
         "cores": args.cores,
         "scheduler": args.scheduler,
-        "enable_logical_rewriting": args.enable_logical_rewriting,
-        "enable_physical_opt": args.enable_physical_opt,
+        "enable_logical_rewriting": args.logical_rewriting,
+        "enable_physical_opt": args.physical_opt,
         "function_executor": args.function_executor,
         "cost_model": args.cost_model,
         "enable_communication_opt": args.enable_communication_opt,

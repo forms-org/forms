@@ -18,6 +18,7 @@ for ROWS in "${ROWS_OPTIONS[@]}"
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
+              --cost_model "simple" \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
@@ -29,7 +30,6 @@ for ROWS in "${ROWS_OPTIONS[@]}"
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
-              --cost_model "loadbalance" \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"

@@ -20,6 +20,8 @@ do
               --filename "$FILENAME" \
               --formula_str "$formula_str" \
               --cores "$CORES" \
+              --logical_rewriting \
+              --physical_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
@@ -31,8 +33,6 @@ do
               --filename "$FILENAME" \
               --formula_str "$formula_str" \
               --cores "$CORES" \
-              --enable_logical_rewriting True \
-              --enable_physical_opt True \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"

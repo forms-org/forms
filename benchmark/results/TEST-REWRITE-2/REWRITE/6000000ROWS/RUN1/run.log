@@ -1,142 +1,205 @@
-2022-10-15 16:51:39,391 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-70c2e1cc88e585e1a8842f883a1edf9e
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 796.11 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 809.43 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 858.22 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 858.22 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f889f35fac0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f90e08bdfc0>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "KeyError('data')"
 
-2022-10-15 16:51:39,520 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-29c3d1de9be1972340897e11279aff65
+distributed.worker - WARNING - Worker is at 54% memory usage. Resuming worker. Process memory: 555.05 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7bd626bb20>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe2a0a4fb50>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "KeyError('data')"
 
-2022-10-15 16:51:40,016 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-1e9967bcb053decdf54af6bfed4651cc
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f65c4433880>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb13dafca90>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "KeyError('data')"
 
-2022-10-15 16:51:40,068 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-2ba6f225e77333cedc89389a1b16b700
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fabbe4b3940>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe23c3e2110>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "KeyError('data')"
 
-2022-10-15 16:51:40,211 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-a7ab569f5334142bbb7e9971eb7b97f3
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa87412f940>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fabad45a470>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "KeyError('data')"
 
-2022-10-15 16:51:40,620 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b05fbe9bbe62e2ce74692c5d84a370d2
+distributed.worker - WARNING - Worker is at 80% memory usage. Pausing worker.  Process memory: 827.54 MiB -- Worker memory limit: 1.00 GiB
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Worker is at 81% memory usage. Pausing worker.  Process memory: 838.62 MiB -- Worker memory limit: 1.00 GiB
+distributed.worker - WARNING - Worker is at 81% memory usage. Pausing worker.  Process memory: 831.04 MiB -- Worker memory limit: 1.00 GiB
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8d33843e80>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb13f802dd0>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:40,842 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-a285c9b7d11998bb0a8e621f1f24bb49
+distributed.nanny - WARNING - Restarting worker
+Distributing data time: 5.782165050506592
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.nanny - WARNING - Restarting worker
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-e70a9f951945ac69994d981d7626d283': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-e70a9f951945ac69994d981d7626d283
+NoneType: None
+distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-6bfdc3aa135b4b2d375e33b2fe99e754': []} state: [None] workers: []
+NoneType: None
+distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-6bfdc3aa135b4b2d375e33b2fe99e754
+NoneType: None
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-6bfdc3aa135b4b2d375e33b2fe99e754': ()}
+distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-e70a9f951945ac69994d981d7626d283': ()}
+distributed.nanny - WARNING - Restarting worker
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f76aafb78e0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe29f3c4400>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:41,129 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-23c0e0a3a0dc3b8c7185987d161fa897
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7b979a3eb0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f987afb71f0>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:41,429 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-6be514960479e7abea2b61eac07892fa
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f60c7177e80>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fababdfd450>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:41,673 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-98564d0de409dc8a542576f0ce3bf09d
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1b38fe0430>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe4f0c6b820>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-e70a9f951945ac69994d981d7626d283')"
 
-2022-10-15 16:51:41,690 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f9d1844daa29277a057f0b99601a0e40
+distributed.nanny - WARNING - Restarting worker
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff2273affd0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdc7b396080>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-6bfdc3aa135b4b2d375e33b2fe99e754')"
 
-2022-10-15 16:51:41,989 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-bef7c0f71b024aca9e285186d55fba88
+distributed.nanny - WARNING - Restarting worker
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f5ad52cbac0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f987afb7970>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:42,037 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-c74a64a112f1c05f762543cb380fa184
+distributed.nanny - WARNING - Restarting worker
+distributed.nanny - WARNING - Restarting worker
+distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
+distributed.nanny - WARNING - Restarting worker
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f18f6aebeb0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fab62953a90>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:42,294 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-d7660cfdc703bebb3f42d89a0450ef16
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0054ad7e80>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe4f0591420>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:42,379 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8f58988fc84b6b020cd4d51c2747088b
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd5553677f0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdc79d13f70>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-2022-10-15 16:51:42,429 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-2f754a2f35f151bbaaf7c3125e152295
+distributed.worker - WARNING - Compute Failed
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f2756b4f700>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe23ad91390>)
 kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
 
-Distributing data time: 3.1246376037597656
-Execution time: 3.6790685653686523
-Traceback (most recent call last):
-  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
-    result = fs.compute_formula(df, formula_str)
-  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
-    res = plan_executor.df_execute_formula_plan(df, root)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
-    return res_table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
-    df_table = execute_one_subtree(child)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
-    return distributive_function_executor(physical_subtree, Function.MAX)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 421, in distributive_function_executor
-    for formula_idx in reversed(all_formula_idx):
-TypeError: 'NoneType' object is not reversible
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fac5ef45c60>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fabaf14eb60>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb13f8673d0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe2a0a4f7c0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f90e07093f0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd1386f7730>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe4f05913f0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f98793db6d0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdc7cf6f8e0>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe23ad3c190>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fab951e0820>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+distributed.worker - WARNING - Compute Failed
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe28227cc40>)
+kwargs:    {}
+Exception: "CancelledError('DataFrame-a521197fa3765dfb8367ab0dcf352521')"
+
+/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 96 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
