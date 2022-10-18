@@ -1,0 +1,24 @@
+2022-10-18 07:34:46,880 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.70 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 07:34:46,949 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.73 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 07:34:47,049 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.76 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 07:34:47,148 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.79 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 07:34:47,248 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.81 GiB -- Worker memory limit: 3.88 GiB
+Distributing data time: 4.779797315597534
+Execution time: 15.771183967590332
+Get table content time: 0.17703580856323242
+Get table content time: 5.168978929519653
+Get table content time: 2.71030330657959
+Get table content time: 8.611071825027466
+Get table content time: 6.825931549072266
+Get table content time: 0.9352166652679443
+Get table content time: 1.898911714553833
+Get table content time: 0.32628560066223145
+Get table content time: 0.9321708679199219
+Get table content time: 6.109252452850342
+Get table content time: 3.0999703407287598
+Get table content time: 4.694171905517578
+Get table content time: 1.7825629711151123
+Get table content time: 8.93736481666565
+Get table content time: 8.384075403213501
+Get table content time: 3.831713914871216
+Get table content time: 10.597813129425049
