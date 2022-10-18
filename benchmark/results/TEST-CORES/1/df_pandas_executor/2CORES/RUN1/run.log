@@ -1,6 +1,7 @@
-/home/ubuntu/.local/lib/python3.10/site-packages/distributed/node.py:183: UserWarning: Port 8787 is already in use.
-Perhaps you already have a cluster running?
-Hosting the HTTP server on port 45701 instead
-  warnings.warn(
-Distributing data time: 4.762598752975464
-Execution time: 2.584012508392334
+Distributing data time: 4.634642601013184
+partitions: 0 64 0 0
+partitions: 64 127 0 0
+Execution time: 2.5733466148376465
+Get table content time: 0.1881108283996582
+Get table content time: 2.197904586791992
+Get table content time: 2.2026333808898926

@@ -1,2 +1,7 @@
-Distributing data time: 4.605301380157471
-Execution time: 4.559709072113037
+Distributing data time: 4.628532648086548
+partitions: 0 90 0 0
+partitions: 0 127 0 0
+Execution time: 4.632340908050537
+Get table content time: 0.18032217025756836
+Get table content time: 3.2636241912841797
+Get table content time: 4.249645948410034
