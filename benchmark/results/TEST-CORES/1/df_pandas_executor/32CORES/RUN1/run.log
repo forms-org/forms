@@ -1,34 +1,35 @@
-2022-10-17 17:14:49,378 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-kpu_ypl_', purging
-2022-10-17 17:14:49,378 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-yg0ulx51', purging
-2022-10-17 17:14:49,381 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-hm_4xygz', purging
-2022-10-17 17:14:49,382 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-0tme7yg3', purging
-2022-10-17 17:14:49,382 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-es3uf6i0', purging
-2022-10-17 17:14:49,382 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-qon4t2f1', purging
-2022-10-17 17:14:49,382 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-pu1f_dmn', purging
-2022-10-17 17:14:49,383 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-wyqbqtq1', purging
-2022-10-17 17:14:49,383 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2wkna7_e', purging
-2022-10-17 17:14:49,385 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ilalm7in', purging
-2022-10-17 17:14:49,385 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-tufruy6n', purging
-2022-10-17 17:14:49,391 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-fbjt0nwo', purging
-2022-10-17 17:14:49,392 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-bmibxabj', purging
-2022-10-17 17:14:49,392 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-rniqn727', purging
-2022-10-17 17:14:49,392 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-lafed4h1', purging
-2022-10-17 17:14:49,392 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-fhzdbojd', purging
-2022-10-17 17:14:49,393 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-5dgj9_z4', purging
-2022-10-17 17:14:49,393 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-u3w_lm98', purging
-2022-10-17 17:14:49,393 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-zy02w934', purging
-2022-10-17 17:14:49,393 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ryjlhqgq', purging
-2022-10-17 17:14:49,393 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-60_2ffa9', purging
-2022-10-17 17:14:49,394 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-82f7otee', purging
-2022-10-17 17:14:49,394 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-q0ktru6t', purging
-2022-10-17 17:14:49,394 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-f4zogqwu', purging
-2022-10-17 17:14:49,397 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-vb709_ar', purging
-2022-10-17 17:14:49,397 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-n7vpvhtp', purging
-2022-10-17 17:14:49,401 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-3ixz4p6s', purging
-2022-10-17 17:14:49,401 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-t82g9lay', purging
-2022-10-17 17:14:49,405 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-fkp15gug', purging
-2022-10-17 17:14:49,406 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-_6p_zv1c', purging
-2022-10-17 17:14:49,406 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-opmst83x', purging
-2022-10-17 17:14:49,409 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-aedv15ez', purging
-Distributing data time: 4.973163843154907
-Execution time: 0.8194468021392822
+Distributing data time: 4.997012376785278
+Execution time: 0.8221352100372314
+Get table content time: 0.20922446250915527
+Get table content time: 0.45923566818237305
+Get table content time: 0.37293577194213867
+Get table content time: 0.44545531272888184
+Get table content time: 0.48299145698547363
+Get table content time: 0.4227325916290283
+Get table content time: 0.48134899139404297
+Get table content time: 0.6183974742889404
+Get table content time: 0.5484368801116943
+Get table content time: 0.45493221282958984
+Get table content time: 0.5288245677947998
+Get table content time: 0.4305391311645508
+Get table content time: 0.4126729965209961
+Get table content time: 0.5868852138519287
+Get table content time: 0.506915807723999
+Get table content time: 0.5409409999847412
+Get table content time: 0.45252108573913574
+Get table content time: 0.5543038845062256
+Get table content time: 0.37517786026000977
+Get table content time: 0.5300366878509521
+Get table content time: 0.45278239250183105
+Get table content time: 0.3926711082458496
+Get table content time: 0.49645423889160156
+Get table content time: 0.605870246887207
+Get table content time: 0.6463067531585693
+Get table content time: 0.5753946304321289
+Get table content time: 0.5489506721496582
+Get table content time: 0.4115626811981201
+Get table content time: 0.5762383937835693
+Get table content time: 0.5232367515563965
+Get table content time: 0.5481774806976318
+Get table content time: 0.3871591091156006
+Get table content time: 0.6206059455871582

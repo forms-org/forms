@@ -18,7 +18,7 @@ do
     do
       for EXECUTOR in "${EXECUTORS[@]}"
       do
-        FILE_DIR="results/TEST-CORES/${n}/${EXECUTOR}/${CORES}CORES/RUN${RUN}"
+        FILE_DIR="results/TEST-CORES-SIMPLE/${n}/${EXECUTOR}/${CORES}CORES/RUN${RUN}"
         mkdir -p $FILE_DIR
         rm -f $FILE_DIR/*
         if [ $n == 9 ] || [ $n == 10 ]
@@ -29,6 +29,7 @@ do
               --cores "$CORES" \
               --function_executor "$EXECUTOR" \
               --enable_sumif_opt \
+	      --cost_model "simple" \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
         else
@@ -37,6 +38,7 @@ do
                 --formula_str "$FORMULA_STR" \
                 --cores "$CORES" \
                 --function_executor "$EXECUTOR" \
+		--cost_model "simple" \
                 --row_num "$ROWS" \
                 --output_path "$FILE_DIR" &> $FILE_DIR/run.log
         fi
