@@ -31,9 +31,12 @@ from forms.executor.dfexecutor.utils import (
 from typing import Callable
 from forms.utils.exceptions import FormSException
 import re
-from datetime import datetime
+from datetime import datetime, date, timedelta
+
+
 # 1 string parameter, more strings are optional
 # Example usages: CONCATENATE(A1, A2, A3), CONCATENATE(A2:B7)
+
 
 def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
@@ -53,7 +56,7 @@ def concatenate_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     def concatenate(s, to_concatenate):
         return s + "".join(to_concatenate)
 
-    kwargs = {"to_concat": values[1:]}
+    kwargs = {"to_concatenate": values[1:]}
     return construct_df_table(values[0].applymap(concatenate, **kwargs))
 
 
@@ -114,7 +117,7 @@ def mid_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = get_string_function_values(physical_subtree)
 
     def mid(text, starting_at, num_characters=1):
-        return text[starting_at: min(starting_at + num_characters, len(text))]
+        return text[starting_at : min(starting_at + num_characters, len(text))]
 
     kwargs = {"starting_at": values[1], "num_characters": values[2]}
     return construct_df_table(values[0].applymap(mid, **kwargs))
@@ -126,7 +129,7 @@ def replace_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = get_string_function_values(physical_subtree)
 
     def replace(text, position, length, new_text):
-        return text[:position] + new_text + text[position + length:]
+        return text[:position] + new_text + text[position + length :]
 
     kwargs = {"position": values[1], "length": values[2], "new_text": values[3]}
     return construct_df_table(values[0].applymap(replace, **kwargs))
@@ -138,7 +141,7 @@ def right_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values = get_string_function_values(physical_subtree)
 
     def right(text, num_characters=1):
-        return text[len(text) - num_characters: len(text)]
+        return text[len(text) - num_characters : len(text)]
 
     if len(values) == 2:
         kwargs = {"num_characters": values[1]}
@@ -165,42 +168,45 @@ def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     def value(text):
         try:
             # Handle certain inputs, expect well-formatted inputs so we can just search for ':'
-            if ':' in text:
+            if ":" in text:
                 # Need to handle AM PM
-                time = text.split(':')
+                time = text.split(":")
                 # Hours:minutes AM/PM
                 if len(time) == 2:
-                    if 'PM' in time[1]:
+                    if "PM" in time[1]:
                         to_minutes = 720
-                        time[1] = time[1].split(' ')[0]
-                    elif 'AM' in time[1]:
+                        time[1] = time[1].split(" ")[0]
+                    elif "AM" in time[1]:
                         to_minutes = 0
-                        time[1] = time[1].split(' ')[0]
+                        time[1] = time[1].split(" ")[0]
                     else:
                         to_minutes = 0
                     to_minutes += int(time[0]) * 60 + int(time[1])
                     return to_minutes / 1440
                 # Hours:minutes:seconds AM/PM
                 elif len(time) == 3:
-                    if 'PM' in time[2]:
+                    if "PM" in time[2]:
                         to_seconds = 43200
-                        time[2] = time[2].split(' ')[0]
-                    elif 'AM' in time[2]:
+                        time[2] = time[2].split(" ")[0]
+                    elif "AM" in time[2]:
                         to_seconds = 0
-                        time[2] = time[2].split(' ')[0]
+                        time[2] = time[2].split(" ")[0]
                     else:
                         to_seconds = 0
                     to_seconds += int(time[0]) * 3600 + int(time[1]) * 60 + int(time[2])
                     return to_seconds / 86400
             # Handle cases: M/D/Y, Y-M-D, M D, Y
             # In Excel, 1/1/1900 = 1 -> Need to find the difference between provided date and this date.
-            elif '-' in text or '/' in text or re.compile(r"\w+ \d{1,2}, \d{4}").search(text):
-                init_date = datetime.date(1900, 1, 1)
-                if '-' in text:
+            elif (
+                "-" in text or "/" in text or re.compile(r"\w+ \d{1,2}, \d{4}").search(text) is not None
+            ):
+                # Can't confirm is excel uses this, but cross-checked different values
+                init_date = datetime(1899, 12, 30)
+                if "-" in text:
                     d = datetime.strptime(text, "%Y-%m-%d")
                     delta = d - init_date
                     return delta.days
-                elif '/' in text:
+                elif "/" in text:
                     d = datetime.strptime(text, "%m/%d/%Y")
                     delta = d - init_date
                     return delta.days
@@ -210,16 +216,18 @@ def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
                     return delta.days
             else:
                 # Don't want to remove decimal or percentage symbols. Maybe more edge cases?
-                remove_special = ''.join(c for c in text if c.isnumeric() or c == '.' or c == '%')
-                if '.' in remove_special:
-                    if '%' in remove_special:
-                        return float(remove_special) / 100
+                remove_special = "".join(c for c in text if c.isnumeric() or c == "." or c == "%")
+                # $125.0 = 125, but $125.55 = 125.55
+                if "%" in remove_special:
+                    return float(remove_special.replace("%", "")) / 100
+                elif "." in remove_special and not float(remove_special).is_integer():
                     return float(remove_special)
                 else:
-                    return int(remove_special)
+                    return int(float(remove_special))
         except Exception as e:
             print("invalid format: ", e)
             raise FormSException
+
     return apply_single_value_func(physical_subtree, value)
 
 
