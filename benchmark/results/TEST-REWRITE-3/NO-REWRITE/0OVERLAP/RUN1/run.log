@@ -1,18 +1,35 @@
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-3n1pa06u', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-e0jcdi51', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-mxeplop6', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-8b9tozgt', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-746i_8d3', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-kybi86i7', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-offpx33i', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-7gwc1xru', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-rxaf_fvq', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-5mrxnpt1', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-ehko8e1a', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-m1kh9nq7', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-8_s7qoni', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-4qn0_263', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-ozisfskq', purging
-distributed.diskutils - INFO - Found stale lock file and directory '/Users/eve/Desktop/S/6.5/forms/benchmark/dask-worker-space/worker-wjzyr2zm', purging
-Distributing data time: 7.266301155090332
-Execution time: 3.026144027709961
+Distributing data time: 4.8117735385894775
+partitions: 0 8 0 0
+partitions: 8 16 0 0
+partitions: 16 23 0 0
+partitions: 23 31 0 0
+partitions: 31 40 0 0
+partitions: 40 48 0 0
+partitions: 48 56 0 0
+partitions: 56 64 0 0
+partitions: 64 72 0 0
+partitions: 72 80 0 0
+partitions: 80 88 0 0
+partitions: 88 96 0 0
+partitions: 96 104 0 0
+partitions: 104 112 0 0
+partitions: 112 120 0 0
+partitions: 120 127 0 0
+Execution time: 0.7456181049346924
+Get table content time: 0.17900443077087402
+Get table content time: 0.5457193851470947
+Get table content time: 0.48168063163757324
+Get table content time: 0.5948662757873535
+Get table content time: 0.47307348251342773
+Get table content time: 0.4652681350708008
+Get table content time: 0.5868175029754639
+Get table content time: 0.5493459701538086
+Get table content time: 0.520681619644165
+Get table content time: 0.4204280376434326
+Get table content time: 0.6028554439544678
+Get table content time: 0.5447850227355957
+Get table content time: 0.553095817565918
+Get table content time: 0.5435497760772705
+Get table content time: 0.5922658443450928
+Get table content time: 0.47767019271850586
+Get table content time: 0.42984724044799805

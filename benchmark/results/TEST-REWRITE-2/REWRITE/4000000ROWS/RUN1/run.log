@@ -1,48 +1,147 @@
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 852.46 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 872.61 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 841.19 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 852.46 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 877.66 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.96 GiB -- Worker memory limit: 1.00 GiB
-distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
-distributed.worker - WARNING - Worker is at 85% memory usage. Pausing worker.  Process memory: 872.61 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 82% memory usage. Pausing worker.  Process memory: 841.19 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 828.55 MiB -- Worker memory limit: 1.00 GiB
-distributed.nanny - WARNING - Restarting worker
-Distributing data time: 38.318907022476196
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.95 GiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.98 GiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 891.07 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 80% memory usage. Pausing worker.  Process memory: 828.55 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 54% memory usage. Resuming worker. Process memory: 553.55 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.96 GiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 57% memory usage. Resuming worker. Process memory: 590.98 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 87% memory usage. Pausing worker.  Process memory: 891.07 MiB -- Worker memory limit: 1.00 GiB
-distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
-distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
-distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-c84534b7c3d84f8090e3de539b03fda6': []} state: [None] workers: []
-NoneType: None
-distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-c84534b7c3d84f8090e3de539b03fda6
-NoneType: None
-distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-c84534b7c3d84f8090e3de539b03fda6': ()}
-distributed.nanny - WARNING - Restarting worker
-distributed.worker - WARNING - Compute Failed
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd137e63af0>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-c84534b7c3d84f8090e3de539b03fda6')"
-
-distributed.nanny - WARNING - Restarting worker
-distributed.worker - WARNING - Compute Failed
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb5f7f7da80>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-1fb90134e2c5079d499c17ac9f61bdf0')"
-
-distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-1fb90134e2c5079d499c17ac9f61bdf0': []} state: ['released'] workers: []
-NoneType: None
-distributed.scheduler - ERROR - Workers don't have promised key: [], DataFrame-1fb90134e2c5079d499c17ac9f61bdf0
-NoneType: None
-distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-1fb90134e2c5079d499c17ac9f61bdf0': ()}
-/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 96 leaked semaphore objects to clean up at shutdown
-  warnings.warn('resource_tracker: There appear to be %d '
+Distributing data time: 2.2301383018493652
+partitions: 0 31 0 0
+partitions: 31 45 0 0
+partitions: 45 55 0 0
+partitions: 55 63 0 0
+partitions: 63 71 0 0
+partitions: 71 78 0 0
+partitions: 78 84 0 0
+partitions: 84 90 0 0
+partitions: 90 95 0 0
+partitions: 95 101 0 0
+partitions: 101 106 0 0
+partitions: 106 110 0 0
+partitions: 110 115 0 0
+partitions: 115 119 0 0
+partitions: 119 123 0 0
+partitions: 123 127 0 0
+partitions: 0 8 0 0
+partitions: 0 0 0 0
+partitions: 8 15 0 0
+partitions: 0 0 0 0
+partitions: 15 24 0 0
+partitions: 0 0 0 0
+partitions: 24 32 0 0
+partitions: 0 1 0 0
+partitions: 32 40 0 0
+partitions: 1 1 0 0
+partitions: 40 48 0 0
+partitions: 1 2 0 0
+partitions: 48 56 0 0
+partitions: 2 3 0 0
+partitions: 56 64 0 0
+partitions: 3 4 0 0
+partitions: 64 72 0 0
+partitions: 4 5 0 0
+partitions: 72 80 0 0
+partitions: 5 6 0 0
+partitions: 80 88 0 0
+partitions: 6 7 0 0
+partitions: 88 96 0 0
+partitions: 7 9 0 0
+partitions: 96 104 0 0
+partitions: 9 10 0 0
+partitions: 104 112 0 0
+partitions: 10 12 0 0
+partitions: 112 120 0 0
+partitions: 12 14 0 0
+partitions: 120 127 0 0
+partitions: 14 15 0 0
+Execution time: 1.3695082664489746
+Get table content time: 0.08170437812805176
+Get table content time: 0.22246551513671875
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.20560812950134277
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.23569846153259277
+Get table content time: 0.022336721420288086
+Get table content time: 0.23607301712036133
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.1851656436920166
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.2161550521850586
+Get table content time: 0.02345871925354004
+Get table content time: 0.17102622985839844
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.21503853797912598
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.24822711944580078
+Get table content time: 0.01306009292602539
+Get table content time: 0.33904361724853516
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.19471192359924316
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.17185282707214355
+Get table content time: 0.01940321922302246
+Get table content time: 0.16208696365356445
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.20034360885620117
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.25195741653442383
+Get table content time: 0.012948989868164062
+Get table content time: 0.19153833389282227
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.16643834114074707
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.23092031478881836
+Get table content time: 0.01675105094909668
+Get table content time: 0.2277510166168213
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.19895434379577637
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.22612881660461426
+Get table content time: 0.012999773025512695
+Get table content time: 0.14303374290466309
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.2098696231842041
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.21540164947509766
+Get table content time: 0.01759791374206543
+Get table content time: 0.5465066432952881
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.15396690368652344
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.24367141723632812
+Get table content time: 0.018516063690185547
+Get table content time: 0.17731356620788574
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.16788887977600098
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.1611785888671875
+Get table content time: 0.030370712280273438
+Get table content time: 0.12538576126098633
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.21837830543518066
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.20873332023620605
+Get table content time: 0.010272979736328125
+Get table content time: 0.18039965629577637
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.1325685977935791
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.21264123916625977
+Get table content time: 0.015018463134765625
+Get table content time: 0.1412525177001953
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.19079089164733887
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.23379015922546387
+Get table content time: 0.017725706100463867
+Get table content time: 0.20422840118408203
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.2117166519165039
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.22897791862487793
+Get table content time: 0.01347804069519043
+Get table content time: 0.1316845417022705
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.1612546443939209
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.24158787727355957
+Get table content time: 0.01797938346862793
+Get table content time: 0.29186558723449707
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.16350030899047852
+all_formula_idx [0, 999998, 1414212, 1732049, 1999999, 2236067, 2449488, 2645750, 2828426, 2999999, 3162277, 3316624, 3464101, 3605551, 3741657, 3872983, 4000000]
+Get table content time: 0.2511565685272217
+Get table content time: 0.012861490249633789

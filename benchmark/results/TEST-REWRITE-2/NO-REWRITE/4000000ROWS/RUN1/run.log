@@ -1,71 +1,35 @@
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 748.23 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 773.76 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 813.98 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 788.30 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 798.15 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 832.12 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 863.23 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 81% memory usage. Pausing worker.  Process memory: 832.12 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 84% memory usage. Pausing worker.  Process memory: 863.23 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 38% memory usage. Resuming worker. Process memory: 397.96 MiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 0.93 GiB -- Worker memory limit: 1.00 GiB
-distributed.worker - WARNING - Worker is at 50% memory usage. Resuming worker. Process memory: 519.01 MiB -- Worker memory limit: 1.00 GiB
-distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
-distributed.nanny - WARNING - Worker exceeded 95% memory budget. Restarting
-distributed.nanny - WARNING - Restarting worker
-Distributing data time: 3.1387057304382324
-distributed.nanny - WARNING - Restarting worker
-distributed.worker - WARNING - Compute Failed
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f818f312590>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-10da07922e081da1e96da9a0391b7539')"
-
-distributed.worker - WARNING - Compute Failed
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fea7a92b850>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-10da07922e081da1e96da9a0391b7539')"
-
-distributed.worker - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker.html#memtrim for more information. -- Unmanaged memory: 747.65 MiB -- Worker memory limit: 1.00 GiB
-Execution time: 11.006803750991821
-Traceback (most recent call last):
-  File "/Users/eve/Desktop/S/6.5/forms/benchmark/test_driver.py", line 50, in <module>
-    result = fs.compute_formula(df, formula_str)
-  File "/Users/eve/Desktop/S/6.5/forms/forms/core/forms.py", line 44, in compute_formula
-    res = plan_executor.df_execute_formula_plan(df, root)
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
-    return res_table.get_table_content()
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/table.py", line 55, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/Users/eve/Desktop/S/6.5/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/site-packages/distributed/client.py", line 274, in result
-    raise exc.with_traceback(tb)
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
-    return distributive_function_executor(physical_subtree, Function.MAX)
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 323, in distributive_function_executor
-    df = child.table.get_table_content()
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/table.py", line 55, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/Users/eve/Desktop/S/6.5/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/Users/eve/Desktop/S/6.5/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/Users/eve/opt/anaconda3/envs/forms/lib/python3.10/site-packages/distributed/client.py", line 276, in result
-    raise result
-concurrent.futures._base.CancelledError: DataFrame-10da07922e081da1e96da9a0391b7539
-distributed.nanny - WARNING - Worker process still alive after 3.9999990463256836 seconds, killing
-distributed.nanny - WARNING - Worker process still alive after 3.999999237060547 seconds, killing
+Distributing data time: 2.246267318725586
+partitions: 0 31 0 0
+partitions: 0 45 0 0
+partitions: 0 55 0 0
+partitions: 0 63 0 0
+partitions: 0 71 0 0
+partitions: 0 78 0 0
+partitions: 0 84 0 0
+partitions: 0 90 0 0
+partitions: 0 95 0 0
+partitions: 0 101 0 0
+partitions: 0 106 0 0
+partitions: 0 110 0 0
+partitions: 0 115 0 0
+partitions: 0 119 0 0
+partitions: 0 123 0 0
+partitions: 0 127 0 0
+Execution time: 3.4739418029785156
+Get table content time: 0.09260416030883789
+Get table content time: 1.487412929534912
+Get table content time: 2.3774900436401367
+Get table content time: 1.9445884227752686
+Get table content time: 1.8255503177642822
+Get table content time: 2.9521684646606445
+Get table content time: 0.865623950958252
+Get table content time: 3.1356565952301025
+Get table content time: 1.4859981536865234
+Get table content time: 1.3934903144836426
+Get table content time: 2.721254825592041
+Get table content time: 2.342176675796509
+Get table content time: 2.7741341590881348
+Get table content time: 2.5943455696105957
+Get table content time: 2.5686397552490234
+Get table content time: 2.9539859294891357
+Get table content time: 2.7777905464172363

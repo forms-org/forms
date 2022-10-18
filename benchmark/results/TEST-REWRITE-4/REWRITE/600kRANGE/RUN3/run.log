@@ -1,27 +1,9 @@
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:37,619 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-90943d41c1e06dd3401a6fbde90ab62e
+2022-10-18 16:57:21,459 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f07beb674fe1578389f152bd90d27f2a
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7efec466b3a0>)
-kwargs:    {}
-Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
-
-/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:37,886 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b3e58808806541650897eac5c7f6079f
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8f781c6230>)
-kwargs:    {}
-Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
-
-/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,249 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-715ee829e1a1887623f3744bb83ce960
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9e97717fd0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7faef42b7880>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
@@ -29,64 +11,53 @@ Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,390 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-34444c515e41d850088b99e91d62a238
+2022-10-18 16:57:21,840 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-014c9d3d7c5d130b30a78bfd4c7bfe50
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f53f01f3580>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbb8d807a90>)
+kwargs:    {}
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
+
+2022-10-18 16:57:21,854 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-7612e73856ab938fb76fd79a919267bd
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4de98a7a30>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,441 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-39b12b4395c0e52d5c6d03d8bce9dd19
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-18 16:57:21,995 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-603d5f2832a26678ba9771c9d5444958
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f486078b880>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f20c4d96500>)
+kwargs:    {}
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
+
+2022-10-18 16:57:22,007 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f964e2720500b5149f28c2d89b95f48a
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff6f5bd3a00>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,519 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-96f27921c69ffdab1321d9a781d4479f
+2022-10-18 16:57:22,111 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-880990d04eae5044bf6d86d1c653e4a7
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f80602878b0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc4e427e200>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,544 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-bba557b1cb2a95879e693488503e78ef
+2022-10-18 16:57:22,260 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-542fd85b553a560a801b993626956a54
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcb297738b0>)
-kwargs:    {}
-Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
-
-/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,561 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-4d13d8515aa70b20d02e6fba3dd97339
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fad8b309e10>)
-kwargs:    {}
-Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
-
-2022-10-15 17:51:38,605 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-83ff7c68000156ebca24a61eeeb2d351
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3a6e3a9d20>)
-kwargs:    {}
-Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
-
-/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,633 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-5a914bf3d372cafbad4bda026501fb2b
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbcdac33820>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff56ca0faf0>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
@@ -98,52 +69,112 @@ Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,706 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f54c8a53c43b33bab0a425ee78e06bf2
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-18 16:57:22,346 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c9c9a1dfddb60f913ac77b69ac6efb85
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fe12e4636a0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdba20bfa90>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
 /usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
   return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
-2022-10-15 17:51:38,717 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-0d2f1bde5c03c5ffb5c2096f87d3586e
+2022-10-18 16:57:22,371 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-f53926218ab60dd0744f41b9b910c90a
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f31e12a3880>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9560180eb0>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-15 17:51:38,736 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-0796c477db20d7d2c32c143b6178cb20
+2022-10-18 16:57:22,384 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-ed6186b0ce51220f87f1363966e51d98
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd8705f33d0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1d691b3a60>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-15 17:51:38,751 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-0a6571ded3da3c107c227fadb9030982
+/usr/local/lib/python3.10/dist-packages/numpy/core/fromnumeric.py:86: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+2022-10-18 16:57:22,386 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-c6ecd32628e657838690d30e4d60860a
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fedf8e236d0>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6aa133a200>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-15 17:51:38,756 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-5a20a52a293ceef2c2df4249096a9489
+2022-10-18 16:57:22,393 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-460b5753ac2fea4e20ef1b42cd9ce747
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f24ba5fb880>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f05800ea320>)
+kwargs:    {}
+Exception: "ValueError('Must pass 2-d input. shape=(1, 624999, 1)')"
+
+2022-10-18 16:57:22,415 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-20bae80b6a8dbb4fb3512fd9e4f3de2f
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7886493490>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-2022-10-15 17:51:38,784 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-a70c48b234c235afa0f68f9d0e9d83fa
+2022-10-18 16:57:22,417 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-bae268def573a98c90d51e041aa70f55
 Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd4e1a34100>)
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3a1108ffd0>)
 kwargs:    {}
 Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
 
-Distributing data time: 4.8013598918914795
-Execution time: 1.748119831085205
+2022-10-18 16:57:22,428 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-d98ebe779935571d3967fdd318764f12
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7d805c7f70>)
+kwargs:    {}
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625000, 1)')"
+
+2022-10-18 16:57:22,454 - distributed.worker - WARNING - Compute Failed
+Key:       execute_one_subtree-58fdb2008236fc7ae7ec31f645a210af
+Function:  execute_one_subtree
+args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f352088b820>)
+kwargs:    {}
+Exception: "ValueError('Must pass 2-d input. shape=(1, 625001, 1)')"
+
+Distributing data time: 4.837361574172974
+partitions: 0 8 0 0
+partitions: 8 16 0 0
+partitions: 0 7 0 0
+partitions: 16 23 0 0
+partitions: 0 7 0 0
+partitions: 23 32 0 0
+partitions: 0 7 0 0
+partitions: 32 40 0 0
+partitions: 0 7 0 0
+partitions: 40 48 0 0
+partitions: 0 7 0 0
+partitions: 48 56 0 0
+partitions: 0 7 0 0
+partitions: 56 64 0 0
+partitions: 0 7 0 0
+partitions: 64 72 0 0
+partitions: 0 7 0 0
+partitions: 72 80 0 0
+partitions: 0 7 0 0
+partitions: 80 88 0 0
+partitions: 0 7 0 0
+partitions: 88 96 0 0
+partitions: 0 7 0 0
+partitions: 96 104 0 0
+partitions: 0 7 0 0
+partitions: 104 112 0 0
+partitions: 0 7 0 0
+partitions: 112 120 0 0
+partitions: 0 7 0 0
+partitions: 120 127 0 0
+partitions: 0 7 0 0
+Execution time: 1.8493406772613525
 Traceback (most recent call last):
   File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
     result = fs.compute_formula(df, formula_str)
@@ -151,7 +182,7 @@ Traceback (most recent call last):
     res = plan_executor.df_execute_formula_plan(df, root)
   File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
     return res_table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
+  File "/home/ubuntu/forms/forms/executor/table.py", line 59, in get_table_content
     self.df = self.remote_df.get_df_content()
   File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
     [
@@ -169,7 +200,7 @@ Traceback (most recent call last):
     return distributive_function_executor(physical_subtree, Function.SUM)
   File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 370, in distributive_function_executor
     return construct_df_table(result)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/utils.py", line 219, in construct_df_table
+  File "/home/ubuntu/forms/forms/executor/dfexecutor/utils.py", line 242, in construct_df_table
     return DFTable(df=pd.DataFrame(array))
   File "/usr/local/lib/python3.10/dist-packages/pandas/core/frame.py", line 761, in __init__
     mgr = ndarray_to_mgr(
@@ -178,3 +209,34 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.10/dist-packages/pandas/core/internals/construction.py", line 584, in _prep_ndarraylike
     raise ValueError(f"Must pass 2-d input. shape={values.shape}")
 ValueError: Must pass 2-d input. shape=(1, 625000, 1)
+Get table content time: 0.5714726448059082
+Get table content time: 0.7672553062438965
+Get table content time: 0.4011659622192383
+Get table content time: 1.1587352752685547
+Get table content time: 0.40997767448425293
+Get table content time: 0.31592226028442383
+Get table content time: 0.6354012489318848
+Get table content time: 0.32576894760131836
+Get table content time: 0.599297285079956
+Get table content time: 0.9613745212554932
+Get table content time: 0.3559272289276123
+Get table content time: 1.121612548828125
+Get table content time: 0.30860257148742676
+Get table content time: 1.0320003032684326
+Get table content time: 0.44534826278686523
+Get table content time: 1.048192024230957
+Get table content time: 0.41095733642578125
+Get table content time: 0.7516961097717285
+Get table content time: 0.3252692222595215
+Get table content time: 1.1714482307434082
+Get table content time: 0.3136422634124756
+Get table content time: 0.7339155673980713
+Get table content time: 0.36025381088256836
+Get table content time: 0.9289169311523438
+Get table content time: 0.5604119300842285
+Get table content time: 1.1670713424682617
+Get table content time: 0.36518383026123047
+Get table content time: 1.127420425415039
+Get table content time: 0.38367724418640137
+Get table content time: 0.9834578037261963
+Get table content time: 0.5101768970489502

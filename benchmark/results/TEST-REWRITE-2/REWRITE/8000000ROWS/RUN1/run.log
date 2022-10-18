@@ -1,142 +1,147 @@
-2022-10-15 16:52:16,637 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-690f7e7150d0ef962fc7e633c9dac7d3
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff6a8b2b8b0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:16,873 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-9983bf7e1f64e40197ee1fe1446729fc
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8234333910>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:17,746 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-db75ea1babb82b1149b71ca0a1295272
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f466699f7c0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:17,905 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-71edac1b75a4a87664889a5e3359b3be
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f00f6da38e0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:18,210 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-a651d627124a9092308e04cd89151d2a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f00f456b8b0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:18,412 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-3e4c90fc0fa0e474c688be8bbae131bd
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f3437a04280>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:19,021 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-79a5cd28eb0c459c7d9ed6d60be7f0ea
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbf5383b3d0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:19,191 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-0bb4253eac2367bbe18560c5736ab016
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f96b25a38e0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:19,276 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-4fa0521b1442686f9efadda36d0b6cbc
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f6505c867a0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:19,723 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-84f77bed86758bf0f2c038e81965ad0b
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7ff6d9effe20>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:20,208 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-490b4eaae5c849d0ccf999dbbc977594
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f4e883b3820>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:20,332 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-68066612e0525e7c1a884a9a1c42243d
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f40618cb490>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:20,709 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-74eb849c1a8daf79453d729f6590b472
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f982434b8b0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:20,728 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8dc3eb06e48c279ec41b370e48148a5f
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f0cc02fba60>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:21,210 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-af7cea4a44a8cbc93e1763842db2b20c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f393df89fc0>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-2022-10-15 16:52:21,212 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-9b325b9d3c08171d82e13d268af2a918
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f866c5c3a90>)
-kwargs:    {}
-Exception: 'TypeError("\'NoneType\' object is not reversible")'
-
-Distributing data time: 3.9366111755371094
-Execution time: 5.093622446060181
-Traceback (most recent call last):
-  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
-    result = fs.compute_formula(df, formula_str)
-  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
-    res = plan_executor.df_execute_formula_plan(df, root)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
-    return res_table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 55, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 37, in execute_one_subtree
-    df_table = execute_one_subtree(child)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
-    return distributive_function_executor(physical_subtree, Function.MAX)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 421, in distributive_function_executor
-    for formula_idx in reversed(all_formula_idx):
-TypeError: 'NoneType' object is not reversible
+Distributing data time: 3.9844281673431396
+partitions: 0 31 0 0
+partitions: 31 45 0 0
+partitions: 45 55 0 0
+partitions: 55 63 0 0
+partitions: 63 71 0 0
+partitions: 71 78 0 0
+partitions: 78 84 0 0
+partitions: 84 90 0 0
+partitions: 90 95 0 0
+partitions: 95 101 0 0
+partitions: 101 106 0 0
+partitions: 106 110 0 0
+partitions: 110 115 0 0
+partitions: 115 119 0 0
+partitions: 119 123 0 0
+partitions: 123 127 0 0
+partitions: 0 7 0 0
+partitions: 0 0 0 0
+partitions: 7 16 0 0
+partitions: 0 0 0 0
+partitions: 16 24 0 0
+partitions: 0 0 0 0
+partitions: 24 32 0 0
+partitions: 0 1 0 0
+partitions: 32 40 0 0
+partitions: 1 1 0 0
+partitions: 40 48 0 0
+partitions: 1 2 0 0
+partitions: 48 56 0 0
+partitions: 2 3 0 0
+partitions: 56 64 0 0
+partitions: 3 4 0 0
+partitions: 64 72 0 0
+partitions: 4 5 0 0
+partitions: 72 80 0 0
+partitions: 5 6 0 0
+partitions: 80 88 0 0
+partitions: 6 7 0 0
+partitions: 88 95 0 0
+partitions: 7 9 0 0
+partitions: 95 104 0 0
+partitions: 9 10 0 0
+partitions: 104 111 0 0
+partitions: 10 12 0 0
+partitions: 111 120 0 0
+partitions: 12 14 0 0
+partitions: 120 127 0 0
+partitions: 14 15 0 0
+Execution time: 2.1815781593322754
+Get table content time: 0.14733338356018066
+Get table content time: 0.5768094062805176
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2041013240814209
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.4899485111236572
+Get table content time: 0.02417755126953125
+Get table content time: 0.26740264892578125
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2524375915527344
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.31650590896606445
+Get table content time: 0.026731252670288086
+Get table content time: 0.3577122688293457
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3027842044830322
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.4820210933685303
+Get table content time: 0.01553034782409668
+Get table content time: 0.38144850730895996
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2559967041015625
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3816111087799072
+Get table content time: 0.023082971572875977
+Get table content time: 0.2602357864379883
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.273118257522583
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3172614574432373
+Get table content time: 0.03966259956359863
+Get table content time: 0.4767179489135742
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2561311721801758
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.44822263717651367
+Get table content time: 0.01869940757751465
+Get table content time: 0.9316940307617188
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.26711034774780273
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3883652687072754
+Get table content time: 0.0279085636138916
+Get table content time: 0.2731456756591797
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3026888370513916
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.3843698501586914
+Get table content time: 0.024587392807006836
+Get table content time: 0.3041961193084717
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.24945497512817383
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.33542609214782715
+Get table content time: 0.027691125869750977
+Get table content time: 0.328157901763916
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2858288288116455
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.4321267604827881
+Get table content time: 0.020871400833129883
+Get table content time: 0.4261770248413086
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2936363220214844
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.445465087890625
+Get table content time: 0.013238191604614258
+Get table content time: 0.21035122871398926
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.15368962287902832
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.4408993721008301
+Get table content time: 0.019063234329223633
+Get table content time: 0.2173147201538086
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.30297040939331055
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.37151074409484863
+Get table content time: 0.02840423583984375
+Get table content time: 0.26496219635009766
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2854154109954834
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.5130860805511475
+Get table content time: 0.01242375373840332
+Get table content time: 0.3843872547149658
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.2867717742919922
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.48860812187194824
+Get table content time: 0.030113697052001953
+Get table content time: 0.272869348526001
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.21206951141357422
+all_formula_idx [0, 1999998, 2828425, 3464100, 3999998, 4472135, 4898978, 5291501, 5656853, 5999999, 6324554, 6633249, 6928202, 7211102, 7483314, 7745966, 8000000]
+Get table content time: 0.4452247619628906
+Get table content time: 0.01996159553527832
