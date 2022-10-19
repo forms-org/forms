@@ -1,37 +1,10 @@
-2022-10-18 07:16:39,715 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-nwtpd27p', purging
-2022-10-18 07:16:39,715 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-j9pexefl', purging
-2022-10-18 07:16:39,717 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-mjwn_1mi', purging
-2022-10-18 07:16:39,720 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-cck4dso_', purging
-2022-10-18 07:16:39,720 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-vdgm_2ua', purging
-2022-10-18 07:16:39,723 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-v58khhvs', purging
-2022-10-18 07:16:39,723 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-f6zsrgf1', purging
-2022-10-18 07:16:39,723 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-c8v7c9li', purging
-2022-10-18 07:16:39,723 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-tk1275p6', purging
-2022-10-18 07:16:39,725 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-i4yvy8za', purging
-2022-10-18 07:16:39,725 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-ytpmb7qm', purging
-2022-10-18 07:16:39,725 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-r6iy7ysr', purging
-2022-10-18 07:16:39,725 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-jwux5x22', purging
-2022-10-18 07:16:39,725 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-gtcif8l2', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-l1trm1ry', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-5nzk0305', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-tev0kroh', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-n62fepyb', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-8mizbho6', purging
-2022-10-18 07:16:39,729 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-e80_9blz', purging
-2022-10-18 07:16:39,730 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-8takmvvw', purging
-2022-10-18 07:16:39,730 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-fy7et2x8', purging
-2022-10-18 07:16:39,730 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-9ixln4yj', purging
-2022-10-18 07:16:39,730 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-_ligvbce', purging
-2022-10-18 07:16:39,730 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-49zmu9ur', purging
-2022-10-18 07:16:39,733 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-rhutvlr7', purging
-2022-10-18 07:16:39,733 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-4og95e76', purging
-2022-10-18 07:16:39,733 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-exi5c1ud', purging
-2022-10-18 07:16:39,733 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-0u3n35pl', purging
-2022-10-18 07:16:39,734 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-guws15bo', purging
-2022-10-18 07:16:39,734 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-uixm07mo', purging
-2022-10-18 07:16:39,734 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-frph0nhv', purging
-Distributing data time: 4.665811061859131
-Execution time: 4.579486608505249
-Get table content time: 0.17051148414611816
-Get table content time: 3.475726842880249
-Get table content time: 0.05114436149597168
+Distributing data time: 4.66750431060791
+partitions: 0 127 0 0
+Execution time: 4.5837180614471436
+Get table content time: 0.16872572898864746
+Get table content time: 3.4586143493652344
+all_formula_idx [0, 10000000]
+all_formula_idx [0, 10000000]
+Get table content time: 0.05115509033203125
+all_formula_idx [0, 10000000]
+all_formula_idx [0, 10000000]

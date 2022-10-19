@@ -1,24 +1,41 @@
-2022-10-18 07:34:46,880 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.70 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:34:46,949 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.73 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:34:47,049 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.76 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:34:47,148 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.79 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:34:47,248 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.81 GiB -- Worker memory limit: 3.88 GiB
-Distributing data time: 4.779797315597534
-Execution time: 15.771183967590332
-Get table content time: 0.17703580856323242
-Get table content time: 5.168978929519653
-Get table content time: 2.71030330657959
-Get table content time: 8.611071825027466
-Get table content time: 6.825931549072266
-Get table content time: 0.9352166652679443
-Get table content time: 1.898911714553833
-Get table content time: 0.32628560066223145
-Get table content time: 0.9321708679199219
-Get table content time: 6.109252452850342
-Get table content time: 3.0999703407287598
-Get table content time: 4.694171905517578
-Get table content time: 1.7825629711151123
-Get table content time: 8.93736481666565
-Get table content time: 8.384075403213501
-Get table content time: 3.831713914871216
-Get table content time: 10.597813129425049
+2022-10-19 09:17:06,196 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.70 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:17:06,267 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.72 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:17:06,368 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.76 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:17:06,469 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.79 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:17:06,567 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.81 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:17:07,863 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.43 GiB -- Worker memory limit: 3.88 GiB
+Distributing data time: 4.786688804626465
+partitions: 0 8 0 0
+partitions: 0 16 0 0
+partitions: 0 24 0 0
+partitions: 0 32 0 0
+partitions: 0 40 0 0
+partitions: 0 48 0 0
+partitions: 0 56 0 0
+partitions: 0 64 0 0
+partitions: 0 72 0 0
+partitions: 0 80 0 0
+partitions: 0 88 0 0
+partitions: 0 96 0 0
+partitions: 0 104 0 0
+partitions: 0 112 0 0
+partitions: 0 120 0 0
+partitions: 0 127 0 0
+Execution time: 12.550661087036133
+Get table content time: 0.21128606796264648
+Get table content time: 6.394405841827393
+Get table content time: 5.856194972991943
+Get table content time: 0.4320180416107178
+Get table content time: 6.8065009117126465
+Get table content time: 1.6023175716400146
+Get table content time: 2.660233974456787
+Get table content time: 6.7215211391448975
+Get table content time: 0.6867969036102295
+Get table content time: 7.539527177810669
+Get table content time: 5.959545850753784
+Get table content time: 1.3425371646881104
+Get table content time: 2.003687858581543
+Get table content time: 5.857326030731201
+Get table content time: 2.657400369644165
+Get table content time: 7.025192022323608
+Get table content time: 7.31650972366333

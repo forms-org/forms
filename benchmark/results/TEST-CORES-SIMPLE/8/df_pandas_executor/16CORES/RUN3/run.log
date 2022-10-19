@@ -1,24 +1,39 @@
-2022-10-18 07:40:24,336 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.72 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:40:24,408 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.75 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:40:24,508 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.77 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:40:24,608 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.80 GiB -- Worker memory limit: 3.88 GiB
-2022-10-18 07:40:25,684 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.46 GiB -- Worker memory limit: 3.88 GiB
-Distributing data time: 4.81609034538269
-Execution time: 13.658984899520874
-Get table content time: 0.21527576446533203
-Get table content time: 1.1085832118988037
-Get table content time: 1.718735933303833
-Get table content time: 4.282884836196899
-Get table content time: 4.37747597694397
-Get table content time: 2.27685809135437
-Get table content time: 3.008814573287964
-Get table content time: 4.005060434341431
-Get table content time: 0.39617276191711426
-Get table content time: 5.936597585678101
-Get table content time: 5.357345104217529
-Get table content time: 7.037951946258545
-Get table content time: 4.578188180923462
-Get table content time: 6.165172815322876
-Get table content time: 1.4024698734283447
-Get table content time: 8.19486927986145
-Get table content time: 8.435636758804321
+2022-10-19 09:27:16,127 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.71 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:27:16,206 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.74 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:27:16,306 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.77 GiB -- Worker memory limit: 3.88 GiB
+2022-10-19 09:27:16,406 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.80 GiB -- Worker memory limit: 3.88 GiB
+Distributing data time: 4.792458534240723
+partitions: 0 8 0 0
+partitions: 0 16 0 0
+partitions: 0 24 0 0
+partitions: 0 32 0 0
+partitions: 0 40 0 0
+partitions: 0 48 0 0
+partitions: 0 56 0 0
+partitions: 0 64 0 0
+partitions: 0 72 0 0
+partitions: 0 80 0 0
+partitions: 0 88 0 0
+partitions: 0 96 0 0
+partitions: 0 104 0 0
+partitions: 0 112 0 0
+partitions: 0 120 0 0
+partitions: 0 127 0 0
+Execution time: 16.532312154769897
+Get table content time: 0.21846604347229004
+Get table content time: 2.070166826248169
+Get table content time: 0.30144309997558594
+Get table content time: 4.639897346496582
+Get table content time: 2.388044834136963
+Get table content time: 7.62370491027832
+Get table content time: 2.9519810676574707
+Get table content time: 6.834047317504883
+Get table content time: 3.5370545387268066
+Get table content time: 2.1485166549682617
+Get table content time: 5.105241537094116
+Get table content time: 8.097285270690918
+Get table content time: 0.6485810279846191
+Get table content time: 10.476247072219849
+Get table content time: 10.134314775466919
+Get table content time: 9.176126718521118
+Get table content time: 11.397470474243164

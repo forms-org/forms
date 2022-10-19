@@ -1,11 +1,31 @@
-Distributing data time: 4.660050630569458
-Execution time: 4.8021886348724365
-Get table content time: 0.17389535903930664
-Get table content time: 1.7138986587524414
-Get table content time: 0.11902928352355957
-Get table content time: 2.622746467590332
-Get table content time: 0.1222071647644043
-Get table content time: 4.280821800231934
-Get table content time: 0.11212372779846191
-Get table content time: 3.729635238647461
-Get table content time: 0.1408376693725586
+Distributing data time: 4.628572225570679
+partitions: 0 32 0 0
+partitions: 32 64 0 0
+partitions: 64 96 0 0
+partitions: 96 127 0 0
+Execution time: 2.087419033050537
+Get table content time: 0.17158889770507812
+Get table content time: 1.5711519718170166
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 0.12489533424377441
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 1.4752910137176514
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 0.1244349479675293
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 1.4260554313659668
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 0.11600375175476074
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 1.3149387836456299
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+Get table content time: 0.09213685989379883
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]
+all_formula_idx [0, 2500000, 5000000, 7500000, 10000000]

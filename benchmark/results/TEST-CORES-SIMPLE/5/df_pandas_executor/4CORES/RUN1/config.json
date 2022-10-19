@@ -1,5 +1,5 @@
 {
-    "timestamp": "2022-10-18 07:00:22.913817",
+    "timestamp": "2022-10-19 09:00:09.259099",
     "cores": 4,
     "scheduler": "prioritized",
     "enable_logical_rewriting": true,
@@ -16,8 +16,8 @@
     "row_num": 10000000,
     "filename": "weather_10M.csv",
     "formula_str": "=SUM(I$1:I1)",
-    "distributing_data_time_in_ms": 4691.617250442505,
-    "execution_time_in_ms": 4898.829460144043,
+    "distributing_data_time_in_ms": 4594.614744186401,
+    "execution_time_in_ms": 1927.6530742645264,
     "planning_time_in_ms": 0,
-    "timecost_in_ms": 10742.562055587769
+    "timecost_in_ms": 7657.797574996948
 }

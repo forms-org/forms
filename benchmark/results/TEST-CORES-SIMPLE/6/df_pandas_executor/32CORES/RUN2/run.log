@@ -1,466 +1,163 @@
-2022-10-18 07:09:44,325 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.52 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,573 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.51 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,660 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.51 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,677 - distributed.worker_memory - WARNING - Worker is at 80% memory usage. Pausing worker.  Process memory: 1.57 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,700 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.61 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,704 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.61 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,737 - distributed.worker_memory - WARNING - Worker is at 80% memory usage. Pausing worker.  Process memory: 1.56 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,737 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.56 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,802 - distributed.worker_memory - WARNING - Worker is at 48% memory usage. Resuming worker. Process memory: 0.93 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:44,842 - distributed.worker_memory - WARNING - Worker is at 46% memory usage. Resuming worker. Process memory: 0.90 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,157 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.54 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,164 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.49 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,229 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.58 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,242 - distributed.worker_memory - WARNING - Worker is at 81% memory usage. Pausing worker.  Process memory: 1.57 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,243 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.57 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,274 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.69 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,341 - distributed.worker_memory - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 1.62 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,358 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.65 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,361 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.66 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,361 - distributed.worker_memory - WARNING - Worker is at 83% memory usage. Pausing worker.  Process memory: 1.63 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,386 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:38833 (pid=54875) exceeded 95% memory budget. Restarting...
-2022-10-18 07:09:45,440 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.75 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,453 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.95 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,472 - distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-525b161253a8b4ed12f42aae98bf9941': ['tcp://127.0.0.1:38833']} state: ['memory'] workers: ['tcp://127.0.0.1:38833']
-NoneType: None
-2022-10-18 07:09:45,473 - distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-525b161253a8b4ed12f42aae98bf9941': []} state: [None] workers: []
-NoneType: None
-2022-10-18 07:09:45,473 - distributed.scheduler - ERROR - Shut down workers that don't have promised key: [], DataFrame-525b161253a8b4ed12f42aae98bf9941
-NoneType: None
-2022-10-18 07:09:45,474 - distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-525b161253a8b4ed12f42aae98bf9941': ()}
-2022-10-18 07:09:45,481 - distributed.scheduler - ERROR - Shut down workers that don't have promised key: ['tcp://127.0.0.1:38833'], DataFrame-525b161253a8b4ed12f42aae98bf9941
-NoneType: None
-2022-10-18 07:09:45,481 - distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-525b161253a8b4ed12f42aae98bf9941': ('tcp://127.0.0.1:38833',)}
-2022-10-18 07:09:45,482 - distributed.scheduler - CRITICAL - Closed comm <BatchedSend: closed> while trying to write {'op': 'cancelled-key', 'key': 'DataFrame-525b161253a8b4ed12f42aae98bf9941'}
-Traceback (most recent call last):
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/scheduler.py", line 5161, in report
-    c.send(msg)
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/batched.py", line 156, in send
-    raise CommClosedError(f"Comm {self.comm!r} already closed.")
-distributed.comm.core.CommClosedError: Comm <TCP (closed) Scheduler->Client local=tcp://127.0.0.1:32979 remote=tcp://127.0.0.1:49160> already closed.
-2022-10-18 07:09:45,487 - distributed.scheduler - CRITICAL - Closed comm <BatchedSend: closed> while trying to write {'op': 'cancelled-key', 'key': 'DataFrame-525b161253a8b4ed12f42aae98bf9941'}
-Traceback (most recent call last):
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/scheduler.py", line 5161, in report
-    c.send(msg)
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/batched.py", line 156, in send
-    raise CommClosedError(f"Comm {self.comm!r} already closed.")
-distributed.comm.core.CommClosedError: Comm <TCP (closed) Scheduler->Client local=tcp://127.0.0.1:32979 remote=tcp://127.0.0.1:49160> already closed.
-2022-10-18 07:09:45,488 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:43753 (pid=54861) exceeded 95% memory budget. Restarting...
-2022-10-18 07:09:45,507 - distributed.nanny - WARNING - Restarting worker
-Distributing data time: 5.070077657699585
-2022-10-18 07:09:45,528 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-90378357ed8d5d17b3a8a5c3a2f652a8
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fab24933820>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:45,537 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-974b3cef59b148639e5e9bc330d72f33
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd709ba78e0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:45,551 - distributed.worker_memory - WARNING - Worker is at 51% memory usage. Resuming worker. Process memory: 0.99 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,560 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-680ce421355b1615ae91a7964f0336e8
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f709b74b400>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:45,571 - distributed.worker_memory - WARNING - Worker is at 84% memory usage. Pausing worker.  Process memory: 1.64 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,599 - distributed.nanny - WARNING - Restarting worker
-2022-10-18 07:09:45,643 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.77 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,645 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.77 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,674 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-75a6bd1d0c330ad67c066a8e52e03c2b
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7faf337ddd20>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-525b161253a8b4ed12f42aae98bf9941')"
-
-2022-10-18 07:09:45,707 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f41b078083f0ac059e98502b721fcb23
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb883b23580>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-525b161253a8b4ed12f42aae98bf9941')"
-
-2022-10-18 07:09:45,734 - distributed.worker_memory - WARNING - Worker is at 52% memory usage. Resuming worker. Process memory: 1.02 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,954 - distributed.worker_memory - WARNING - Worker is at 89% memory usage. Pausing worker.  Process memory: 1.73 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:45,993 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.66 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,027 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.87 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,035 - distributed.worker_memory - WARNING - Worker is at 85% memory usage. Pausing worker.  Process memory: 1.66 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,036 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.66 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,039 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:37705 (pid=54891) exceeded 95% memory budget. Restarting...
-2022-10-18 07:09:46,060 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.80 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,088 - distributed.worker_memory - WARNING - Worker tcp://127.0.0.1:37975 (pid=54859) exceeded 95% memory budget. Restarting...
-2022-10-18 07:09:46,111 - distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-06e3854753f9ce7030c46a526dc5777d': ['tcp://127.0.0.1:37705']} state: [None] workers: ['tcp://127.0.0.1:37705']
-NoneType: None
-2022-10-18 07:09:46,112 - distributed.scheduler - ERROR - Couldn't gather keys {'DataFrame-06e3854753f9ce7030c46a526dc5777d': []} state: [None] workers: []
-NoneType: None
-2022-10-18 07:09:46,112 - distributed.scheduler - ERROR - Shut down workers that don't have promised key: [], DataFrame-06e3854753f9ce7030c46a526dc5777d
-NoneType: None
-2022-10-18 07:09:46,113 - distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-06e3854753f9ce7030c46a526dc5777d': ()}
-2022-10-18 07:09:46,116 - distributed.scheduler - ERROR - Shut down workers that don't have promised key: ['tcp://127.0.0.1:37705'], DataFrame-06e3854753f9ce7030c46a526dc5777d
-NoneType: None
-2022-10-18 07:09:46,116 - distributed.client - WARNING - Couldn't gather 1 keys, rescheduling {'DataFrame-06e3854753f9ce7030c46a526dc5777d': ('tcp://127.0.0.1:37705',)}
-2022-10-18 07:09:46,122 - distributed.nanny - WARNING - Restarting worker
-2022-10-18 07:09:46,136 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 1.32 GiB -- Worker memory limit: 1.94 GiB
-2022-10-18 07:09:46,140 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-1894c57a533b25f6ddf05a173aeadc3a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fab24933a60>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-06e3854753f9ce7030c46a526dc5777d')"
-
-2022-10-18 07:09:46,172 - distributed.nanny - WARNING - Restarting worker
-2022-10-18 07:09:46,198 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-736a5f8a627277d22551255ff90719e0
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8c11f57fa0>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-06e3854753f9ce7030c46a526dc5777d')"
-
-2022-10-18 07:09:46,326 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-e245f1b59c2c335437b2380cc81df70c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbc2b48ff40>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-1c071dd1fa374c4c4ee754c9924b0022')"
-
-2022-10-18 07:09:46,528 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-71b9c71d87545f485dc21ced78e00803
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f709b74bb50>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-06e3854753f9ce7030c46a526dc5777d')"
-
-2022-10-18 07:09:46,638 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-c201d8dd0c8f74cc33b0a6db6a607b29
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd14d468d90>)
-kwargs:    {}
-Exception: "CancelledError('DataFrame-06e3854753f9ce7030c46a526dc5777d')"
-
-2022-10-18 07:09:48,957 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-d8171ae1f34233d94357982cf0306b1a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbc28138a00>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:48,966 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-66e0f3a1e18332dfef57c44a4dae9f83
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7faf30b37d30>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:48,982 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-6d2276743f9a95b74cbb4bcf61cc9b6c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb883b20100>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:48,986 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-86b1b55fabb685e02bda086646923c1b
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd709b53df0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:48,991 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-85a2fd3c5b9371a845a4e44f84879602
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f70993b27a0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:48,993 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b170e043735c9de8a39fa472626450db
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fab1d9b7d00>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,014 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-4e70df378bc9a081d80163647dbb621c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fd12eb23340>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,039 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-59927baf57e4a504121483e6abf59001
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f8c11f57d30>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,064 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-79d64c9d3bec45f492fa9ca3c6476d6b
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fcab8386e00>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,079 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b93be15a4924bc5c9a90d093181a254c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f47346bf640>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,083 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-da541515c0f3987e1cf564f3601aacf7
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f659e208100>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,090 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-77d2440abe71ba9929d1825e9dbe5fe2
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fc7143c48e0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,092 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-41f52220b219b9c828394326510e77f9
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fdde098f700>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,094 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-9a4c92bea562b1898dd8e9fd9dabfe5c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f249b7ff820>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,101 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-0328d9b4ea661921e67b606687eae168
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f183b39c100>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,104 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-e26498b8746a4225554a1f2b9d721a77
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f43de97c0a0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,107 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-c75c75472ab2da71471daacda26147ed
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f24f00f5ea0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,107 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8f16ebafd730181dcf5d46deb9247b1f
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f354fe618a0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,116 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-a5c31b33e9d7c2d7a0e18bb728ada976
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7718d8c100>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,119 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-c10fea5d70e8b1d3febb89e509c93e4a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fedcc3d8580>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,120 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-4be20dfa670f9817903589dec190984a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1c7bbc7e50>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,121 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-144d2bdf4f1a4adb8581eb57770297c6
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa5f30d76a0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,128 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-d0f551307e0dfd49ed3a121b56d73daf
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fa7a5c527a0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,140 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-05b5da0ca2e25f18a83ffaffdc7c536c
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1290f2fca0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,169 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-3f66df613eb653877f445a2af3a57b78
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f71380ec370>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,176 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-9250ac679fd9681f9064cdcf819ed191
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f77204cfc40>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,188 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-91c166ba2881eea834286cd5ceed5f80
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f9e07b781f0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,207 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-b262829dafc65dbd145db104dfed5576
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbafdd39fc0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,212 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-8f3f3a6f33f2c381e65542b54573b401
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fbdfc2dbf40>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,220 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-f7ffba0293e75a0eb4070f0fe50f20fd
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7fb4e234bee0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,229 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-23ce5bf58de5aed6bb1ff4a61843ba4a
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f7d44143730>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-2022-10-18 07:09:49,234 - distributed.worker - WARNING - Compute Failed
-Key:       execute_one_subtree-52e97880452c78c106ffb9e3ed29512f
-Function:  execute_one_subtree
-args:      (<forms.executor.executionnode.FunctionExecutionNode object at 0x7f1eb1bcbeb0>)
-kwargs:    {}
-Exception: "KeyError('data')"
-
-Execution time: 9.658344745635986
-Traceback (most recent call last):
-  File "/home/ubuntu/forms/benchmark/test_driver.py", line 50, in <module>
-    result = fs.compute_formula(df, formula_str)
-  File "/home/ubuntu/forms/forms/core/forms.py", line 44, in compute_formula
-    res = plan_executor.df_execute_formula_plan(df, root)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 81, in df_execute_formula_plan
-    return res_table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 57, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
-    return distributive_function_executor(physical_subtree, Function.MAX)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 375, in distributive_function_executor
-    df = child.table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 57, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 277, in result
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/planexecutor.py", line 45, in execute_one_subtree
-    res_table = function_executor(physical_subtree)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 120, in max_df_executor
-    return distributive_function_executor(physical_subtree, Function.MAX)
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/basicfuncexecutor.py", line 375, in distributive_function_executor
-    df = child.table.get_table_content()
-  File "/home/ubuntu/forms/forms/executor/table.py", line 57, in get_table_content
-    self.df = self.remote_df.get_df_content()
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 80, in get_df_content
-    [
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/executor/dfexecutor/remotedf.py", line 82, in <listcomp>
-    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-  File "/home/ubuntu/forms/forms/runtime/remoteobject.py", line 33, in get_computed_result
-    return self.object_ref.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 274, in result
-    result = self.client.sync(self._result, callback_timeout=timeout, raiseit=False)
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils.py", line 339, in sync
-    return sync(
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils.py", line 406, in sync
-    raise exc.with_traceback(tb)
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils.py", line 379, in f
-    result = yield future
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/tornado/gen.py", line 762, in run
-    value = future.result()
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 299, in _result
-    result = await self.client._gather([self])
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 2118, in _gather
-    response = await future
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 2158, in _gather_remote
-    data2, missing_keys, missing_workers = await gather_from_workers(
-  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/utils_comm.py", line 88, in gather_from_workers
-    response.update(r["data"])
-KeyError: 'data'
-Get table content time: 2.5346689224243164
-Get table content time: 1.702601432800293
-Get table content time: 2.190368175506592
-Get table content time: 3.485861301422119
-Get table content time: 4.009155035018921
-Get table content time: 1.9949493408203125
-Get table content time: 0.8564968109130859
-Get table content time: 3.196049213409424
-Get table content time: 4.407774448394775
-Get table content time: 2.427168369293213
-Get table content time: 4.223174095153809
-Get table content time: 3.8974127769470215
-Get table content time: 0.9157075881958008
-Get table content time: 4.6369335651397705
-Get table content time: 1.155116319656372
-Get table content time: 3.7195701599121094
-Get table content time: 5.770944595336914
-Get table content time: 5.042092323303223
-Get table content time: 5.972142696380615
-Get table content time: 5.083406686782837
-Get table content time: 2.563610553741455
-Get table content time: 0.36943817138671875
+Distributing data time: 5.034245014190674
+partitions: 0 4 0 0
+partitions: 4 8 0 0
+partitions: 8 12 0 0
+partitions: 12 16 0 0
+partitions: 16 20 0 0
+partitions: 20 24 0 0
+partitions: 24 28 0 0
+partitions: 28 32 0 0
+partitions: 32 36 0 0
+partitions: 36 40 0 0
+partitions: 40 44 0 0
+partitions: 44 48 0 0
+partitions: 48 52 0 0
+partitions: 52 56 0 0
+partitions: 56 60 0 0
+partitions: 60 64 0 0
+partitions: 64 68 0 0
+partitions: 68 72 0 0
+partitions: 72 76 0 0
+partitions: 76 80 0 0
+partitions: 80 84 0 0
+partitions: 84 88 0 0
+partitions: 88 92 0 0
+partitions: 92 96 0 0
+partitions: 96 100 0 0
+partitions: 100 104 0 0
+partitions: 104 108 0 0
+partitions: 108 112 0 0
+partitions: 112 116 0 0
+partitions: 116 120 0 0
+partitions: 120 124 0 0
+partitions: 124 127 0 0
+Execution time: 1.557990312576294
+Get table content time: 0.22698330879211426
+Get table content time: 0.6261780261993408
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6001079082489014
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5141456127166748
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6390018463134766
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.48776769638061523
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6214582920074463
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.4931778907775879
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5535387992858887
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.4153099060058594
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6663415431976318
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.4737215042114258
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5265412330627441
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5204694271087646
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6588232517242432
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.420151948928833
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.633866548538208
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.4582493305206299
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6092236042022705
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5922844409942627
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6274783611297607
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.42581987380981445
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6190598011016846
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5452518463134766
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6212301254272461
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.43439650535583496
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.625084638595581
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.44916415214538574
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6617827415466309
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5926594734191895
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6757149696350098
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5969970226287842
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.624650239944458
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6130964756011963
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.67228102684021
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5701353549957275
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6174540519714355
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5294077396392822
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5896515846252441
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5939772129058838
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5687708854675293
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5913679599761963
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5816161632537842
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5120987892150879
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5670225620269775
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5842418670654297
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6512866020202637
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5386443138122559
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5695576667785645
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5082869529724121
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6264429092407227
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5399527549743652
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5255966186523438
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.535402774810791
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5909130573272705
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.4913973808288574
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6101031303405762
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5249435901641846
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5127298831939697
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5116710662841797
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6409687995910645
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6234281063079834
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.5491318702697754
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.565608024597168
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]
+Get table content time: 0.6296052932739258
+all_formula_idx [0, 312500, 625000, 937500, 1250000, 1562500, 1875000, 2187500, 2500000, 2812500, 3125000, 3437500, 3750000, 4062500, 4375000, 4687500, 5000000, 5312500, 5625000, 5937500, 6250000, 6562500, 6875000, 7187500, 7500000, 7812500, 8125000, 8437500, 8750000, 9062500, 9375000, 9687500, 10000000]

@@ -1,19 +1,35 @@
-Distributing data time: 4.7986626625061035
-Execution time: 0.7727956771850586
-Get table content time: 0.1892695426940918
-Get table content time: 0.45011091232299805
-Get table content time: 0.5777029991149902
-Get table content time: 0.5490810871124268
-Get table content time: 0.531503438949585
-Get table content time: 0.42171168327331543
-Get table content time: 0.5565850734710693
-Get table content time: 0.5018706321716309
-Get table content time: 0.5438892841339111
-Get table content time: 0.5279791355133057
-Get table content time: 0.42828869819641113
-Get table content time: 0.45202088356018066
-Get table content time: 0.622556209564209
-Get table content time: 0.6000752449035645
-Get table content time: 0.6359341144561768
-Get table content time: 0.514502763748169
-Get table content time: 0.5905416011810303
+Distributing data time: 4.766710519790649
+partitions: 0 8 0 0
+partitions: 8 16 0 0
+partitions: 16 24 0 0
+partitions: 24 32 0 0
+partitions: 32 40 0 0
+partitions: 40 48 0 0
+partitions: 48 56 0 0
+partitions: 56 64 0 0
+partitions: 64 72 0 0
+partitions: 72 80 0 0
+partitions: 80 88 0 0
+partitions: 88 96 0 0
+partitions: 96 104 0 0
+partitions: 104 112 0 0
+partitions: 112 120 0 0
+partitions: 120 127 0 0
+Execution time: 0.7891459465026855
+Get table content time: 0.18646526336669922
+Get table content time: 0.48323869705200195
+Get table content time: 0.5054686069488525
+Get table content time: 0.5587868690490723
+Get table content time: 0.43779611587524414
+Get table content time: 0.6516759395599365
+Get table content time: 0.4228556156158447
+Get table content time: 0.5165987014770508
+Get table content time: 0.6175708770751953
+Get table content time: 0.516932487487793
+Get table content time: 0.6009697914123535
+Get table content time: 0.4795820713043213
+Get table content time: 0.49980950355529785
+Get table content time: 0.5845592021942139
+Get table content time: 0.6146135330200195
+Get table content time: 0.47205638885498047
+Get table content time: 0.6063821315765381

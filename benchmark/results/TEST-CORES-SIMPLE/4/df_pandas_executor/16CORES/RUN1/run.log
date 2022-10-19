@@ -1,19 +1,35 @@
-Distributing data time: 4.743170976638794
-Execution time: 1.5664751529693604
-Get table content time: 0.17305493354797363
-Get table content time: 0.4532661437988281
-Get table content time: 0.4902918338775635
-Get table content time: 0.5534517765045166
-Get table content time: 0.5472946166992188
-Get table content time: 0.4002501964569092
-Get table content time: 0.5653319358825684
-Get table content time: 0.6126363277435303
-Get table content time: 0.6239097118377686
-Get table content time: 0.581571102142334
-Get table content time: 0.570530891418457
-Get table content time: 0.4942476749420166
-Get table content time: 0.5593233108520508
-Get table content time: 0.48410725593566895
-Get table content time: 0.45194435119628906
-Get table content time: 0.4472053050994873
-Get table content time: 0.5802426338195801
+Distributing data time: 4.808366060256958
+partitions: 0 8 0 0
+partitions: 8 16 0 0
+partitions: 16 24 0 0
+partitions: 24 32 0 0
+partitions: 32 40 0 0
+partitions: 40 48 0 0
+partitions: 48 56 0 0
+partitions: 56 64 0 0
+partitions: 64 72 0 0
+partitions: 72 80 0 0
+partitions: 80 88 0 0
+partitions: 88 96 0 0
+partitions: 96 104 0 0
+partitions: 104 112 0 0
+partitions: 112 120 0 0
+partitions: 120 127 0 0
+Execution time: 1.8554675579071045
+Get table content time: 0.1915726661682129
+Get table content time: 0.43320679664611816
+Get table content time: 0.3767533302307129
+Get table content time: 0.5483732223510742
+Get table content time: 0.42652416229248047
+Get table content time: 0.8757126331329346
+Get table content time: 1.2172796726226807
+Get table content time: 0.5625498294830322
+Get table content time: 0.5832817554473877
+Get table content time: 0.5149455070495605
+Get table content time: 0.5612027645111084
+Get table content time: 0.42011260986328125
+Get table content time: 0.5310385227203369
+Get table content time: 0.5586011409759521
+Get table content time: 0.4805185794830322
+Get table content time: 0.46769118309020996
+Get table content time: 0.5442378520965576
