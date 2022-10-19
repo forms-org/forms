@@ -30,10 +30,15 @@ def atan2_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 
 def decimal_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    return None
-    # return math_double_df_executor(
-    #     physical_subtree, lambda x, y: float(base(str(x), int(y), 10, string=True))
-    # )
+    def decimal(num, base):
+        assert 2 <= base <= 36
+        if isinstance(num, float):
+            num = str(int(num))
+        elif isinstance(num, int):
+            num = str(num)
+        return int(num, int(base))
+
+    return math_double_df_executor(physical_subtree, decimal)
 
 
 def mod_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
