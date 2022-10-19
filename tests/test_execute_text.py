@@ -100,15 +100,27 @@ def test_execute_exact_rr():
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
-# def test_execute_concatenate_rr():
-#     parent = FunctionExecutionNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
-#     child1 = RefExecutionNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-#     child2 = LitExecutionNode("hello world", RefType.RR, axis_along_row)
-#     link_parent_to_children(parent, [child1, child2])
-#     parent.set_exec_context(ExecutionContext(50, 100, axis_along_row))
-#     sub_result = concatenate_executor(parent)
-#     real_result = pd.DataFrame(np.full(50, "  TeSt Case  hello world"))
-#     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
+def test_execute_concat_rr():
+    parent = FunctionExecutionNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
+    child1 = RefExecutionNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
+    child2 = LitExecutionNode(" ", RefType.RR, axis_along_row)
+    link_parent_to_children(parent, [child1, child2])
+    parent.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = concat_executor(parent)
+    real_result = pd.DataFrame(np.full(50, "  TeSt Case   "))
+    assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
+
+
+def test_execute_concatenate_rr():
+    parent = FunctionExecutionNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
+    child1 = RefExecutionNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
+    child2 = LitExecutionNode("hello world", RefType.RR, axis_along_row)
+    child3 = LitExecutionNode(" RISE Lab", RefType.RR, axis_along_row)
+    link_parent_to_children(parent, [child1, child2, child3])
+    parent.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = concatenate_executor(parent)
+    real_result = pd.DataFrame(np.full(50, "  TeSt Case  hello world RISE Lab"))
+    assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_find_rr():
@@ -168,3 +180,45 @@ def test_execute_replace_rr():
     sub_result = replace_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  TeSt Suites"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
+
+
+def test_execute_time_value():
+    m = 100
+    n = 5
+    df = pd.DataFrame(np.full((m, n), "1:22:33 PM"))
+    table2 = DFTable(df)
+    root = FunctionExecutionNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
+    child = RefExecutionNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    link_parent_to_children(root, [child])
+    child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = value_executor(root)
+    real_result = pd.DataFrame(np.full(50, fill_value=0.557326389))
+    assert np.allclose(sub_result.df.values, real_result.values, rtol=1e-03)
+
+
+def test_execute_numerical_value():
+    m = 100
+    n = 5
+    df = pd.DataFrame(np.full((m, n), "67.5%"))
+    table2 = DFTable(df)
+    root = FunctionExecutionNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
+    child = RefExecutionNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    link_parent_to_children(root, [child])
+    child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = value_executor(root)
+    real_result = pd.DataFrame(np.full(50, fill_value=0.675))
+    assert np.array_equal(sub_result.df.values, real_result.values)
+
+
+def test_execute_date_value():
+    m = 100
+    n = 5
+    df = pd.DataFrame(np.full((m, n), "September 6, 2001"))
+    table2 = DFTable(df)
+    root = FunctionExecutionNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
+    child = RefExecutionNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    link_parent_to_children(root, [child])
+    child.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+    sub_result = value_executor(root)
+    real_result = pd.DataFrame(np.full(50, fill_value=37140))
+    assert np.array_equal(sub_result.df.values, real_result.values)

@@ -29,30 +29,35 @@ from forms.executor.dfexecutor.utils import (
     get_value_rr,
 )
 from typing import Callable
+from forms.utils.exceptions import FormSException
+import re
+from datetime import datetime, date, timedelta
 
 
 # 1 string parameter, more strings are optional
 # Example usages: CONCATENATE(A1, A2, A3), CONCATENATE(A2:B7)
 
-# TODO
+
 def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
-    def concat(s, *args):
-        return s + "".join(args)
+    def concat(s, to_concat):
+        return s + "".join(to_concat)
 
-    return construct_df_table(values[0].applymap(concat, values[1:]))
+    kwargs = {"to_concat": values[1:]}
+    return construct_df_table(values[0].applymap(concat, **kwargs))
 
 
-# TODO
 def concatenate_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
-    def concatenate(s, *args):
-        return s + "".join(args)
+    def concatenate(s, to_concatenate):
+        return s + "".join(to_concatenate)
 
-    return construct_df_table(values[0].applymap(concatenate, values[1:]))
+    kwargs = {"to_concatenate": values[1:]}
+    return construct_df_table(values[0].applymap(concatenate, **kwargs))
 
 
 # 2 parameters, s1 and s2 to compare
@@ -155,9 +160,75 @@ def upper_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.upper())
 
 
-# TODO
+# TODO: Handle three cases-number, date, time
+# If string, check that each character is alphanumeric else remove
+# If time, returns a float from 0 to 1. Eqn: # seconds in parameter number / # seconds in a day
+# If date, regex for date format
 def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    return apply_single_value_func(physical_subtree, lambda x: x.upper())
+    def value(text):
+        try:
+            # Handle certain inputs, expect well-formatted inputs so we can just search for ':'
+            if ":" in text:
+                # Need to handle AM PM
+                time = text.split(":")
+                # Hours:minutes AM/PM
+                if len(time) == 2:
+                    if "PM" in time[1]:
+                        to_minutes = 720
+                        time[1] = time[1].split(" ")[0]
+                    elif "AM" in time[1]:
+                        to_minutes = 0
+                        time[1] = time[1].split(" ")[0]
+                    else:
+                        to_minutes = 0
+                    to_minutes += int(time[0]) * 60 + int(time[1])
+                    return to_minutes / 1440
+                # Hours:minutes:seconds AM/PM
+                elif len(time) == 3:
+                    if "PM" in time[2]:
+                        to_seconds = 43200
+                        time[2] = time[2].split(" ")[0]
+                    elif "AM" in time[2]:
+                        to_seconds = 0
+                        time[2] = time[2].split(" ")[0]
+                    else:
+                        to_seconds = 0
+                    to_seconds += int(time[0]) * 3600 + int(time[1]) * 60 + int(time[2])
+                    return to_seconds / 86400
+            # Handle cases: M/D/Y, Y-M-D, M D, Y
+            # In Excel, 1/1/1900 = 1 -> Need to find the difference between provided date and this date.
+            elif (
+                "-" in text or "/" in text or re.compile(r"\w+ \d{1,2}, \d{4}").search(text) is not None
+            ):
+                # Can't confirm is excel uses this, but cross-checked different values
+                init_date = datetime(1899, 12, 30)
+                if "-" in text:
+                    d = datetime.strptime(text, "%Y-%m-%d")
+                    delta = d - init_date
+                    return delta.days
+                elif "/" in text:
+                    d = datetime.strptime(text, "%m/%d/%Y")
+                    delta = d - init_date
+                    return delta.days
+                else:
+                    d = datetime.strptime(text, "%B %d, %Y")
+                    delta = d - init_date
+                    return delta.days
+            else:
+                # Don't want to remove decimal or percentage symbols. Maybe more edge cases?
+                remove_special = "".join(c for c in text if c.isnumeric() or c == "." or c == "%")
+                # $125.0 = 125, but $125.55 = 125.55
+                if "%" in remove_special:
+                    return float(remove_special.replace("%", "")) / 100
+                elif "." in remove_special and not float(remove_special).is_integer():
+                    return float(remove_special)
+                else:
+                    return int(float(remove_special))
+        except Exception as e:
+            print("invalid format: ", e)
+            raise FormSException
+
+    return apply_single_value_func(physical_subtree, value)
 
 
 def get_string_function_value(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
