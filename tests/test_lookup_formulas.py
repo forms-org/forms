@@ -29,7 +29,7 @@ def execute_before_and_after_one_test():
     yield
 
 
-def test_compute_vlookup():
+def test_compute_vlookup_exact():
     global df
     computed_df = forms.compute_formula(df, '=VLOOKUP("B", A1:I40, 7, 0)')
     expected_df = pd.DataFrame(np.array([1.6222] * 40))
@@ -37,3 +37,20 @@ def test_compute_vlookup():
     computed_df = forms.compute_formula(df, "=VLOOKUP(1, C1:I40, 5, 0)")
     expected_df = pd.DataFrame(np.array([1.6222] * 40))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, "=VLOOKUP(1.5, C1:I40, 5, 0)")
+    assert computed_df.iloc[:, 0].isnull().all()
+
+
+def test_compute_vlookup_approx():
+    global df
+    computed_df = forms.compute_formula(df, "=VLOOKUP(1.5, C1:I40, 5, 1)")
+    expected_df = pd.DataFrame(np.array([1.6222] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, "=VLOOKUP(41, C1:I40, 5, 1)")
+    expected_df = pd.DataFrame(np.array([3.999] * 40))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, "=VLOOKUP(-1, C1:I40, 5, 1)")
+    assert computed_df.iloc[:, 0].isnull().all()
+    # computed_df = forms.compute_formula(df, "=VLOOKUP(C5, C1:I40, C6, 1)")
+    # expected_df = pd.DataFrame(np.array([3.999] * 40))
+    # assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
