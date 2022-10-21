@@ -29,7 +29,7 @@ from forms.executor.dfexecutor.utils import (
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     size, values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
     values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
-    df_arr : list = []
+    df_arr: list = []
     for i in range(size):
         value, col_idx = values[i], col_idxes[i]
         value_idx, found = approx_binary_search(value, list(df.iloc[:, 0]))
