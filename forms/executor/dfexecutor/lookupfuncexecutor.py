@@ -27,12 +27,17 @@ from forms.executor.dfexecutor.utils import (
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    size, value, df, col_idx, approx = get_vlookup_params(physical_subtree)
-    value_idx, found = approx_binary_search(value, list(df.iloc[:, 0]))
-    result = np.nan
-    if (found or approx) and value_idx != -1:
-        result = df.iloc[value_idx, col_idx - 1]
-    return construct_df_table(pd.DataFrame([result] * size))
+    size, values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
+    values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
+    df_arr : list = []
+    for i in range(size):
+        value, col_idx = values[i], col_idxes[i]
+        value_idx, found = approx_binary_search(value, list(df.iloc[:, 0]))
+        result = np.nan
+        if (found or approx) and value_idx != -1:
+            result = df.iloc[value_idx, col_idx - 1]
+        df_arr.append(result)
+    return construct_df_table(pd.DataFrame(df_arr))
 
 
 # Performs binary search for value VALUE in array ARR. Assumes the array is sorted.
@@ -57,37 +62,36 @@ def approx_binary_search(value: any, arr: list) -> tuple[int, bool]:
 
 # Retrives parameters for VLOOKUP.
 # The first parameter is the size of the dataframe for this core, followed by the actual VLOOKUP parameters.
-def get_vlookup_params(
-    physical_subtree: FunctionExecutionNode,
-) -> tuple[int, any, pd.DataFrame, int, bool]:
+def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
     # Verify VLOOKUP params
     children = physical_subtree.children
     num_children = len(children)
     assert num_children == 3 or num_children == 4
 
-    # Retrieve params
-    value: any = get_literal_value(children[0])
-    df: pd.DataFrame = get_df(children[1])
-    col_idx: int = int(get_literal_value(children[2]))
-    approx: bool = get_approx(children[3], num_children)
-
     # Calculate the number of items in this node
     start_idx = children[1].exec_context.start_formula_idx
     end_idx = children[1].exec_context.end_formula_idx
-    n_formula = end_idx - start_idx
+    size = end_idx - start_idx
 
-    return n_formula, value, df, col_idx, approx
+    # Retrieve params
+    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size))
+    df: pd.DataFrame = get_df(children[1])
+    col_idxes: pd.DataFrame = clean_col_idxes(get_literal_value(children[2], size))
+    approx: bool = is_approx(children)
+
+    return size, values, df, col_idxes, approx
 
 
 # Gets a literal value from a child, removing any quotes.
 # If the value is in a dataframe, extracts the value from the dataframe.
-def get_literal_value(child: ExecutionNode) -> any:
+def get_literal_value(child: ExecutionNode, size: int) -> pd.DataFrame:
     value = get_single_value(child)
-    if isinstance(value, pd.DataFrame):
-        value = value.iloc[0, 0]
-    if isinstance(value, str):
-        value = value.strip('"').strip("'")
-    return value
+    result = value
+    if not isinstance(value, pd.DataFrame):
+        result = pd.DataFrame([value] * size)
+    elif value.shape[0] == 1:
+        result = pd.DataFrame([value.iloc[0, 0]] * size)
+    return result
 
 
 # Obtains the full dataframe for this lookup.
@@ -98,7 +102,17 @@ def get_df(child: RefExecutionNode) -> pd.DataFrame:
 
 
 # If VLOOKUP has a 4th parameter, determines if approximate match should be used.
-def get_approx(child: ExecutionNode, num_children: int) -> bool:
-    if num_children == 4:
-        return get_single_value(child) != 0
+def is_approx(children: list) -> bool:
+    if len(children) == 4:
+        return get_single_value(children[3]) != 0
     return True
+
+
+# Clean string values by removing quotations.
+def clean_string_values(values: pd.DataFrame):
+    return values.applymap(lambda x: x.strip('"').strip("'") if isinstance(x, str) else x)
+
+
+# Clean column indices by casting floats to integers.
+def clean_col_idxes(col_idxes: pd.DataFrame):
+    return col_idxes.applymap(lambda x: int(x))
