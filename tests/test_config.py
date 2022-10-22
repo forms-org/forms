@@ -25,6 +25,7 @@ def test_config():
     assert forms_config.scheduler == "NotSimple"
 
 
+# Small test dataframe. 12 columns, 40 rows
 test_df = pd.DataFrame(
     {
         "col1": ["A", "B", "C", "D"] * 10,
@@ -39,5 +40,24 @@ test_df = pd.DataFrame(
         "col10": [np.pi / 2] * 40,
         "col11": [2] * 40,
         "col12": [16] * 40,
+    }
+)
+
+
+# Larger test dataframe. 12 columns, 1000 rows
+test_df_big = pd.DataFrame(
+    {
+        "col1": ["A", "B", "C", "D"] * 250,
+        "col2": [1] * 1000,
+        "col3": range(1000),
+        "col4": [1, 2, 3, 4] * 250,
+        "col5": [-1, 2, -3, 4] * 250,
+        "col6": [0] * 1000,
+        "col7": [0.4111, 1.6222, 2.93333333, 3.999] * 250,
+        "col8": [0, 30, 60, 90] * 250,
+        "col9": ["I", "VI", "IX", "ML"] * 250,
+        "col10": [np.pi / 2] * 1000,
+        "col11": [2] * 1000,
+        "col12": [16] * 1000,
     }
 )

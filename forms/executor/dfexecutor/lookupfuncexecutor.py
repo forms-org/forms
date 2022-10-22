@@ -29,25 +29,71 @@ from forms.executor.dfexecutor.utils import (
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     size, values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
     values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
+    if approx:
+        result_df = vlookup_df_executor_approx(size, values, df, col_idxes)
+    else:
+        result_df = vlookup_df_executor_exact_hash(size, values, df, col_idxes)
+    return construct_df_table(result_df)
+
+
+def vlookup_df_executor_approx(size, values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
     for i in range(size):
         value, col_idx = values[i], col_idxes[i]
-        value_idx, found = approx_binary_search(value, list(df.iloc[:, 0]))
+        value_idx = approx_binary_search(value, list(df.iloc[:, 0]))
         result = np.nan
-        if (found or approx) and value_idx != -1:
+        if value_idx != -1:
             result = df.iloc[value_idx, col_idx - 1]
         df_arr.append(result)
-    return construct_df_table(pd.DataFrame(df_arr))
+    return pd.DataFrame(df_arr)
+
+
+def vlookup_df_executor_exact_hash(size, values, df, col_idxes) -> pd.DataFrame:
+    df_arr: list = []
+    cache = {}
+    for i in range(size):
+        value = df.iloc[i, 0]
+        if value not in cache:
+            cache[value] = i
+    for i in range(size):
+        value, col_idx = values[i], col_idxes[i]
+        result = np.nan
+        if value in cache:
+            value_idx = cache[value]
+            result = df.iloc[value_idx, col_idx - 1]
+        df_arr.append(result)
+    return pd.DataFrame(df_arr)
+
+
+def vlookup_df_executor_exact_loops(size, values, df, col_idxes) -> pd.DataFrame:
+    df_arr: list = []
+    for i in range(size):
+        value, col_idx = values[i], col_idxes[i]
+        value_idx = exact_scan_search(value, list(df.iloc[:, 0]))
+        result = np.nan
+        if value_idx != -1:
+            result = df.iloc[value_idx, col_idx - 1]
+        df_arr.append(result)
+    return pd.DataFrame(df_arr)
+
+
+# Performs a scan of array ARR to find value VALUE.
+# If the value is not found, returns -1.
+def exact_scan_search(value: any, arr: list) -> int:
+    for i in range(len(arr)):
+        if arr[i] == value:
+            return i
+    return -1
 
 
 # Performs binary search for value VALUE in array ARR. Assumes the array is sorted.
-# If the value is found, returns the index of the value and True.
-# If the value is not found, returns the index of the value before the sorted value and False.
+# If the value is found, returns the index of the value.
+# If the value is not found, returns the index of the value before the sorted value.
 # If the value is less than the first value, return -1.
-def approx_binary_search(value: any, arr: list) -> tuple[int, bool]:
+def approx_binary_search(value: any, arr: list) -> int:
     assert len(arr) > 0
     if value < arr[0]:
-        return -1, False
+        return -1
     low, high = 0, len(arr) - 1
     while low <= high:
         mid = (high + low) // 2
@@ -56,8 +102,8 @@ def approx_binary_search(value: any, arr: list) -> tuple[int, bool]:
         elif arr[mid] > value:
             high = mid - 1
         else:
-            return mid, True
-    return (high + low) // 2, False
+            return mid
+    return (high + low) // 2
 
 
 # Retrives parameters for VLOOKUP.
