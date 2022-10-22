@@ -363,9 +363,7 @@ def get_single_value(child):
     if isinstance(child, RefExecutionNode):
         df = child.table.get_table_content()
         out_ref_type = child.out_ref_type
-        start_idx = child.exec_context.start_formula_idx
-        end_idx = child.exec_context.end_formula_idx
-        n_formula = end_idx - start_idx
+        n_formula = get_execution_node_n_formula(child)
         axis = child.exec_context.axis
         if axis == axis_along_row:
             start_row, start_column, end_row, end_column = get_reference_indices(child)
@@ -379,3 +377,9 @@ def get_single_value(child):
     elif isinstance(child, LitExecutionNode):
         value = child.literal
     return value
+
+
+def get_execution_node_n_formula(node: RefExecutionNode):
+    start_idx = node.exec_context.start_formula_idx
+    end_idx = node.exec_context.end_formula_idx
+    return end_idx - start_idx

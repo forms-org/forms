@@ -113,6 +113,7 @@ class Function(Enum):
     TRUNC = "trunc"
 
     # Lookup functions
+    LOOKUP = "lookup"
     VLOOKUP = "vlookup"
 
     # This is a generic function for supporting formula execution based on the formulas lib
@@ -220,6 +221,7 @@ pandas_supported_functions = {
     Function.ROUNDUP,
     Function.TRUNC,
     # Lookup functions
+    Function.LOOKUP,
     Function.VLOOKUP,
 }
 
