@@ -67,4 +67,3 @@ def test_compute_vlookup_approx():
     computed_df = forms.compute_formula(df, "=VLOOKUP($C$4, C1:I1000, $C$6)")
     expected_df = pd.DataFrame(np.array([3.999] * 1000))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-

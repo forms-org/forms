@@ -58,4 +58,3 @@ def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
         search_range = search_range.iloc[:, 0]
 
     return size, values, search_range, result_range
-
