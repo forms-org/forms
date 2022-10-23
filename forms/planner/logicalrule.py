@@ -61,6 +61,7 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
             new_child.function = Function.SUM
             new_child.seps = []
             link_parent_to_children(new_child, [child])
+        new_child.out_ref_type = child.out_ref_type
     return new_child
 
 

@@ -139,12 +139,6 @@ def get_range(
             end = ref.last_row + 1
     elif fr_rf_optimization == FRRFOptimization.PHASEONE:
         if out_ref_type == RefType.FR:
-            start = ref.row + start_idx
-            end = ref.last_row + 1
-        elif out_ref_type == RefType.RF:
-            start = ref.row
-            end = ref.last_row + 1
-        if out_ref_type == RefType.FR:
             start = ref.row if start_idx == 0 else start_idx + ref.last_row
             end = end_idx + ref.last_row
         elif out_ref_type == RefType.RF:
@@ -154,6 +148,10 @@ def get_range(
                 if end_idx == ref_node.exec_context.all_formula_idx[-1]
                 else ref.row + end_idx,
             )
+        # special cases for SUMIF rewrite: the current function node is SUMIF, PHASEONE, and also RR type
+        elif out_ref_type == RefType.RR:
+            start = ref.row + start_idx
+            end = ref.last_row + end_idx
     return Range(max(0, start), ref.col, min(end, num_of_rows), ref.last_col, ref_node=ref_node)
 
 

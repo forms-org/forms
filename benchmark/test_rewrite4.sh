@@ -11,7 +11,7 @@ sed 1d $FORMULA | while IFS="," read -r FORMULA_STR
 do
   echo $FORMULA_STR
   n=$(($n+1))
-  range=$(($n*200))
+  range=$(($n*2000))
 	for RUN in "${RUN_OPTIONS[@]}"
   do
     FILE_DIR="results/TEST-REWRITE-4/NO-REWRITE/${range}kRANGE/RUN${RUN}"

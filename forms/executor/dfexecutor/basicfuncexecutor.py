@@ -211,10 +211,16 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     if not physical_subtree.exec_context.enable_sumif_opt:
         # baseline implementation
         results = []
-        for index in range(start_idx, end_idx):
+        df = ref_node.table.get_table_content()
+        for idx in range(start_idx, end_idx):
             value = None
-            df = ref_node.table.get_table_content()
             axis = ref_node.exec_context.axis
+            index = (
+                idx - start_idx
+                if start_idx == 0
+                   or ref_node.exec_context.enable_communication_opt
+                else idx
+            )  # check intermediate node
             # TODO: add support for axis_along_column
             if axis == axis_along_row:
                 indices = get_reference_indices_for_single_index(ref_node, index)
