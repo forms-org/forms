@@ -3,7 +3,6 @@
 declare -a RUN_OPTIONS=(1 2 3)
 declare -a ROWS_OPTIONS=(2000000 4000000 6000000 8000000 10000000)
 declare FILENAME='weather_10M.csv'
-declare ROWS=10000000
 declare CORES=16
 
 for ROWS in "${ROWS_OPTIONS[@]}"
