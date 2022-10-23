@@ -1,11 +1,23 @@
-Distributing data time: 4.699033975601196
-partitions: 0 63 0 0
-partitions: 0 90 0 0
-partitions: 0 110 0 0
-partitions: 0 127 0 0
-Execution time: 5.305654764175415
-Get table content time: 0.18484139442443848
-Get table content time: 2.830322027206421
-Get table content time: 4.3864359855651855
-Get table content time: 3.309034585952759
-Get table content time: 4.898611307144165
+Distributing data time: 4.741741418838501
+partitions: 0 31 0 0
+partitions: 31 64 0 0
+partitions: 64 96 0 0
+partitions: 96 127 0 0
+Execution time: 2.0576398372650146
+Get table content time: 0.18613529205322266
+Get table content time: 1.4808647632598877
+all_formula_idx None
+Get table content time: 0.11292243003845215
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.5689845085144043
+all_formula_idx None
+Get table content time: 0.11998629570007324
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.4531779289245605
+all_formula_idx None
+Get table content time: 0.12293696403503418
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.183833360671997
+all_formula_idx None
+Get table content time: 0.12917089462280273
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]

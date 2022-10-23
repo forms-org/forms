@@ -7,7 +7,7 @@ declare FILENAME='weather_10M.csv'
 declare FORMULA=formula_in_all_types.csv
 declare ROWS=10000000
 
-n=9
+n=8
 sed 1d $FORMULA | while IFS="," read -r FORMULA_STR
 do
   echo $FORMULA_STR

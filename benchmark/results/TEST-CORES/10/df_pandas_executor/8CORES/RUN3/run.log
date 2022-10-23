@@ -1,19 +1,43 @@
-Distributing data time: 4.69303560256958
-partitions: 0 45 0 0
-partitions: 0 63 0 0
-partitions: 0 78 0 0
-partitions: 0 90 0 0
-partitions: 0 101 0 0
-partitions: 0 110 0 0
-partitions: 0 119 0 0
-partitions: 0 127 0 0
-Execution time: 6.082431793212891
-Get table content time: 0.17991375923156738
-Get table content time: 3.1737353801727295
-Get table content time: 4.643840551376343
-Get table content time: 2.1607422828674316
-Get table content time: 5.326467990875244
-Get table content time: 3.721256971359253
-Get table content time: 4.430931806564331
-Get table content time: 5.638049125671387
-Get table content time: 4.653037786483765
+Distributing data time: 4.787121772766113
+partitions: 0 16 0 0
+partitions: 16 31 0 0
+partitions: 31 48 0 0
+partitions: 48 64 0 0
+partitions: 64 80 0 0
+partitions: 80 96 0 0
+partitions: 96 112 0 0
+partitions: 112 127 0 0
+Execution time: 1.3345372676849365
+Get table content time: 0.18136072158813477
+Get table content time: 0.777015209197998
+all_formula_idx None
+Get table content time: 0.1729130744934082
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.8837504386901855
+all_formula_idx None
+Get table content time: 0.11630988121032715
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.7742655277252197
+all_formula_idx None
+Get table content time: 0.14448785781860352
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.8518507480621338
+all_formula_idx None
+Get table content time: 0.15455245971679688
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.8183071613311768
+all_formula_idx None
+Get table content time: 0.1380939483642578
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.8449511528015137
+all_formula_idx None
+Get table content time: 0.1701343059539795
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.8464000225067139
+all_formula_idx None
+Get table content time: 0.14728879928588867
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
+Get table content time: 0.6623587608337402
+all_formula_idx None
+Get table content time: 0.15199661254882812
+all_formula_idx [0, 3535533, 4999999, 6123723, 7071067, 7905693, 8660253, 9354143, 10000000]
