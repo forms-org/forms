@@ -217,8 +217,7 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
             axis = ref_node.exec_context.axis
             index = (
                 idx - start_idx
-                if start_idx == 0
-                   or ref_node.exec_context.enable_communication_opt
+                if start_idx == 0 or ref_node.exec_context.enable_communication_opt
                 else idx
             )  # check intermediate node
             # TODO: add support for axis_along_column
@@ -226,8 +225,8 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
                 indices = get_reference_indices_for_single_index(ref_node, index)
                 if indices is not None:
                     start_row, start_column, end_row, end_column = indices
-                    df = df.iloc[start_row:end_row, start_column:end_column]
-                    value = df.to_numpy()
+                    value = df.iloc[start_row:end_row, start_column:end_column]
+                    value = value.to_numpy()
                 result = np.nan if value is None else np.sum(operator_dict[op](value, val) * value)
                 results.append(result)
         return construct_df_table(results)
