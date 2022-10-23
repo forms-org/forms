@@ -14,7 +14,7 @@ do
   n=$(($n+1))
 	for RUN in "${RUN_OPTIONS[@]}"
   do
-    FILE_DIR="results/TEST-REWRITE-3/NO-REWRITE/${overlap}OVERLAP/RUN${RUN}"
+    FILE_DIR="results/TEST-REWRITE-3-NOOPT/NO-REWRITE/${overlap}OVERLAP/RUN${RUN}"
     mkdir -p $FILE_DIR
     rm -f $FILE_DIR/*
     timeout 5m python3 test_driver.py \
@@ -23,19 +23,17 @@ do
               --cores "$CORES" \
               --logical_rewriting \
               --physical_opt \
-              --enable_sumif_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
 
-    FILE_DIR="results/TEST-REWRITE-3/REWRITE/${overlap}OVERLAP/RUN${RUN}"
+    FILE_DIR="results/TEST-REWRITE-3-NOOPT/REWRITE/${overlap}OVERLAP/RUN${RUN}"
     mkdir -p $FILE_DIR
     rm -f $FILE_DIR/*
     timeout 5m python3 test_driver.py \
               --filename "$FILENAME" \
               --formula_str "$FORMULA_STR" \
               --cores "$CORES" \
-              --enable_sumif_opt \
               --row_num "$ROWS" \
               --output_path "$FILE_DIR" &> $FILE_DIR/run.log
     echo "finished $FILE_DIR"
