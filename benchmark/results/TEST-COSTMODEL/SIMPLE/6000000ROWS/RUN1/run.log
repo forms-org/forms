@@ -1,2 +1,35 @@
-Distributing data time: 3.1390914916992188
-Execution time: 12.505611896514893
+Distributing data time: 3.081521987915039
+partitions: 0 127 0 0
+partitions: 8 127 0 0
+partitions: 16 127 0 0
+partitions: 24 127 0 0
+partitions: 32 127 0 0
+partitions: 40 127 0 0
+partitions: 48 127 0 0
+partitions: 56 127 0 0
+partitions: 64 127 0 0
+partitions: 72 127 0 0
+partitions: 80 127 0 0
+partitions: 88 127 0 0
+partitions: 96 127 0 0
+partitions: 104 127 0 0
+partitions: 112 127 0 0
+partitions: 120 127 0 0
+Execution time: 11.164367914199829
+Get table content time: 0.14028334617614746
+Get table content time: 3.136392831802368
+Get table content time: 5.271293640136719
+Get table content time: 0.26523923873901367
+Get table content time: 2.170902729034424
+Get table content time: 5.368341684341431
+Get table content time: 2.2125275135040283
+Get table content time: 3.013066291809082
+Get table content time: 5.35509467124939
+Get table content time: 0.5295624732971191
+Get table content time: 1.2539405822753906
+Get table content time: 1.2053875923156738
+Get table content time: 1.2247474193572998
+Get table content time: 5.073861837387085
+Get table content time: 3.6642420291900635
+Get table content time: 2.348545789718628
+Get table content time: 3.1720125675201416
