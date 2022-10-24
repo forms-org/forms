@@ -1,4 +1,0 @@
-2022-10-13 14:08:03,207 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-6v1kx5t6', purging
-2022-10-13 14:08:03,207 - distributed.diskutils - INFO - Found stale lock file and directory '/tmp/dask-worker-space/worker-2zkrumqn', purging
-/usr/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 24 leaked semaphore objects to clean up at shutdown
-  warnings.warn('resource_tracker: There appear to be %d '

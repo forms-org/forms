@@ -13,7 +13,6 @@
 #  limitations under the License.
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from time import time
 
 from pynverse import inversefunc
 

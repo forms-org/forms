@@ -214,7 +214,6 @@ def min_cost(ranges: list):
         partitions = old_remote_df.remote_partitions[
             r.row_part_idx : r.last_row_part_idx + 1, r.col_part_idx : r.last_col_part_idx + 1
         ]
-        print("partitions:", r.row_part_idx, r.last_row_part_idx, r.col_part_idx, r.last_col_part_idx)
         remote_df = RemoteDF(
             remote_partitions=partitions,
             num_rows=old_remote_df.num_rows,

@@ -385,7 +385,6 @@ def distributive_function_executor(
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
         all_formula_idx = child.exec_context.all_formula_idx
-        print("all_formula_idx", all_formula_idx)
         if physical_subtree.fr_rf_optimization == FRRFOptimization.PHASEONE:
             if axis == axis_along_row:
                 start_row, start_column, end_row, end_column = get_reference_indices_2_phase_rf_fr(child)
