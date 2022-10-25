@@ -49,7 +49,7 @@ def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
     sorted_values.sort(key=lambda x: x[1])
 
     # Use sorted_values as the left and search_range as the right
-    left_idx, right_idx, mark = 0, 0, -1
+    left_idx, right_idx = 0, 0
     df_arr: list = [np.nan] * len(values)
     while left_idx < len(values):
         searching_val = sorted_values[left_idx][1]
