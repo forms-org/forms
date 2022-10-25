@@ -19,6 +19,7 @@ from forms.core.config import forms_config
 from forms.executor.dfexecutor.remotedf import RemoteDF
 from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
 from forms.executor.table import DFTable
+from forms.utils.optimizations import FRRFOptimization
 from forms.utils.reference import RefType, axis_along_row
 
 
@@ -117,22 +118,40 @@ def get_refs(exec_subtree):
     return refs
 
 
-def get_range(ref_node: RefExecutionNode, start_idx: int, end_idx: int):
+def get_range(
+    ref_node: RefExecutionNode, start_idx: int, end_idx: int, fr_rf_optimization: FRRFOptimization
+):
     out_ref_type = ref_node.out_ref_type
     ref = ref_node.ref
     num_of_rows = ref_node.table.get_num_of_rows()
-    if out_ref_type == RefType.RR:
-        start = ref.row + start_idx
-        end = ref.last_row + end_idx
-    elif out_ref_type == RefType.FR:
-        start = ref.row
-        end = ref.last_row + end_idx
-    elif out_ref_type == RefType.RF:
-        start = ref.row + start_idx
-        end = ref.last_row + 1
-    else:  # out_ref_type == RefType.FF
-        start = ref.row
-        end = ref.last_row + 1
+    if fr_rf_optimization == FRRFOptimization.NOOPT:
+        if out_ref_type == RefType.RR:
+            start = ref.row + start_idx
+            end = ref.last_row + end_idx
+        elif out_ref_type == RefType.FR:
+            start = ref.row
+            end = ref.last_row + end_idx
+        elif out_ref_type == RefType.RF:
+            start = ref.row + start_idx
+            end = ref.last_row + 1
+        else:  # out_ref_type == RefType.FF
+            start = ref.row
+            end = ref.last_row + 1
+    elif fr_rf_optimization == FRRFOptimization.PHASEONE:
+        if out_ref_type == RefType.FR:
+            start = ref.row if start_idx == 0 else start_idx + ref.last_row
+            end = end_idx + ref.last_row
+        elif out_ref_type == RefType.RF:
+            start = ref.row + start_idx
+            end = (
+                ref.last_row + 1
+                if end_idx == ref_node.exec_context.all_formula_idx[-1]
+                else ref.row + end_idx,
+            )
+        # special cases for SUMIF rewrite: the current function node is SUMIF, PHASEONE, and also RR type
+        elif out_ref_type == RefType.RR:
+            start = ref.row + start_idx
+            end = ref.last_row + end_idx
     return Range(max(0, start), ref.col, min(end, num_of_rows), ref.last_col, ref_node=ref_node)
 
 
@@ -209,8 +228,9 @@ def remote_access_planning(exec_subtree: FunctionExecutionNode) -> FunctionExecu
     if forms_config.enable_communication_opt:
         start_idx = exec_subtree.exec_context.start_formula_idx
         end_idx = exec_subtree.exec_context.end_formula_idx
+        fr_rf_optimization = exec_subtree.fr_rf_optimization
         refs = get_refs(exec_subtree)
-        ranges = [get_range(ref, start_idx, end_idx) for ref in refs]
+        ranges = [get_range(ref, start_idx, end_idx, fr_rf_optimization) for ref in refs]
         min_cost(ranges)
     return exec_subtree
 
@@ -320,24 +340,24 @@ def get_reference_indices_2_phase_rf_fr(ref_node: RefExecutionNode):
     end_idx = ref_node.exec_context.end_formula_idx
     all_formula_idx = ref_node.exec_context.all_formula_idx
     if ref_node.exec_context.enable_communication_opt:
-        row = ref_node.row_offset
+        row = ref_node.ref.row
         col = ref_node.col_offset
         if out_ref_type == RefType.FR:
-            return (
-                row if start_idx == 0 else start_idx + row + row_length - 1,
-                col,
-                end_idx + row + row_length - 1,
-                col + col_width,
-            )
+            start = row if start_idx == 0 else start_idx + row + row_length - 1
+            end = end_idx + row + row_length - 1
         elif out_ref_type == RefType.RF:
-            return (
-                row,
-                col,
+            start = row + start_idx
+            end = (
                 row + row_length - start_idx
                 if end_idx == all_formula_idx[-1]
-                else row + end_idx - start_idx,
-                col + col_width,
+                else row + end_idx - start_idx
             )
+        return (
+            ref_node.row_offset,
+            col,
+            ref_node.row_offset + end - start,
+            col + col_width,
+        )
     else:
         row = ref.row
         col = ref.col

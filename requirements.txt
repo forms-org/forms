@@ -9,3 +9,4 @@ pynverse
 formulas
 roman
 mpmath
+seaborn
