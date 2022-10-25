@@ -26,22 +26,40 @@ from forms.executor.dfexecutor.lookup.utils import (
 
 
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    size, values, search_range, result_range = get_lookup_params(physical_subtree)
+    values, search_range, result_range = get_lookup_params(physical_subtree)
     values = values.iloc[:, 0]
+    result_df = lookup_binary_search(values, search_range, result_range)
+    return construct_df_table(result_df)
+
+
+def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
     df_arr: list = []
-    for i in range(size):
+    for i in range(len(values)):
         value_idx = approx_binary_search(values[i], list(search_range))
         result = np.nan
         if value_idx != -1:
             result = result_range[value_idx]
         df_arr.append(result)
-    return construct_df_table(pd.DataFrame(df_arr))
+    return pd.DataFrame(df_arr)
 
 
-# Retrives parameters for VLOOKUP.
-# The first parameter is the size of the dataframe for this core, followed by the actual VLOOKUP parameters.
+def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
+    df_arr: list = []
+    sorted_vals = list(enumerate(values))
+    sorted_vals.sort(key=lambda x: x[1])
+    # print(sorted_vals)
+    # for i in range(len(values)):
+    #     value_idx = approx_binary_search(values[i], list(search_range))
+    #     result = np.nan
+    #     if value_idx != -1:
+    #         result = result_range[value_idx]
+    #     df_arr.append(result)
+    return pd.DataFrame(df_arr)
+
+
+# Retrives parameters for LOOKUP.
 def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
-    # Verify VLOOKUP params
+    # Verify LOOKUP param count
     children = physical_subtree.children
     num_children = len(children)
     assert num_children == 2 or num_children == 3
@@ -57,4 +75,4 @@ def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
         result_range = get_df(children[2]).iloc[:, 0]
         search_range = search_range.iloc[:, 0]
 
-    return size, values, search_range, result_range
+    return values, search_range, result_range

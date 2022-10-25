@@ -31,18 +31,18 @@ from forms.executor.dfexecutor.lookup.utils import (
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    size, values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
+    values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
     values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
     if approx:
-        result_df = vlookup_df_executor_approx(size, values, df, col_idxes)
+        result_df = vlookup_approx(values, df, col_idxes)
     else:
-        result_df = vlookup_df_executor_exact_hash(size, values, df, col_idxes)
+        result_df = vlookup_exact_hash(values, df, col_idxes)
     return construct_df_table(result_df)
 
 
-def vlookup_df_executor_approx(size, values, df, col_idxes) -> pd.DataFrame:
+def vlookup_approx(values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
-    for i in range(size):
+    for i in range(len(values)):
         value, col_idx = values[i], col_idxes[i]
         value_idx = approx_binary_search(value, list(df.iloc[:, 0]))
         result = np.nan
@@ -52,14 +52,14 @@ def vlookup_df_executor_approx(size, values, df, col_idxes) -> pd.DataFrame:
     return pd.DataFrame(df_arr)
 
 
-def vlookup_df_executor_exact_hash(size, values, df, col_idxes) -> pd.DataFrame:
+def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
     cache = {}
-    for i in range(size):
+    for i in range(len(values)):
         value = df.iloc[i, 0]
         if value not in cache:
             cache[value] = i
-    for i in range(size):
+    for i in range(len(values)):
         value, col_idx = values[i], col_idxes[i]
         result = np.nan
         if value in cache:
@@ -69,9 +69,9 @@ def vlookup_df_executor_exact_hash(size, values, df, col_idxes) -> pd.DataFrame:
     return pd.DataFrame(df_arr)
 
 
-def vlookup_df_executor_exact_loops(size, values, df, col_idxes) -> pd.DataFrame:
+def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
-    for i in range(size):
+    for i in range(len(values)):
         value, col_idx = values[i], col_idxes[i]
         value_idx = exact_scan_search(value, list(df.iloc[:, 0]))
         result = np.nan
@@ -91,9 +91,8 @@ def exact_scan_search(value: any, arr: list) -> int:
 
 
 # Retrives parameters for VLOOKUP.
-# The first parameter is the size of the dataframe for this core, followed by the actual VLOOKUP parameters.
 def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
-    # Verify VLOOKUP num params
+    # Verify VLOOKUP param count
     children = physical_subtree.children
     num_children = len(children)
     assert num_children == 3 or num_children == 4
@@ -107,4 +106,4 @@ def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
     if len(children) == 4:
         approx = get_single_value(children[3]) != 0
 
-    return size, values, df, col_idxes, approx
+    return values, df, col_idxes, approx
