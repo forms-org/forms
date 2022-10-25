@@ -86,6 +86,8 @@ from forms.executor.dfexecutor.mathfuncexecutorvariable import (
     trunc_df_executor,
 )
 
+from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_df_executor
+from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_df_executor
 
 from forms.executor.dfexecutor.textfunctionexecutor import (
     concat_executor,
@@ -538,6 +540,9 @@ function_to_executor_dict = {
     Function.ROUNDDOWN: round_down_df_executor,
     Function.ROUNDUP: round_up_df_executor,
     Function.TRUNC: trunc_df_executor,
+    # Lookup functions
+    Function.LOOKUP: lookup_df_executor,
+    Function.VLOOKUP: vlookup_df_executor,
     # Generic formulas executor
     Function.FORMULAS: formulas_executor,
 }

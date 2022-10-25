@@ -38,7 +38,7 @@ def test_compute_atan2():
 
 def test_compute_decimal():
     global df
-    computed_df = forms.compute_formula(df, "=DECIMAL(C1, 16)")
+    computed_df = forms.compute_formula(df, "=DECIMAL(A1, 16)")
     expected_df = pd.DataFrame(np.array([10, 11, 12, 13] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
     computed_df = forms.compute_formula(df, "=DECIMAL(11, 8)")
