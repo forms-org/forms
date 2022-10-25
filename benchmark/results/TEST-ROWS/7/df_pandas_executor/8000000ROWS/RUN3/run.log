@@ -1,0 +1,11 @@
+Distributing data time: 3.951986789703369
+Execution time: 5.300943613052368
+2022-10-15 16:36:09,085 - tornado.application - ERROR - Exception in callback <bound method Client._heartbeat of <Client: 'tcp://127.0.0.1:34517' processes=16 threads=32, memory=62.13 GiB>>
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/tornado/ioloop.py", line 905, in _run
+    return self.callback()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/client.py", line 1390, in _heartbeat
+    self.scheduler_comm.send({"op": "heartbeat-client"})
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/distributed/batched.py", line 156, in send
+    raise CommClosedError(f"Comm {self.comm!r} already closed.")
+distributed.comm.core.CommClosedError: Comm <TCP (closed) Client->Scheduler local=tcp://127.0.0.1:34020 remote=tcp://127.0.0.1:34517> already closed.

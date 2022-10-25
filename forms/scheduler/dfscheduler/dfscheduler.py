@@ -30,11 +30,14 @@ class DFSimpleScheduler(BaseScheduler):
     ):
         super().__init__(compiler, exec_config, execution_tree)
         self.scheduled = False
+        self.partition_plan = self.cost_model.get_partition_plan(
+            self.execution_tree, self.exec_config.cores
+        )
 
     def next_subtree(self) -> (ExecutionNode, list):
         if not self.scheduled:
             cores = self.exec_config.cores
-            partition_plan = self.cost_model.get_partition_plan(self.execution_tree, cores)
+            partition_plan = self.partition_plan
             exec_subtree_list = [self.execution_tree.gen_exec_subtree() for _ in range(cores)]
             exec_context_list = [
                 ExecutionContext(

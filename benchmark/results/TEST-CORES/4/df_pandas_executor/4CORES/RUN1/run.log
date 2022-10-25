@@ -1,0 +1,11 @@
+Distributing data time: 4.648730516433716
+partitions: 0 32 0 0
+partitions: 31 64 0 0
+partitions: 64 96 0 0
+partitions: 96 127 0 0
+Execution time: 3.346994400024414
+Get table content time: 0.1686711311340332
+Get table content time: 1.506295919418335
+Get table content time: 1.5708513259887695
+Get table content time: 1.4319710731506348
+Get table content time: 1.5722873210906982

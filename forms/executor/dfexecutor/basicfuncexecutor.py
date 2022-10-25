@@ -197,8 +197,9 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert isinstance(ref_node, RefExecutionNode)
     assert isinstance(criteria, LitExecutionNode)
     literal_str = criteria.literal.replace('"', "")
-    op = "".join(c for c in literal_str if not c.isdigit())
-    val = "".join(c for c in literal_str if c.isdigit())
+    first_digit = next(i for i, c in enumerate(literal_str) if c.isdigit())
+    op = literal_str[:first_digit]
+    val = literal_str[first_digit:]
     val = float(val)
     assert op in operator_dict.keys()
     ref = ref_node.ref
@@ -210,17 +211,22 @@ def sumif_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     if not physical_subtree.exec_context.enable_sumif_opt:
         # baseline implementation
         results = []
-        for index in range(start_idx, end_idx):
+        df = ref_node.table.get_table_content()
+        for idx in range(start_idx, end_idx):
             value = None
-            df = ref_node.table.get_table_content()
             axis = ref_node.exec_context.axis
+            index = (
+                idx - start_idx
+                if start_idx == 0 or ref_node.exec_context.enable_communication_opt
+                else idx
+            )  # check intermediate node
             # TODO: add support for axis_along_column
             if axis == axis_along_row:
                 indices = get_reference_indices_for_single_index(ref_node, index)
                 if indices is not None:
                     start_row, start_column, end_row, end_column = indices
-                    df = df.iloc[start_row:end_row, start_column:end_column]
-                    value = df.to_numpy()
+                    value = df.iloc[start_row:end_row, start_column:end_column]
+                    value = value.to_numpy()
                 result = np.nan if value is None else np.sum(operator_dict[op](value, val) * value)
                 results.append(result)
         return construct_df_table(results)
