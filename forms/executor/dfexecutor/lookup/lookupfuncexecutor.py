@@ -45,20 +45,20 @@ def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
 
 def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
     # Sort values and preserve index for later
-    sorted_vals = list(enumerate(values))
-    sorted_vals.sort(key=lambda x: x[1])
+    sorted_values = list(enumerate(values))
+    sorted_values.sort(key=lambda x: x[1])
 
-    # Use sorted vals as the left and search range as the right
+    # Use sorted_values as the left and search_range as the right
     left_idx, right_idx, mark = 0, 0, -1
     df_arr: list = [np.nan] * len(values)
     while left_idx < len(values):
-        searching_val = sorted_vals[left_idx][1]
+        searching_val = sorted_values[left_idx][1]
         while right_idx < len(search_range) and search_range[right_idx] <= searching_val:
             right_idx += 1
         stop_val = search_range[right_idx] if right_idx < len(search_range) else np.infty
-        while left_idx < len(values) and sorted_vals[left_idx][1] < stop_val:
+        while left_idx < len(values) and sorted_values[left_idx][1] < stop_val:
             if right_idx != 0:
-                df_arr[sorted_vals[left_idx][0]] = result_range[right_idx - 1]
+                df_arr[sorted_values[left_idx][0]] = result_range[right_idx - 1]
             left_idx += 1
 
     return pd.DataFrame(df_arr)
