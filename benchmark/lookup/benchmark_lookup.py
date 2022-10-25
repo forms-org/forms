@@ -84,23 +84,41 @@ def benchmark_lookup():
 
     df = create_df(df_type="constant", start_val=50)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
-    print_results("Constant DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time)
+    print_results(
+        "Constant DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time
+    )
 
     df = create_df(df_type="range", start_val=0)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
-    print_results("Range DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time)
+    print_results(
+        "Range DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time
+    )
 
     df = create_df(df_type="range", start_val=0.5)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
-    print_results("Range DataFrame Approximate", "Binary search", "Sort merge", binary_search_time, sort_merge_time)
+    print_results(
+        "Range DataFrame Approximate", "Binary search", "Sort merge", binary_search_time, sort_merge_time
+    )
 
     df = create_df(df_type="range", start_val=-2.5)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
-    print_results("Range DataFrame Approximate NaN", "Binary search", "Sort merge", binary_search_time, sort_merge_time)
+    print_results(
+        "Range DataFrame Approximate NaN",
+        "Binary search",
+        "Sort merge",
+        binary_search_time,
+        sort_merge_time,
+    )
 
     df = create_df(df_type="random")
     binary_search_time, sort_merge_time = run_lookup_trials(df)
-    print_results("Random DataFrame Approximate", "Binary search", "Sort merge", binary_search_time, sort_merge_time)
+    print_results(
+        "Random DataFrame Approximate",
+        "Binary search",
+        "Sort merge",
+        binary_search_time,
+        sort_merge_time,
+    )
 
 
 def run_vlookup_exact_trials(df: pd.DataFrame):

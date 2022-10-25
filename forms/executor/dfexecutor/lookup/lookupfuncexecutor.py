@@ -28,7 +28,7 @@ from forms.executor.dfexecutor.lookup.utils import (
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, search_range, result_range = get_lookup_params(physical_subtree)
     values = values.iloc[:, 0]
-    result_df = lookup_binary_search(values, search_range, result_range)
+    result_df = lookup_sort_merge(values, search_range, result_range)
     return construct_df_table(result_df)
 
 
