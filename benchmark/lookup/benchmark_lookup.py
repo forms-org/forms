@@ -52,14 +52,15 @@ def print_results(title: str, subtitle1: str, subtitle2: str, time1: float, time
 def run_lookup_trials(df: pd.DataFrame):
     values, search_range, result_range = df.iloc[:, 1], df.iloc[:, 0], df.iloc[:, 2]
 
+    iterations: int = 3
+
     # Warm up cache
-    for i in range(5):
-        lookup_binary_search(values, search_range, result_range)
-        lookup_sort_merge(values, search_range, result_range)
+    lookup_binary_search(values, search_range, result_range)
+    lookup_sort_merge(values, search_range, result_range)
 
     # Run trials
     binary_search_time, sort_merge_time = 0, 0
-    for i in range(5):
+    for i in range(iterations):
         start_time = time.time()
         result1 = lookup_binary_search(values, search_range, result_range)
         binary_search_time += time.time() - start_time
@@ -67,7 +68,7 @@ def run_lookup_trials(df: pd.DataFrame):
         result2 = lookup_sort_merge(values, search_range, result_range)
         sort_merge_time += time.time() - start_time
         assert result1.equals(result2)
-    for i in range(5):
+    for i in range(iterations):
         start_time = time.time()
         result1 = lookup_sort_merge(values, search_range, result_range)
         sort_merge_time += time.time() - start_time
@@ -76,31 +77,31 @@ def run_lookup_trials(df: pd.DataFrame):
         binary_search_time += time.time() - start_time
         assert result1.equals(result2)
 
-    return binary_search_time, sort_merge_time
+    return binary_search_time / (3 * iterations), sort_merge_time / (3 * iterations)
 
 
 def benchmark_lookup():
     print("\nBENCHMARKING LOOKUP", "-" * 20, "\n")
 
-    df = create_df(df_type="constant", start_val=50)
+    df = create_df(size=(2000, 12), df_type="constant", start_val=50)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
     print_results(
         "Constant DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time
     )
 
-    df = create_df(df_type="range", start_val=0)
+    df = create_df(size=(2000, 12), df_type="range", start_val=0)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
     print_results(
         "Range DataFrame Exact", "Binary search", "Sort merge", binary_search_time, sort_merge_time
     )
 
-    df = create_df(df_type="range", start_val=0.5)
+    df = create_df(size=(2000, 12), df_type="range", start_val=0.5)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
     print_results(
         "Range DataFrame Approximate", "Binary search", "Sort merge", binary_search_time, sort_merge_time
     )
 
-    df = create_df(df_type="range", start_val=-2.5)
+    df = create_df(size=(2000, 12), df_type="range", start_val=-2.5)
     binary_search_time, sort_merge_time = run_lookup_trials(df)
     print_results(
         "Range DataFrame Approximate NaN",
@@ -110,7 +111,7 @@ def benchmark_lookup():
         sort_merge_time,
     )
 
-    df = create_df(df_type="random")
+    df = create_df(size=(2000, 12), df_type="random")
     binary_search_time, sort_merge_time = run_lookup_trials(df)
     print_results(
         "Random DataFrame Approximate",
@@ -125,14 +126,15 @@ def run_vlookup_exact_trials(df: pd.DataFrame):
     values = df.iloc[:, 1]
     col_idxes = pd.Series([df.shape[1]] * df.shape[0])
 
+    iterations: int = 3
+
     # Warm up cache
-    for i in range(5):
-        vlookup_exact_loops(values, df, col_idxes)
-        vlookup_exact_hash(values, df, col_idxes)
+    vlookup_exact_loops(values, df, col_idxes)
+    vlookup_exact_hash(values, df, col_idxes)
 
     # Run trials
     loops_time, hash_time = 0, 0
-    for i in range(5):
+    for i in range(iterations):
         start_time = time.time()
         result1 = vlookup_exact_loops(values, df, col_idxes)
         loops_time += time.time() - start_time
@@ -140,7 +142,7 @@ def run_vlookup_exact_trials(df: pd.DataFrame):
         result2 = vlookup_exact_hash(values, df, col_idxes)
         hash_time += time.time() - start_time
         assert result1.equals(result2)
-    for i in range(5):
+    for i in range(iterations):
         start_time = time.time()
         result1 = vlookup_exact_hash(values, df, col_idxes)
         hash_time += time.time() - start_time
@@ -149,21 +151,21 @@ def run_vlookup_exact_trials(df: pd.DataFrame):
         loops_time += time.time() - start_time
         assert result1.equals(result2)
 
-    return loops_time, hash_time
+    return loops_time / (3 * iterations), hash_time / (3 * iterations)
 
 
 def benchmark_vlookup_exact():
     print("\nBENCHMARKING VLOOKUP EXACT", "-" * 13, "\n")
 
-    df = create_df(df_type="constant", start_val=50)
+    df = create_df(size=(2000, 12), df_type="constant", start_val=50)
     loops_time, hash_time = run_vlookup_exact_trials(df)
     print_results("Constant DataFrame Exact", "Nested Loops", "Hash and Probe", loops_time, hash_time)
 
-    df = create_df(df_type="range", start_val=0)
+    df = create_df(size=(2000, 12), df_type="range", start_val=0)
     loops_time, hash_time = run_vlookup_exact_trials(df)
     print_results("Range DataFrame Exact", "Nested Loops", "Hash and Probe", loops_time, hash_time)
 
-    df = create_df(df_type="range", start_val=0.5)
+    df = create_df(size=(2000, 12), df_type="range", start_val=0.5)
     loops_time, hash_time = run_vlookup_exact_trials(df)
     print_results("Range DataFrame All NaN", "Nested Loops", "Hash and Probe", loops_time, hash_time)
 
