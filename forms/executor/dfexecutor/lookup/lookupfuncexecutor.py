@@ -28,18 +28,28 @@ from forms.executor.dfexecutor.lookup.utils import (
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, search_range, result_range = get_lookup_params(physical_subtree)
     values = values.iloc[:, 0]
-    result_df = lookup_sort_merge(values, search_range, result_range)
+    result_df = lookup_binary_search_np(values, search_range, result_range)
     return construct_df_table(result_df)
 
 
 def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
-    df_arr: list = []
+    df_arr: list = [np.nan] * len(values)
     for i in range(len(values)):
         value_idx = approx_binary_search(values[i], list(search_range))
-        result = np.nan
         if value_idx != -1:
-            result = result_range[value_idx]
-        df_arr.append(result)
+            df_arr[i] = result_range[value_idx]
+    return pd.DataFrame(df_arr)
+
+
+def lookup_binary_search_np(values, search_range, result_range) -> pd.DataFrame:
+    df_arr: list = [np.nan] * len(values)
+    value_idxes = np.searchsorted(list(search_range), list(values), side='left')
+    for i in range(len(values)):
+        value, value_idx = values[i], value_idxes[i]
+        if value_idx >= 1000 or value != search_range[value_idx]:
+            value_idx -= 1
+        if value_idx != -1:
+            df_arr[i] = result_range[value_idx]
     return pd.DataFrame(df_arr)
 
 
