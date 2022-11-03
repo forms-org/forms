@@ -15,6 +15,8 @@
 import pandas as pd
 from abc import ABC, abstractmethod
 
+from time import time
+
 
 class Table(ABC):
     @abstractmethod
@@ -52,7 +54,9 @@ class DFTable(Table):
 
     def get_table_content(self) -> pd.DataFrame:
         if self.df is None:
+            start = time()
             self.df = self.remote_df.get_df_content()
+            print(f"Get table content time: {time() - start}")
         return self.df
 
     def gen_table_for_execution(self) -> Table:
