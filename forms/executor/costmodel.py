@@ -28,6 +28,8 @@ from forms.utils.reference import RefType
 
 
 class BaseCostModel(ABC):
+    time_cost = 0
+
     def __init__(self, num_of_formulae: int):
         self.num_of_formulae = num_of_formulae
 

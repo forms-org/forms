@@ -1,0 +1,41 @@
+2022-10-18 14:25:12,907 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.69 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 14:25:13,069 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.74 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 14:25:18,334 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.68 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 14:25:18,510 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.75 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 14:25:18,609 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.79 GiB -- Worker memory limit: 3.88 GiB
+2022-10-18 14:25:18,709 - distributed.worker_memory - WARNING - Unmanaged memory use is high. This may indicate a memory leak or the memory may not be released to the OS; see https://distributed.dask.org/en/latest/worker-memory.html#memory-not-released-back-to-the-os for more information. -- Unmanaged memory: 2.82 GiB -- Worker memory limit: 3.88 GiB
+Distributing data time: 4.80660343170166
+partitions: 0 31 0 0
+partitions: 0 45 0 0
+partitions: 0 55 0 0
+partitions: 0 63 0 0
+partitions: 0 71 0 0
+partitions: 0 78 0 0
+partitions: 0 84 0 0
+partitions: 0 90 0 0
+partitions: 0 95 0 0
+partitions: 0 101 0 0
+partitions: 0 106 0 0
+partitions: 0 110 0 0
+partitions: 0 115 0 0
+partitions: 0 119 0 0
+partitions: 0 123 0 0
+partitions: 0 127 0 0
+Execution time: 17.313169240951538
+Get table content time: 0.19364428520202637
+Get table content time: 1.2054131031036377
+Get table content time: 8.430994272232056
+Get table content time: 6.356412887573242
+Get table content time: 7.6976354122161865
+Get table content time: 4.7070770263671875
+Get table content time: 3.0799131393432617
+Get table content time: 3.929689645767212
+Get table content time: 4.759876728057861
+Get table content time: 2.3839924335479736
+Get table content time: 10.802287817001343
+Get table content time: 5.305598020553589
+Get table content time: 9.789451599121094
+Get table content time: 8.723235845565796
+Get table content time: 6.6735334396362305
+Get table content time: 11.102401733398438
+Get table content time: 12.323283910751343

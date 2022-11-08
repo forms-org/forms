@@ -34,11 +34,7 @@ class FactorOutPhysicalRule(RewritingRule):
             or plan_node.function in distributive_functions_if
             or plan_node.function in algebraic_functions_if
         ):
-            if (
-                plan_node.fr_rf_optimization == FRRFOptimization.NOOPT
-                and len(plan_node.children) == 1
-                and isinstance(plan_node.children[0], RefNode)
-            ):
+            if plan_node.fr_rf_optimization == FRRFOptimization.NOOPT and len(plan_node.children) == 1:
                 if (
                     plan_node.children[0].out_ref_type == RefType.RF
                     or plan_node.children[0].out_ref_type == RefType.FR

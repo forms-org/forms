@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 from enum import Enum, auto
+from time import time
 
 from forms.core.config import forms_config
 from forms.executor.compiler import BaseCompiler
@@ -38,10 +39,6 @@ class BasePhase:
         self.compiler = compiler
         self.exec_config = exec_config
         self.execution_tree = execution_tree
-        self.cost_model = create_cost_model_by_name(forms_config.cost_model, exec_config.num_of_formulae)
-        self.partition_plan = self.cost_model.get_partition_plan(
-            self.execution_tree, self.exec_config.cores
-        )
         self.phase_scheduled = False
         self.phase_finished = False
 
@@ -54,6 +51,17 @@ class BasePhase:
     def is_finished(self):
         return self.phase_finished
 
+    def init_cost_model(self):
+        start_time = time()
+        self.cost_model = create_cost_model_by_name(
+            forms_config.cost_model, self.exec_config.num_of_formulae
+        )
+        self.partition_plan = self.cost_model.get_partition_plan(
+            self.execution_tree, self.exec_config.cores
+        )
+        end_time = time()
+        self.cost_model.__class__.time_cost += end_time - start_time
+
 
 class SimplePhase(BasePhase):
     def __init__(
@@ -61,6 +69,8 @@ class SimplePhase(BasePhase):
     ):
         super().__init__(compiler, exec_config, execution_tree)
         self.empty = False
+        if not self.empty:
+            self.init_cost_model()
 
     def next_subtree(self):
         if not self.phase_scheduled:
@@ -102,6 +112,8 @@ class FFPhase(BasePhase):
         self.scheduled_idx = 0
         self.finished_idx = 0
         self.empty = len(self.ff_trees) == 0
+        if not self.empty:
+            self.init_cost_model()
 
     def find_ff_subtrees(self, execution_tree):
         if (
@@ -125,7 +137,7 @@ class FFPhase(BasePhase):
                     self.exec_config.axis,
                 )
             )
-            subtree = remote_access_planning(subtree)
+            self.subtrees[curr_idx] = remote_access_planning(subtree)
             self.scheduled_idx += 1
             if self.scheduled_idx == len(self.ff_trees):
                 self.phase_scheduled = True
@@ -158,6 +170,8 @@ class RFFRPhaseOne(BasePhase):
         self.find_phase_one_subtrees(self.execution_tree)
         self.idx = 0
         self.empty = len(self.phaseone_trees) == 0
+        if not self.empty:
+            self.init_cost_model()
 
     def find_phase_one_subtrees(self, execution_tree):
         if (
@@ -226,6 +240,8 @@ class RFFRPhaseTwo(BasePhase):
         self.find_phase_two_subtrees(self.execution_tree)
         self.idx = 0
         self.empty = len(self.phasetwo_trees) == 0
+        if not self.empty:
+            self.init_cost_model()
 
     def find_phase_two_subtrees(self, execution_tree):
         if (

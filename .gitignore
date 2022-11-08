@@ -19,3 +19,5 @@ tests/coverage.xml
 # dask
 dask-worker-space/
 .ipynb
+# large spreadsheet
+*10M.csv

@@ -1,0 +1,23 @@
+Distributing data time: 4.683138132095337
+partitions: 0 31 0 0
+partitions: 31 64 0 0
+partitions: 64 96 0 0
+partitions: 96 127 0 0
+Execution time: 2.06929874420166
+Get table content time: 0.18681931495666504
+Get table content time: 1.396744728088379
+all_formula_idx None
+Get table content time: 0.10840368270874023
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.5922069549560547
+all_formula_idx None
+Get table content time: 0.09412837028503418
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.6099998950958252
+all_formula_idx None
+Get table content time: 0.09952592849731445
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
+Get table content time: 1.5088543891906738
+all_formula_idx None
+Get table content time: 0.08933544158935547
+all_formula_idx [0, 4999999, 7071067, 8660253, 10000000]
