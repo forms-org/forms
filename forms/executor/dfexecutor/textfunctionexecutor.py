@@ -160,7 +160,6 @@ def upper_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.upper())
 
 
-# TODO: Handle three cases-number, date, time
 # If string, check that each character is alphanumeric else remove
 # If time, returns a float from 0 to 1. Eqn: # seconds in parameter number / # seconds in a day
 # If date, regex for date format

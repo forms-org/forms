@@ -50,6 +50,10 @@ class Function(Enum):
     UPPER = "upper"
     VALUE = "value"
 
+    # Logic functions
+    IF = "if"
+    EQUAL = "equal"
+
     # Single-parameter math functions
     ABS = "abs"
     ACOS = "acos"
@@ -157,6 +161,9 @@ pandas_supported_functions = {
     Function.TRIM,
     Function.UPPER,
     Function.VALUE,
+    # Logic functions
+    Function.IF,
+    Function.EQUAL,
     # Single-parameter math functions
     Function.ABS,
     Function.ACOS,
