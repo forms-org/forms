@@ -55,7 +55,7 @@ def vlookup_approx(values, df, col_idxes) -> pd.DataFrame:
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
     cache = {}
-    for i in range(len(values)):
+    for i in range(df.shape[0]):
         value = df.iloc[i, 0]
         if value not in cache:
             cache[value] = i
