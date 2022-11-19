@@ -46,7 +46,7 @@ def lookup_binary_search_np(values, search_range, result_range) -> pd.DataFrame:
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
     for i in range(len(values)):
         value, value_idx = values[i], value_idxes[i]
-        if value_idx >= 1000 or value != search_range[value_idx]:
+        if value_idx >= len(search_range) or value != search_range[value_idx]:
             value_idx -= 1
         if value_idx != -1:
             df_arr[i] = result_range[value_idx]
