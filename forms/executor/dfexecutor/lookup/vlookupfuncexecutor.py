@@ -52,6 +52,19 @@ def vlookup_approx(values, df, col_idxes) -> pd.DataFrame:
     return pd.DataFrame(df_arr)
 
 
+def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
+    df_arr: list = [np.nan] * len(values)
+    search_range = df.iloc[:, 0]
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    for i in range(len(values)):
+        value, value_idx, col_idx = values[i], value_idxes[i], col_idxes[i]
+        if value_idx >= len(search_range) or value != search_range[value_idx]:
+            value_idx -= 1
+        if value_idx != -1:
+            df_arr[i] = df.iloc[value_idx, col_idx - 1]
+    return pd.DataFrame(df_arr)
+
+
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
     df_arr: list = []
     cache = {}
