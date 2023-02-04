@@ -6,8 +6,8 @@ from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_exact_h
 
 
 # Locally hashes a dataframe with 1 column and groups it by hash.
-def hash_partition_df(df: pd.DataFrame):
-    hashed_df = df.iloc[:, 0].apply(lambda x: hash(x) % CORES)
+def hash_partition_df(df: pd.DataFrame, num_cores: int):
+    hashed_df = df.iloc[:, 0].apply(lambda x: hash(x) % num_cores)
     df['hash_DO_NOT_USE'] = hashed_df
     return df.groupby('hash_DO_NOT_USE')
 
@@ -15,17 +15,18 @@ def hash_partition_df(df: pd.DataFrame):
 # Chunks and hashes dataframes in df_list with a Dask client.
 def hash_chunk_k_tables_distributed(client: Client, df_list: list[pd.DataFrame]):
     workers = list(client.scheduler_info()['workers'].keys())
+    num_cores = len(workers)
     chunk_partitions = {}
     for df_idx in range(len(df_list)):
         chunk_partitions[df_idx] = []
         df = df_list[df_idx]
-        for i in range(CORES):
+        for i in range(num_cores):
             worker_id = workers[i]
-            start_idx = (i * df.shape[0]) // CORES
-            end_idx = ((i + 1) * df.shape[0]) // CORES
+            start_idx = (i * df.shape[0]) // num_cores
+            end_idx = ((i + 1) * df.shape[0]) // num_cores
             data = df[start_idx: end_idx]
             scattered_data = client.scatter(data, workers=worker_id)
-            chunk_partitions[df_idx].append(client.submit(hash_partition_df, scattered_data))
+            chunk_partitions[df_idx].append(client.submit(hash_partition_df, scattered_data, num_cores))
     for df_idx in range(len(df_list)):
         chunk_partitions[df_idx] = client.gather(chunk_partitions[df_idx])
     return chunk_partitions
@@ -61,11 +62,12 @@ def vlookup_exact_hash_distributed(client: Client,
     values['col_idxes_DO_NOT_USE'] = col_idxes
     chunk_partitions = hash_chunk_k_tables_distributed(client, [values, df.iloc[:, 0].to_frame()])
     workers = list(client.scheduler_info()['workers'].keys())
+    num_cores = len(workers)
     result_futures = []
-    for i in range(CORES):
+    for i in range(num_cores):
         worker_id = workers[i]
         values_partitions, df_partitions = [], []
-        for j in range(CORES):
+        for j in range(num_cores):
             if i in chunk_partitions[0][j].groups:
                 group = chunk_partitions[0][j].get_group(i)
                 values_partitions.append(group)
@@ -94,22 +96,26 @@ def vlookup_exact_hash_distributed(client: Client,
     return pd.concat(results).sort_index()
 
 
-if __name__ == '__main__':
+def run_test():
     CORES = 4
     DF_ROWS = 100000
     np.random.seed(1)
-    df = pd.DataFrame(np.random.randint(0, 1000, size=(DF_ROWS, 10)))
-    values, df, col_idxes = df.iloc[:, 0], df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
+    test_df = pd.DataFrame(np.random.randint(0, 1000, size=(DF_ROWS, 10)))
+    values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
 
     start_time = time()
     table1 = vlookup_exact_hash(values, df, col_idxes)
-    print(f"Finished local hash in {time() - start_time} seconds.")
+    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     dask_client = Client(processes=True, n_workers=CORES)
     start_time = time()
     table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed hash in {time() - start_time} seconds.")
+    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     table1 = table1.astype('object')
     assert table1.equals(table2)
     print("Dataframes are equal!")
+
+
+if __name__ == '__main__':
+    run_test()

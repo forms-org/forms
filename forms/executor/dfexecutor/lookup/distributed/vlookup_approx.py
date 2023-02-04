@@ -6,20 +6,25 @@ from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_approx_
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
-def range_partition_df(df: pd.DataFrame, bins):
-    binned_df = pd.cut(df.iloc[:, 0], bins, labels=False)
+def range_partition_df(df: pd.DataFrame or pd.Series, bins):
+    if isinstance(df, pd.DataFrame):
+        data = df.iloc[:, 0]
+    else:
+        data = df
+    binned_df = pd.cut(data, bins, labels=False)
     df['bin_DO_NOT_USE'] = binned_df
     return df.groupby('bin_DO_NOT_USE')
 
 
 # Chunks range partitions a table based on a set of given bins.
-def range_partition_df_distributed(client: Client, df: pd.DataFrame, bins):
+def range_partition_df_distributed(client: Client, df: pd.DataFrame or pd.Series, bins):
     workers = list(client.scheduler_info()['workers'].keys())
+    num_cores = len(workers)
     chunk_partitions = []
-    for i in range(CORES):
+    for i in range(num_cores):
         worker_id = workers[i]
-        start_idx = (i * df.shape[0]) // CORES
-        end_idx = ((i + 1) * df.shape[0]) // CORES
+        start_idx = (i * df.shape[0]) // num_cores
+        end_idx = ((i + 1) * df.shape[0]) // num_cores
         data = df[start_idx: end_idx]
         scattered_data = client.scatter(data, workers=worker_id)
         chunk_partitions.append(client.submit(range_partition_df, scattered_data, bins))
@@ -48,12 +53,15 @@ def vlookup_approx_distributed(client: Client,
                                values: pd.Series,
                                df: pd.DataFrame,
                                col_idxes: pd.Series) -> pd.DataFrame:
+    workers = list(client.scheduler_info()['workers'].keys())
+    num_cores = len(workers)
+
     search_keys = df.iloc[:, 0]
     idx_bins = []
     bins = []
-    for i in range(CORES):
-        start_idx = (i * df.shape[0]) // CORES
-        end_idx = ((i + 1) * df.shape[0]) // CORES
+    for i in range(num_cores):
+        start_idx = (i * df.shape[0]) // num_cores
+        end_idx = ((i + 1) * df.shape[0]) // num_cores
         if start_idx == 0:
             idx_bins.append(0)
             bins.append(-float('inf'))
@@ -64,21 +72,20 @@ def vlookup_approx_distributed(client: Client,
     """
     # It might be better to get the bins with qcut
     start_time_test = time()
-    res, bins = pd.qcut(values, CORES, retbins=True, labels=False)
+    res, bins = pd.qcut(values, num_cores, retbins=True, labels=False)
     print(f"qcut time: {time() - start_time_test}")
     print(res)
     """
 
     values = values.to_frame()
     values['col_idxes_DO_NOT_USE'] = col_idxes
-    binned_values = range_partition_df_distributed(dask_client, values, bins)
+    binned_values = range_partition_df_distributed(client, values, bins)
 
-    workers = list(client.scheduler_info()['workers'].keys())
     result_futures = []
-    for i in range(CORES):
+    for i in range(num_cores):
         worker_id = workers[i]
         values_partitions = []
-        for j in range(CORES):
+        for j in range(num_cores):
             if i in binned_values[j].groups:
                 group = binned_values[j].get_group(i)
                 values_partitions.append(group)
@@ -97,22 +104,26 @@ def vlookup_approx_distributed(client: Client,
     return pd.concat(results).sort_index()
 
 
-if __name__ == '__main__':
+def run_test():
     CORES = 4
     DF_ROWS = 100000
-    df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
-    values, df, col_idxes = df.iloc[:, 0], df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
-    df.iloc[:, 0] = range(DF_ROWS)
+    test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
+    values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
+    df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
 
     start_time = time()
     table1 = vlookup_approx_np(values, df, col_idxes)
-    print(f"Finished local hash in {time() - start_time} seconds.")
+    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     dask_client = Client(processes=True, n_workers=CORES)
     start_time = time()
     table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed hash in {time() - start_time} seconds.")
+    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     table1 = table1.astype('object')
     assert table1.equals(table2)
     print("Dataframes are equal!")
+
+
+if __name__ == '__main__':
+    run_test()
