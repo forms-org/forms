@@ -42,15 +42,14 @@ def vlookup_exact_hash_local(values, df):
         value = df.iloc[i, 0]
         if value not in cache:
             cache[value] = i
-    result_df = pd.Series(index=values.index, dtype=object)
+    result_arr = [np.nan] * len(values)
     for i in range(len(values)):
         value, col_idx = values.iloc[i], col_idxes.iloc[i]
-        result = np.nan
         if value in cache:
             value_idx = cache[value]
             result = df.iloc[value_idx, col_idx - 1]
-        result_df.iloc[i] = result
-    return result_df.to_frame()
+            result_arr[i] = result
+    return pd.DataFrame(result_arr, index=values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
@@ -112,8 +111,7 @@ def run_test():
     table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
-    table1 = table1.astype('object')
-    assert table1.equals(table2)
+    assert table1.astype('object').equals(table2.astype('object'))
     print("Dataframes are equal!")
 
 

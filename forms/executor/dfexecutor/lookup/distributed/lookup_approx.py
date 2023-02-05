@@ -20,15 +20,15 @@ def lookup_approx_local(values, df) -> pd.DataFrame:
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-    result_df = pd.Series(index=values.index, dtype=object)
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    result_arr = [np.nan] * len(values)
     for i in range(len(values)):
         value, value_idx = values.iloc[i], value_idxes[i]
         if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
             value_idx -= 1
         if value_idx != -1:
-            result_df.iloc[i] = result_range.iloc[value_idx]
-    return pd.DataFrame(result_df)
+            result_arr[i] = result_range.iloc[value_idx]
+    return pd.DataFrame(result_arr, index=values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.

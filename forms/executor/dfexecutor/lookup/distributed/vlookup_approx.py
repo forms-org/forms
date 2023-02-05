@@ -37,15 +37,15 @@ def vlookup_approx_local(values, df) -> pd.DataFrame:
         return pd.DataFrame(dtype=object)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
     search_range = df.iloc[:, 0]
-    result_df = pd.Series(index=values.index, dtype=object)
+    result_arr = [np.nan] * len(values)
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
     for i in range(len(values)):
         value, value_idx, col_idx = values.iloc[i], value_idxes[i], col_idxes.iloc[i]
         if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
             value_idx -= 1
         if value_idx != -1:
-            result_df.iloc[i] = df.iloc[value_idx, col_idx - 1]
-    return pd.DataFrame(result_df)
+            result_arr[i] = df.iloc[value_idx, col_idx - 1]
+    return pd.DataFrame(result_arr, index=values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
@@ -107,6 +107,7 @@ def vlookup_approx_distributed(client: Client,
 def run_test():
     CORES = 4
     DF_ROWS = 100000
+    np.random.seed(1)
     test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
     df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
@@ -120,8 +121,7 @@ def run_test():
     table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
-    table1 = table1.astype('object')
-    assert table1.equals(table2)
+    assert table1.astype('object').equals(table2.astype('object'))
     print("Dataframes are equal!")
 
 

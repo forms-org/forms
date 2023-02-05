@@ -66,7 +66,7 @@ def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
 
 
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
-    df_arr: list = []
+    df_arr: list = [np.nan] * len(values)
     cache = {}
     for i in range(df.shape[0]):
         value = df.iloc[i, 0]
@@ -74,11 +74,10 @@ def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
             cache[value] = i
     for i in range(len(values)):
         value, col_idx = values[i], col_idxes[i]
-        result = np.nan
         if value in cache:
             value_idx = cache[value]
             result = df.iloc[value_idx, col_idx - 1]
-        df_arr.append(result)
+            df_arr[i] = result
     return pd.DataFrame(df_arr)
 
 
