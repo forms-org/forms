@@ -53,16 +53,16 @@ def vlookup_approx(values, df, col_idxes) -> pd.DataFrame:
 
 
 def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
-    df_arr: list = [np.nan] * len(values)
     search_range = df.iloc[:, 0]
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    result_arr = [np.nan] * len(values)
     for i in range(len(values)):
-        value, value_idx, col_idx = values[i], value_idxes[i], col_idxes[i]
-        if value_idx >= len(search_range) or value != search_range[value_idx]:
+        value, value_idx, col_idx = values.iloc[i], value_idxes[i], col_idxes.iloc[i]
+        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
             value_idx -= 1
         if value_idx != -1:
-            df_arr[i] = df.iloc[value_idx, col_idx - 1]
-    return pd.DataFrame(df_arr)
+            result_arr[i] = df.iloc[value_idx, col_idx - 1]
+    return pd.DataFrame(result_arr)
 
 
 def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
@@ -84,19 +84,19 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
 
 
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
-    df_arr: list = [np.nan] * len(values)
     cache = {}
     for i in range(df.shape[0]):
         value = df.iloc[i, 0]
         if value not in cache:
             cache[value] = i
+    result_arr = [np.nan] * len(values)
     for i in range(len(values)):
-        value, col_idx = values[i], col_idxes[i]
+        value, col_idx = values.iloc[i], col_idxes.iloc[i]
         if value in cache:
             value_idx = cache[value]
             result = df.iloc[value_idx, col_idx - 1]
-            df_arr[i] = result
-    return pd.DataFrame(df_arr)
+            result_arr[i] = result
+    return pd.DataFrame(result_arr)
 
 
 def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:

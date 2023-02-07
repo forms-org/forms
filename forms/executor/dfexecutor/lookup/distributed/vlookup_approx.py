@@ -1,8 +1,24 @@
+#  Copyright 2022-2023 The FormS Authors.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 import numpy as np
 import pandas as pd
 from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_approx_np_vector
+from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
+    vlookup_approx_np,
+    vlookup_approx_np_vector
+)
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -36,16 +52,8 @@ def vlookup_approx_local(values, df) -> pd.DataFrame:
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
-    search_range = df.iloc[:, 0]
-    result_arr = [np.nan] * len(values)
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
-    for i in range(len(values)):
-        value, value_idx, col_idx = values.iloc[i], value_idxes[i], col_idxes.iloc[i]
-        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
-            value_idx -= 1
-        if value_idx != -1:
-            result_arr[i] = df.iloc[value_idx, col_idx - 1]
-    return pd.DataFrame(result_arr, index=values.index)
+    res = vlookup_approx_np(values, df, col_idxes)
+    return res.set_index(values.index)
 
 
 # Local numpy binary search to find the values

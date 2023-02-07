@@ -1,3 +1,16 @@
+#  Copyright 2022-2023 The FormS Authors.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 import numpy as np
 import pandas as pd
 from time import time
@@ -6,7 +19,10 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_binary_search_np_vector
+from forms.executor.dfexecutor.lookup.lookupfuncexecutor import (
+    lookup_binary_search_np,
+    lookup_binary_search_np_vector
+)
 
 
 def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
@@ -20,15 +36,8 @@ def lookup_approx_local(values, df) -> pd.DataFrame:
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
-    result_arr = [np.nan] * len(values)
-    for i in range(len(values)):
-        value, value_idx = values.iloc[i], value_idxes[i]
-        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
-            value_idx -= 1
-        if value_idx != -1:
-            result_arr[i] = result_range.iloc[value_idx]
-    return pd.DataFrame(result_arr, index=values.index)
+    res = lookup_binary_search_np(values, search_range, result_range)
+    return res.set_index(values.index)
 
 
 # Local numpy binary search to find the values

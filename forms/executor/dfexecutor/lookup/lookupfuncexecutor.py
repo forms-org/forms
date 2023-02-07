@@ -13,7 +13,6 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
-from time import time
 
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode
@@ -43,15 +42,15 @@ def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
 
 
 def lookup_binary_search_np(values, search_range, result_range) -> pd.DataFrame:
-    df_arr: list = [np.nan] * len(values)
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    result_arr = [np.nan] * len(values)
     for i in range(len(values)):
-        value, value_idx = values[i], value_idxes[i]
-        if value_idx >= len(search_range) or value != search_range[value_idx]:
+        value, value_idx = values.iloc[i], value_idxes[i]
+        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
             value_idx -= 1
         if value_idx != -1:
-            df_arr[i] = result_range[value_idx]
-    return pd.DataFrame(df_arr)
+            result_arr[i] = result_range.iloc[value_idx]
+    return pd.DataFrame(result_arr)
 
 
 def lookup_binary_search_np_vector(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:

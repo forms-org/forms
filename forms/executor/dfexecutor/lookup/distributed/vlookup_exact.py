@@ -1,8 +1,23 @@
+#  Copyright 2022-2023 The FormS Authors.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 import numpy as np
 import pandas as pd
 from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_exact_hash
+from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
+    vlookup_exact_hash
+)
 
 
 # Locally hashes a dataframe with 1 column and groups it by hash.
@@ -37,19 +52,8 @@ def vlookup_exact_hash_local(values, df):
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
-    cache = {}
-    for i in range(df.shape[0]):
-        value = df.iloc[i, 0]
-        if value not in cache:
-            cache[value] = i
-    result_arr = [np.nan] * len(values)
-    for i in range(len(values)):
-        value, col_idx = values.iloc[i], col_idxes.iloc[i]
-        if value in cache:
-            value_idx = cache[value]
-            result = df.iloc[value_idx, col_idx - 1]
-            result_arr[i] = result
-    return pd.DataFrame(result_arr, index=values.index)
+    res = vlookup_exact_hash(values, df, col_idxes)
+    return res.set_index(values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
