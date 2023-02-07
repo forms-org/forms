@@ -36,7 +36,7 @@ def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     if approx:
         result_df = vlookup_approx_np_vector(values, df, col_idxes)
     else:
-        result_df = vlookup_exact_hash(values, df, col_idxes)
+        result_df = vlookup_exact_hash_vector(values, df, col_idxes)
     return construct_df_table(result_df)
 
 
@@ -97,6 +97,25 @@ def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
             result = df.iloc[value_idx, col_idx - 1]
             result_arr[i] = result
     return pd.DataFrame(result_arr)
+
+
+def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
+    # print(np.unique(df.iloc[:, 0], return_index=True))
+    cache = {}
+    for i in range(df.shape[0]):
+        value = df.iloc[i, 0]
+        if value not in cache:
+            cache[value] = i
+    result_idxes = values.replace(cache)
+    row_res = np.take(df.to_numpy(), result_idxes, axis=0)
+    res = np.choose(col_idxes - 1, row_res.T).to_numpy()
+    nan_mask = np.isin(values, list(cache.keys()), invert=True)
+    nan_idxes = nan_mask.nonzero()
+    if len(nan_idxes) > 0:
+        if np.float64 > res.dtype:
+            res = res.astype(np.float64)
+        np.put(res, nan_idxes, np.nan)
+    return pd.DataFrame(res).astype(type(res[0]))
 
 
 def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:

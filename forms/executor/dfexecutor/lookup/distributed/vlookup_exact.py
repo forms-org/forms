@@ -16,7 +16,8 @@ import pandas as pd
 from time import time
 from dask.distributed import Client
 from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
-    vlookup_exact_hash
+    vlookup_exact_hash,
+    vlookup_exact_hash_vector
 )
 
 
@@ -53,6 +54,15 @@ def vlookup_exact_hash_local(values, df):
         return pd.DataFrame(dtype=object)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
     res = vlookup_exact_hash(values, df, col_idxes)
+    return res.set_index(values.index)
+
+
+# Locally hash and probe.
+def vlookup_exact_hash_local_vector(values, df):
+    if len(values) == 0:
+        return pd.DataFrame(dtype=object)
+    values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
+    res = vlookup_exact_hash_vector(values, df, col_idxes)
     return res.set_index(values.index)
 
 
@@ -93,7 +103,7 @@ def vlookup_exact_hash_distributed(client: Client,
         else:
             scattered_df = pd.DataFrame(dtype=object)
 
-        result_futures.append(client.submit(vlookup_exact_hash_local, scattered_values, scattered_df))
+        result_futures.append(client.submit(vlookup_exact_hash_local_vector, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
@@ -107,7 +117,7 @@ def run_test():
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
 
     start_time = time()
-    table1 = vlookup_exact_hash(values, df, col_idxes)
+    table1 = vlookup_exact_hash_vector(values, df, col_idxes)
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     dask_client = Client(processes=True, n_workers=CORES)
