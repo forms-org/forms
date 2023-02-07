@@ -31,6 +31,26 @@ def lookup_approx_local(values, df) -> pd.DataFrame:
     return pd.DataFrame(result_arr, index=values.index)
 
 
+# Local numpy binary search to find the values
+def lookup_approx_local_vector(values, df) -> pd.DataFrame:
+    if len(values) == 0:
+        return pd.DataFrame(dtype=object)
+    search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    greater_than_length = np.greater_equal(value_idxes, len(search_range))
+    value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
+    search_range_values = np.take(search_range, value_idxes_no_oob)
+    approximate_matches = (values.reset_index(drop=True) != search_range_values.reset_index(drop=True))
+    combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
+    adjusted_idxes = value_idxes - combined
+    res = np.take(result_range, adjusted_idxes).to_numpy()
+    nan_mask = np.equal(adjusted_idxes, -1)
+    nan_idxes = nan_mask[nan_mask].index
+    if len(nan_idxes) > 0:
+        np.put(res, nan_idxes, np.nan)
+    return pd.DataFrame(res, index=values.index)
+
+
 # Performs a distributed VLOOKUP on the given values with a Dask client.
 def lookup_approx_distributed(client: Client,
                               values: pd.Series,
@@ -71,7 +91,7 @@ def lookup_approx_distributed(client: Client,
         end_idx = idx_bins[i + 1]
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
-        result_futures.append(client.submit(lookup_approx_local, scattered_values, scattered_df))
+        result_futures.append(client.submit(lookup_approx_local_vector, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
