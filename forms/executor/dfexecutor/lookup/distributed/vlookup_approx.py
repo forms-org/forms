@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_approx_np
+from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_approx_np_vector
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -46,6 +46,15 @@ def vlookup_approx_local(values, df) -> pd.DataFrame:
         if value_idx != -1:
             result_arr[i] = df.iloc[value_idx, col_idx - 1]
     return pd.DataFrame(result_arr, index=values.index)
+
+
+# Local numpy binary search to find the values
+def vlookup_approx_local_vector(values, df) -> pd.DataFrame:
+    if len(values) == 0:
+        return pd.DataFrame(dtype=object)
+    values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
+    res = vlookup_approx_np_vector(values, df, col_idxes)
+    return res.set_index(values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
@@ -98,7 +107,7 @@ def vlookup_approx_distributed(client: Client,
         end_idx = idx_bins[i + 1]
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
-        result_futures.append(client.submit(vlookup_approx_local, scattered_values, scattered_df))
+        result_futures.append(client.submit(vlookup_approx_local_vector, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
@@ -106,14 +115,14 @@ def vlookup_approx_distributed(client: Client,
 
 def run_test():
     CORES = 4
-    DF_ROWS = 100000
+    DF_ROWS = 1000000
     np.random.seed(1)
     test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
     df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
 
     start_time = time()
-    table1 = vlookup_approx_np(values, df, col_idxes)
+    table1 = vlookup_approx_np_vector(values, df, col_idxes)
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     dask_client = Client(processes=True, n_workers=CORES)

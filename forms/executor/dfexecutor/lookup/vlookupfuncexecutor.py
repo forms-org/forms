@@ -34,7 +34,7 @@ def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
     values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
     if approx:
-        result_df = vlookup_approx(values, df, col_idxes)
+        result_df = vlookup_approx_np_vector(values, df, col_idxes)
     else:
         result_df = vlookup_exact_hash(values, df, col_idxes)
     return construct_df_table(result_df)
@@ -63,6 +63,24 @@ def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
         if value_idx != -1:
             df_arr[i] = df.iloc[value_idx, col_idx - 1]
     return pd.DataFrame(df_arr)
+
+
+def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
+    search_range = df.iloc[:, 0]
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    greater_than_length = np.greater_equal(value_idxes, len(search_range))
+    value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
+    search_range_values = np.take(search_range, value_idxes_no_oob)
+    approximate_matches = (values.reset_index(drop=True) != search_range_values.reset_index(drop=True))
+    combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
+    adjusted_idxes = value_idxes - combined
+    row_res = np.take(df.to_numpy(), adjusted_idxes, axis=0)
+    res = np.choose(col_idxes - 1, row_res.T).to_numpy()
+    nan_mask = np.equal(adjusted_idxes, -1)
+    nan_idxes = nan_mask[nan_mask].index
+    if len(nan_idxes) > 0:
+        np.put(res, nan_idxes, np.nan)
+    return pd.DataFrame(res).astype(type(res[0]))
 
 
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:

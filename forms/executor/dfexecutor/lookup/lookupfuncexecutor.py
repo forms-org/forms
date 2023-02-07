@@ -29,7 +29,7 @@ from forms.executor.dfexecutor.lookup.utils import (
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, search_range, result_range = get_lookup_params(physical_subtree)
     values = values.iloc[:, 0]
-    result_df = lookup_binary_search_np(values, search_range, result_range)
+    result_df = lookup_binary_search_np_vector(values, search_range, result_range)
     return construct_df_table(result_df)
 
 
@@ -67,7 +67,7 @@ def lookup_binary_search_np_vector(values: pd.Series, search_range: pd.Series, r
     nan_idxes = nan_mask[nan_mask].index
     if len(nan_idxes) > 0:
         np.put(res, nan_idxes, np.nan)
-    return pd.DataFrame(res)
+    return pd.DataFrame(res).astype(type(res[0]))
 
 
 def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:

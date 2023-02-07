@@ -6,7 +6,7 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_binary_search_np
+from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_binary_search_np_vector
 
 
 def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
@@ -36,19 +36,8 @@ def lookup_approx_local_vector(values, df) -> pd.DataFrame:
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
-    greater_than_length = np.greater_equal(value_idxes, len(search_range))
-    value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
-    search_range_values = np.take(search_range, value_idxes_no_oob)
-    approximate_matches = (values.reset_index(drop=True) != search_range_values.reset_index(drop=True))
-    combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
-    adjusted_idxes = value_idxes - combined
-    res = np.take(result_range, adjusted_idxes).to_numpy()
-    nan_mask = np.equal(adjusted_idxes, -1)
-    nan_idxes = nan_mask[nan_mask].index
-    if len(nan_idxes) > 0:
-        np.put(res, nan_idxes, np.nan)
-    return pd.DataFrame(res, index=values.index)
+    res = lookup_binary_search_np_vector(values, search_range, result_range)
+    return res.set_index(values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
@@ -99,13 +88,13 @@ def lookup_approx_distributed(client: Client,
 
 def run_test():
     CORES = 4
-    DF_ROWS = 100000
+    DF_ROWS = 1000000
     np.random.seed(1)
     test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 3)))
     values, search_range, result_range = test_df.iloc[:, 0], pd.Series(range(DF_ROWS)), test_df.iloc[:, 2]
 
     start_time = time()
-    table1 = lookup_binary_search_np(values, search_range, result_range)
+    table1 = lookup_binary_search_np_vector(values, search_range, result_range)
     print(f"Finished local LOOKUP in {time() - start_time} seconds.")
 
     dask_client = Client(processes=True, n_workers=CORES)
