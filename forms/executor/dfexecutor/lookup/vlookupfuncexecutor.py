@@ -84,9 +84,10 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
 
 
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
+    search_range = df.iloc[:, 0]
     cache = {}
     for i in range(df.shape[0]):
-        value = df.iloc[i, 0]
+        value = search_range.iloc[i]
         if value not in cache:
             cache[value] = i
     result_arr = [np.nan] * len(values)
@@ -100,14 +101,12 @@ def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
 
 
 def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
-    # print(np.unique(df.iloc[:, 0], return_index=True))
-    cache = {}
-    for i in range(df.shape[0]):
-        value = df.iloc[i, 0]
-        if value not in cache:
-            cache[value] = i
+    search_range = df.iloc[:, 0]
+    idxes = list(enumerate(search_range))
+    idxes.reverse()
+    cache = {v: i for i, v in idxes}
     result_idxes = values.replace(cache)
-    row_res = np.take(df.to_numpy(), result_idxes, axis=0)
+    row_res = np.take(df.to_numpy(), result_idxes, axis=0, mode='clip')
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
     nan_mask = np.isin(values, list(cache.keys()), invert=True)
     nan_idxes = nan_mask.nonzero()
