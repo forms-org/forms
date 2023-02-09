@@ -52,6 +52,7 @@ class Function(Enum):
 
     # Logic functions
     IF = "if"
+    IFS = "ifs"
     EQUAL = "equal"
 
     # Single-parameter math functions
@@ -163,6 +164,7 @@ pandas_supported_functions = {
     Function.VALUE,
     # Logic functions
     Function.IF,
+    Function.IFS,
     Function.EQUAL,
     # Single-parameter math functions
     Function.ABS,

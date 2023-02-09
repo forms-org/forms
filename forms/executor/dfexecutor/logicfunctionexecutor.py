@@ -33,15 +33,30 @@ from forms.utils.exceptions import FormSException
 from openpyxl.formula import Tokenizer
 
 
+# We want to support all text and math functions supported by FormS
 def if_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert len(physical_subtree.children) == 3
+    # This will get the literal values of all nodes in the tree
     values = get_logical_function_values(physical_subtree)
 
-    def excel_if(exp, true_value, false_value):
-        return true_value if exp else false_value
+    def execute_if(exp, true_value, false_value=None):
+        return true_value if exp.iloc[:, 0].all() else false_value
 
     kwargs = {"true_value": values[1], "false_value": values[2]}
-    return construct_df_table(values[0].applymap(excel_if, **kwargs))
+    return execute_if(values[0], values[1], values[2])
+
+
+# Return the value of the first true condition.
+# If all are false, throw an error
+def ifs_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+    values = get_logical_function_values(physical_subtree)
+    values = iter(values)
+    for exp in values:
+        t = next(values)
+        # exp will always be a DataFrame
+        if exp.iloc[:, 0].all():
+            return t
+    raise FormSException
 
 
 # Handles any type of input, basically a super of exact string function
@@ -83,6 +98,7 @@ def get_logical_function_value(physical_subtree: FunctionExecutionNode) -> pd.Da
 def get_logical_function_values(physical_subtree: FunctionExecutionNode) -> list:
     values = []
     assert len(physical_subtree.children) >= 2
+    print(physical_subtree.children)
     for child in physical_subtree.children:
         values.append(get_single_value(child))
     return values

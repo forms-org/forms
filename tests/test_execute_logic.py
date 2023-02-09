@@ -22,7 +22,8 @@ from forms.executor.executionnode import (
     LitExecutionNode,
     create_intermediate_ref_node,
 )
-from forms.executor.dfexecutor.logicfunctionexecutor import if_executor, equal_executor
+from forms.executor.dfexecutor.logicfunctionexecutor import if_executor, ifs_executor, equal_executor
+from forms.executor.dfexecutor.textfunctionexecutor import len_executor
 from forms.executor.table import DFTable
 from forms.executor.utils import ExecutionContext
 from forms.utils.reference import Ref, RefType, axis_along_row
@@ -52,10 +53,10 @@ def compute_one_formula(ref: Ref, ref_type: RefType, function: Function, executo
     return executor(root)
 
 
-# Simple test of IF(C2="Yes",1,2)
-# = is parent of C2 and "Yes"
+# Simple test of IF(C2="test",1,2)
+# = is parent of C2 and "test"
 # IF is parent of =, 1, and 2
-def test_execute_if():
+def test_simple_if():
     root = FunctionExecutionNode(Function.IF, Ref(0, 0), RefType.RR, axis_along_row)
     parent = FunctionExecutionNode(Function.EQUAL, Ref(0, 0), RefType.RR, axis_along_row)
     child1 = LitExecutionNode("1", RefType.RR, axis_along_row)
@@ -71,5 +72,38 @@ def test_execute_if():
     link_parent_to_children(root, [ref_node, child1, child2])
     result = if_executor(root)
 
-    real_result = pd.DataFrame(np.full(50, "1"))
-    assert np.array_equal(result.df.iloc[0:50].values, real_result.values)
+    # real_result = pd.DataFrame(np.full(50, "1"))
+    assert result == "1"
+
+
+# Testing IFS(C2="FormS", "1", C2="test", "99")
+def test_simple_ifs():
+    root = FunctionExecutionNode(Function.IFS, Ref(0, 0), RefType.FF, axis_along_row)
+
+    # This should be False
+    parent = FunctionExecutionNode(Function.EQUAL, Ref(0, 0), RefType.FF, axis_along_row)
+    child1 = LitExecutionNode("1", RefType.RR, axis_along_row)
+    child2 = RefExecutionNode(Ref(1, 3), table, RefType.FF, axis_along_row)
+    child3 = LitExecutionNode("FormS", RefType.RR, axis_along_row)
+
+    # This should be True
+    newparent = FunctionExecutionNode(Function.EQUAL, Ref(0, 0), RefType.FF, axis_along_row)
+    newchild1 = LitExecutionNode("99", RefType.RR, axis_along_row)
+    newchild2 = RefExecutionNode(Ref(1, 3), table, RefType.FF, axis_along_row)
+    newchild3 = LitExecutionNode("test", RefType.RR, axis_along_row)
+
+    link_parent_to_children(root, [parent, child1, newparent, newchild1])
+    link_parent_to_children(parent, [child2, child3])
+    link_parent_to_children(newparent, [newchild2, newchild2])
+    root.set_exec_context(ExecutionContext(50, 100, axis_along_row))
+
+    sub_result = equal_executor(parent)
+    ref_node = create_intermediate_ref_node(sub_result, parent)
+    new_sub_result = equal_executor(newparent)
+    new_ref_node = create_intermediate_ref_node(new_sub_result, newparent)
+
+    link_parent_to_children(root, [ref_node, child1, new_ref_node, newchild1])
+
+    result = ifs_executor(root)
+
+    assert result == "99"

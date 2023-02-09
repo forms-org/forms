@@ -103,7 +103,7 @@ from forms.executor.dfexecutor.textfunctionexecutor import (
     value_executor,
 )
 
-from forms.executor.dfexecutor.logicfunctionexecutor import if_executor, equal_executor
+from forms.executor.dfexecutor.logicfunctionexecutor import if_executor, ifs_executor, equal_executor
 
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
@@ -487,7 +487,10 @@ function_to_executor_dict = {
     Function.TRIM: trim_executor,
     Function.UPPER: upper_executor,
     Function.VALUE: value_executor,
+    # Logic functions
     Function.IF: if_executor,
+    Function.IFS: ifs_executor,
+    Function.EQUAL: equal_executor,
     # Single-parameter math functions
     Function.ABS: abs_df_executor,
     Function.ACOS: acos_df_executor,

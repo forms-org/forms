@@ -37,6 +37,7 @@ from datetime import datetime, date, timedelta
 # 1 string parameter, more strings are optional
 # Example usages: CONCATENATE(A1, A2, A3), CONCATENATE(A2:B7)
 
+
 def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
