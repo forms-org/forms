@@ -23,6 +23,7 @@ from forms.executor.dfexecutor.lookup.lookupfuncexecutor import (
     lookup_binary_search_np,
     lookup_binary_search_np_vector
 )
+from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
@@ -32,16 +33,8 @@ def lookup_approx_distributed_reduction(client, values, search_range, result_ran
 
 
 # Local numpy binary search to find the values
-def lookup_approx_local(values, df) -> pd.DataFrame:
-    if len(values) == 0:
-        return pd.DataFrame(dtype=object)
-    search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-    res = lookup_binary_search_np(values, search_range, result_range)
-    return res.set_index(values.index)
-
-
-# Local numpy binary search to find the values
-def lookup_approx_local_vector(values, df) -> pd.DataFrame:
+def lookup_approx_local(values_partitions, df) -> pd.DataFrame:
+    values = pd.concat(values_partitions)
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
@@ -58,17 +51,7 @@ def lookup_approx_distributed(client: Client,
     num_cores = len(workers)
 
     df = pd.concat([search_range, result_range], axis=1)
-    idx_bins = []
-    bins = []
-    for i in range(num_cores):
-        start_idx = (i * df.shape[0]) // num_cores
-        end_idx = ((i + 1) * df.shape[0]) // num_cores
-        if start_idx == 0:
-            idx_bins.append(0)
-            bins.append(-float('inf'))
-        idx_bins.append(end_idx)
-        bins.append(df.iloc[end_idx - 1, 0])
-    bins[-1] = float('inf')
+    bins, idx_bins = get_df_bins(df, num_cores)
 
     binned_values = range_partition_df_distributed(client, values, bins)
 
@@ -81,7 +64,7 @@ def lookup_approx_distributed(client: Client,
                 group = binned_values[j].get_group(i)
                 values_partitions.append(group)
         if len(values_partitions) > 0:
-            scattered_values = client.scatter(pd.concat(values_partitions), workers=worker_id)
+            scattered_values = client.scatter(values_partitions, workers=worker_id)
         else:
             scattered_values = pd.Series(dtype=object)
 
@@ -89,7 +72,7 @@ def lookup_approx_distributed(client: Client,
         end_idx = idx_bins[i + 1]
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
-        result_futures.append(client.submit(lookup_approx_local_vector, scattered_values, scattered_df))
+        result_futures.append(client.submit(lookup_approx_local, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()

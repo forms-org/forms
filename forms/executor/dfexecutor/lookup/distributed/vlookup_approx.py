@@ -19,6 +19,7 @@ from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
     vlookup_approx_np,
     vlookup_approx_np_vector
 )
+from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -48,16 +49,8 @@ def range_partition_df_distributed(client: Client, df: pd.DataFrame or pd.Series
 
 
 # Local numpy binary search to find the values
-def vlookup_approx_local(values, df) -> pd.DataFrame:
-    if len(values) == 0:
-        return pd.DataFrame(dtype=object)
-    values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
-    res = vlookup_approx_np(values, df, col_idxes)
-    return res.set_index(values.index)
-
-
-# Local numpy binary search to find the values
-def vlookup_approx_local_vector(values, df) -> pd.DataFrame:
+def vlookup_approx_local(values_partitions, df) -> pd.DataFrame:
+    values = pd.concat(values_partitions)
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
@@ -72,19 +65,7 @@ def vlookup_approx_distributed(client: Client,
                                col_idxes: pd.Series) -> pd.DataFrame:
     workers = list(client.scheduler_info()['workers'].keys())
     num_cores = len(workers)
-
-    search_keys = df.iloc[:, 0]
-    idx_bins = []
-    bins = []
-    for i in range(num_cores):
-        start_idx = (i * df.shape[0]) // num_cores
-        end_idx = ((i + 1) * df.shape[0]) // num_cores
-        if start_idx == 0:
-            idx_bins.append(0)
-            bins.append(-float('inf'))
-        idx_bins.append(end_idx)
-        bins.append(search_keys[end_idx - 1])
-    bins[-1] = float('inf')
+    bins, idx_bins = get_df_bins(df, num_cores)
 
     """
     # It might be better to get the bins with qcut
@@ -107,7 +88,7 @@ def vlookup_approx_distributed(client: Client,
                 group = binned_values[j].get_group(i)
                 values_partitions.append(group)
         if len(values_partitions) > 0:
-            scattered_values = client.scatter(pd.concat(values_partitions), workers=worker_id)
+            scattered_values = client.scatter(values_partitions, workers=worker_id)
         else:
             scattered_values = pd.Series(dtype=object)
 
@@ -115,7 +96,7 @@ def vlookup_approx_distributed(client: Client,
         end_idx = idx_bins[i + 1]
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
-        result_futures.append(client.submit(vlookup_approx_local_vector, scattered_values, scattered_df))
+        result_futures.append(client.submit(vlookup_approx_local, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()

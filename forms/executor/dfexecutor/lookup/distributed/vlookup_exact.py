@@ -48,19 +48,11 @@ def hash_chunk_k_tables_distributed(client: Client, df_list: list[pd.DataFrame])
     return chunk_partitions
 
 
-# Locally hash and probe.
-def vlookup_exact_hash_local(values, df):
+def vlookup_exact_hash_local(values_partitions, df_partitions):
+    values = pd.concat(values_partitions)
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
-    values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
-    res = vlookup_exact_hash(values, df, col_idxes)
-    return res.set_index(values.index)
-
-
-# Locally hash and probe.
-def vlookup_exact_hash_local_vector(values, df):
-    if len(values) == 0:
-        return pd.DataFrame(dtype=object)
+    df = pd.concat(df_partitions)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
     res = vlookup_exact_hash_vector(values, df, col_idxes)
     return res.set_index(values.index)
@@ -73,7 +65,7 @@ def vlookup_exact_hash_distributed(client: Client,
                                    col_idxes: pd.Series) -> pd.DataFrame:
     values = values.to_frame()
     values['col_idxes_DO_NOT_USE'] = col_idxes
-    chunk_partitions = hash_chunk_k_tables_distributed(client, [values, df.iloc[:, 0].to_frame()])
+    chunk_partitions = hash_chunk_k_tables_distributed(client, [values, df])
     workers = list(client.scheduler_info()['workers'].keys())
     num_cores = len(workers)
     result_futures = []
@@ -89,21 +81,16 @@ def vlookup_exact_hash_distributed(client: Client,
                 df_partitions.append(group)
 
         if len(values_partitions) > 0:
-            scattered_values = client.scatter(pd.concat(values_partitions), workers=worker_id)
+            scattered_values = client.scatter(values_partitions, workers=worker_id)
         else:
             scattered_values = pd.DataFrame(dtype=object)
 
         if len(df_partitions) > 0:
-            # This is an optimization to avoid sending unnecessary data to nodes to be hashed
-            # Instead, use the index to reconstruct the data locally to send to each node
-            # I don't think this really does anything, it's easier to just hash df above and set
-            # partition to pd.concat(df_partitions)
-            partition = df[df.index.isin(pd.concat(df_partitions).index)]
-            scattered_df = client.scatter(partition, workers=worker_id)
+            scattered_df = client.scatter(df_partitions, workers=worker_id)
         else:
             scattered_df = pd.DataFrame(dtype=object)
 
-        result_futures.append(client.submit(vlookup_exact_hash_local_vector, scattered_values, scattered_df))
+        result_futures.append(client.submit(vlookup_exact_hash_local, scattered_values, scattered_df))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
@@ -111,7 +98,7 @@ def vlookup_exact_hash_distributed(client: Client,
 
 def run_test():
     CORES = 4
-    DF_ROWS = 100000
+    DF_ROWS = 1000000
     np.random.seed(1)
     test_df = pd.DataFrame(np.random.randint(0, 1000, size=(DF_ROWS, 10)))
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)

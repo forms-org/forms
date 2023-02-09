@@ -20,6 +20,22 @@ from forms.executor.executionnode import (
 from forms.executor.dfexecutor.utils import get_single_value
 
 
+def get_df_bins(df, num_cores):
+    search_keys = df.iloc[:, 0]
+    idx_bins = []
+    bins = []
+    for i in range(num_cores):
+        start_idx = (i * df.shape[0]) // num_cores
+        end_idx = ((i + 1) * df.shape[0]) // num_cores
+        if start_idx == 0:
+            idx_bins.append(0)
+            bins.append(-float('inf'))
+        idx_bins.append(end_idx)
+        bins.append(search_keys[end_idx - 1])
+    bins[-1] = float('inf')
+    return bins, idx_bins
+
+
 # Performs binary search for value VALUE in array ARR. Assumes the array is sorted.
 # If the value is found, returns the index of the value.
 # If the value is not found, returns the index of the value before the sorted value.
