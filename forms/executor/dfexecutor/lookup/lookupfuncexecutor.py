@@ -65,6 +65,8 @@ def lookup_binary_search_np_vector(values: pd.Series, search_range: pd.Series, r
     nan_mask = np.equal(adjusted_idxes, -1)
     nan_idxes = nan_mask[nan_mask].index
     if len(nan_idxes) > 0:
+        if np.float64 > res.dtype:
+            res = res.astype(np.float64)
         np.put(res, nan_idxes, np.nan)
     return pd.DataFrame(res).astype(type(res[0]))
 

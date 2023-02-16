@@ -65,6 +65,17 @@ def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
     return pd.DataFrame(result_arr)
 
 
+def vlookup_approx_np_lc(values, df, col_idxes) -> pd.DataFrame:
+    search_range = df.iloc[:, 0]
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = [((value_idxes[i] - 1)
+                    if (value_idxes[i] >= len(search_range) or values.iloc[i] != search_range.iloc[value_idxes[i]])
+                    else value_idxes[i]) for i in range(len(value_idxes))]
+    result_arr = [df.iloc[value_idxes[i], col_idxes.iloc[i] - 1] if value_idxes != -1 else np.nan
+                  for i in range(len(values))]
+    return pd.DataFrame(result_arr)
+
+
 def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     search_range = df.iloc[:, 0]
     value_idxes = np.searchsorted(list(search_range), list(values), side="left")
@@ -79,6 +90,8 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     nan_mask = np.equal(adjusted_idxes, -1)
     nan_idxes = nan_mask[nan_mask].index
     if len(nan_idxes) > 0:
+        if np.float64 > res.dtype:
+            res = res.astype(np.float64)
         np.put(res, nan_idxes, np.nan)
     return pd.DataFrame(res).astype(type(res[0]))
 
