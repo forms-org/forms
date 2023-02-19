@@ -19,7 +19,10 @@ from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
     vlookup_approx_np,
     vlookup_approx_np_vector
 )
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils import (
+    get_df_bins,
+    create_alphanumeric_df
+)
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -28,7 +31,7 @@ def range_partition_df(df: pd.DataFrame or pd.Series, bins):
         data = df.iloc[:, 0]
     else:
         data = df
-    binned_df = pd.cut(data, bins, labels=False)
+    binned_df = pd.Series(np.searchsorted(bins, data), index=df.index)
     df['bin_DO_NOT_USE'] = binned_df
     return df.groupby('bin_DO_NOT_USE')
 
@@ -93,7 +96,7 @@ def vlookup_approx_distributed(client: Client,
             scattered_values = pd.Series(dtype=object)
 
         start_idx = idx_bins[i]
-        end_idx = idx_bins[i + 1]
+        end_idx = idx_bins[i + 1] + 1
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
         result_futures.append(client.submit(vlookup_approx_local, scattered_values, scattered_df))
@@ -109,6 +112,24 @@ def run_test():
     test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
     df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
+
+    start_time = time()
+    table1 = vlookup_approx_np_vector(values, df, col_idxes)
+    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
+
+    dask_client = Client(processes=True, n_workers=CORES)
+    start_time = time()
+    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
+    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
+
+    assert table1.astype('object').equals(table2.astype('object'))
+    print("Dataframes are equal!")
+
+
+def run_string_test():
+    CORES = 4
+    DF_ROWS = 1000000
+    values, df, col_idxes = create_alphanumeric_df(DF_ROWS, print_df=True)
 
     start_time = time()
     table1 = vlookup_approx_np_vector(values, df, col_idxes)

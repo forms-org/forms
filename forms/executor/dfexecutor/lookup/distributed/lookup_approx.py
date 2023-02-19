@@ -23,7 +23,10 @@ from forms.executor.dfexecutor.lookup.lookupfuncexecutor import (
     lookup_binary_search_np,
     lookup_binary_search_np_vector
 )
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils import (
+    get_df_bins,
+    create_alphanumeric_df
+)
 
 
 def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
@@ -69,7 +72,7 @@ def lookup_approx_distributed(client: Client,
             scattered_values = pd.Series(dtype=object)
 
         start_idx = idx_bins[i]
-        end_idx = idx_bins[i + 1]
+        end_idx = idx_bins[i + 1] + 1
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
 
         result_futures.append(client.submit(lookup_approx_local, scattered_values, scattered_df))
@@ -98,5 +101,24 @@ def run_test():
     print("Dataframes are equal!")
 
 
+def run_string_test():
+    CORES = 4
+    DF_ROWS = 1000000
+    values, df, col_idxes = create_alphanumeric_df(DF_ROWS, print_df=True)
+    search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
+
+    start_time = time()
+    table1 = lookup_binary_search_np_vector(values, search_range, result_range)
+    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
+
+    dask_client = Client(processes=True, n_workers=CORES)
+    start_time = time()
+    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range)
+    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
+
+    assert table1.astype('object').equals(table2.astype('object'))
+    print("Dataframes are equal!")
+
+
 if __name__ == '__main__':
-    run_test()
+    run_string_test()

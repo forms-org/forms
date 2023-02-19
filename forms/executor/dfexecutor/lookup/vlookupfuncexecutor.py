@@ -89,11 +89,14 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
     nan_mask = np.equal(adjusted_idxes, -1)
     nan_idxes = nan_mask[nan_mask].index
+    if np.float64 > res.dtype:
+        res = res.astype(np.float64)
     if len(nan_idxes) > 0:
-        if np.float64 > res.dtype:
-            res = res.astype(np.float64)
         np.put(res, nan_idxes, np.nan)
-    return pd.DataFrame(res).astype(type(res[0]))
+    res_type = type(res[0])
+    if np.issubdtype(type(res[0]), np.integer):
+        res_type = np.float64
+    return pd.DataFrame(res).astype(res_type)
 
 
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
@@ -123,11 +126,14 @@ def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
     nan_mask = np.isin(values, list(cache.keys()), invert=True)
     nan_idxes = nan_mask.nonzero()
+    if np.float64 > res.dtype:
+        res = res.astype(np.float64)
     if len(nan_idxes) > 0:
-        if np.float64 > res.dtype:
-            res = res.astype(np.float64)
         np.put(res, nan_idxes, np.nan)
-    return pd.DataFrame(res).astype(type(res[0]))
+    res_type = type(res[0])
+    if np.issubdtype(type(res[0]), np.integer):
+        res_type = np.float64
+    return pd.DataFrame(res).astype(res_type)
 
 
 def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:

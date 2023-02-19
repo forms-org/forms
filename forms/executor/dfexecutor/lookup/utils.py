@@ -29,11 +29,36 @@ def get_df_bins(df, num_cores):
         end_idx = ((i + 1) * df.shape[0]) // num_cores
         if start_idx == 0:
             idx_bins.append(0)
-            bins.append(-float('inf'))
-        idx_bins.append(end_idx)
+        idx_bins.append(end_idx - 1)
         bins.append(search_keys[end_idx - 1])
-    bins[-1] = float('inf')
+    bins.pop(-1)
     return bins, idx_bins
+
+
+def create_alphanumeric_df(rows, print_df=False):
+    import string
+    import numpy as np
+    from time import time
+
+    np.random.seed(1)
+    start_time = time()
+    test_strings = [i + j + k + x + y
+                    for i in string.ascii_lowercase
+                    for j in string.ascii_lowercase
+                    for k in string.ascii_lowercase
+                    for x in string.ascii_lowercase
+                    for y in string.ascii_lowercase
+                    ]
+    search_keys = np.random.choice(test_strings, rows, replace=False)
+    search_keys.sort()
+    result = np.array(list(range(rows)))
+    df = pd.DataFrame({0: search_keys, 1: result})
+    values = pd.Series(np.random.choice(test_strings, rows, replace=False))
+    col_idxes = pd.Series([2] * rows)
+    print(f"Generated input in {time() - start_time} seconds.")
+    if print_df:
+        print(pd.DataFrame({0: search_keys, 1: result, "values": values, "col_idxes": col_idxes}))
+    return values, df, col_idxes
 
 
 # Performs binary search for value VALUE in array ARR. Assumes the array is sorted.
