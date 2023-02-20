@@ -13,6 +13,7 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
+from time import time
 
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode
@@ -121,11 +122,15 @@ def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
     idxes = list(enumerate(search_range))
     idxes.reverse()
     cache = {v: i for i, v in idxes}
+    nan_mask = values.isin(set(cache.keys())) ^ True
+    nan_idxes = nan_mask.to_numpy().nonzero()
+    print(len(nan_idxes[0]))
+    start_time = time()
     result_idxes = values.replace(cache)
+    print(f"replace time: {time() - start_time}")
+    np.put(result_idxes.to_numpy(), nan_idxes, 1)
     row_res = np.take(df.to_numpy(), result_idxes, axis=0, mode='clip')
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
-    nan_mask = np.isin(values, list(cache.keys()), invert=True)
-    nan_idxes = nan_mask.nonzero()
     if np.float64 > res.dtype:
         res = res.astype(np.float64)
     if len(nan_idxes) > 0:
