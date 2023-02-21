@@ -121,7 +121,7 @@ def run_test():
 
 def run_string_test():
     CORES = 4
-    DF_ROWS = 10000
+    DF_ROWS = 1000000
     values, df, col_idxes = create_alphanumeric_df(DF_ROWS, print_df=True)
 
     start_time = time()
