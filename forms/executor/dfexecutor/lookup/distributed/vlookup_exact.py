@@ -11,17 +11,9 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import numpy as np
 import pandas as pd
-from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import (
-    vlookup_exact_hash,
-    vlookup_exact_hash_vector
-)
-from forms.executor.dfexecutor.lookup.utils import (
-    create_alpha_df
-)
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector
 
 
 # Locally hashes a dataframe with 1 column and groups it by hash.
@@ -51,6 +43,7 @@ def hash_chunk_k_tables_distributed(client: Client, df_list: list[pd.DataFrame])
     return chunk_partitions
 
 
+# Local hash join to get the result.
 def vlookup_exact_hash_local(values_partitions, df_partitions):
     values = pd.concat(values_partitions)
     if len(values) == 0:
@@ -97,45 +90,3 @@ def vlookup_exact_hash_distributed(client: Client,
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
-
-
-def run_num_test():
-    CORES = 4
-    DF_ROWS = 100000
-    np.random.seed(1)
-    test_df = pd.DataFrame(np.random.randint(0, 1000, size=(DF_ROWS, 10)))
-    values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
-
-    start_time = time()
-    table1 = vlookup_exact_hash_vector(values, df, col_idxes)
-    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-def run_string_test():
-    CORES = 4
-    DF_ROWS = 1000000
-    values, df, col_idxes = create_alpha_df(DF_ROWS, print_df=True)
-
-    start_time = time()
-    table1 = vlookup_exact_hash_vector(values, df, col_idxes)
-    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-if __name__ == '__main__':
-    run_string_test()

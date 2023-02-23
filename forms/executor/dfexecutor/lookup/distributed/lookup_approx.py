@@ -11,24 +11,17 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import numpy as np
 import pandas as pd
-from time import time
 from dask.distributed import Client
 from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import (
-    lookup_binary_search_np,
-    lookup_binary_search_np_vector
-)
-from forms.executor.dfexecutor.lookup.utils import (
-    get_df_bins,
-    create_alpha_df
-)
+from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_np_vector
+from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
+# A test version of LOOKUP that reduces the problem to VLOOKUP.
 def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
     df = pd.concat([search_range, result_range], axis=1)
     col_idxes = pd.Series([2] * len(search_range))
@@ -41,11 +34,11 @@ def lookup_approx_local(values_partitions, df) -> pd.DataFrame:
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-    res = lookup_binary_search_np_vector(values, search_range, result_range)
+    res = lookup_np_vector(values, search_range, result_range)
     return res.set_index(values.index)
 
 
-# Performs a distributed VLOOKUP on the given values with a Dask client.
+# Performs a distributed LOOKUP on the given values with a Dask client.
 def lookup_approx_distributed(client: Client,
                               values: pd.Series,
                               search_range: pd.Series,
@@ -79,46 +72,3 @@ def lookup_approx_distributed(client: Client,
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
-
-
-def run_num_test():
-    CORES = 4
-    DF_ROWS = 1000000
-    np.random.seed(1)
-    test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 3)))
-    values, search_range, result_range = test_df.iloc[:, 0], pd.Series(range(DF_ROWS)), test_df.iloc[:, 2]
-
-    start_time = time()
-    table1 = lookup_binary_search_np_vector(values, search_range, result_range)
-    print(f"Finished local LOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range)
-    print(f"Finished distributed LOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-def run_string_test():
-    CORES = 4
-    DF_ROWS = 1000000
-    values, df, col_idxes = create_alpha_df(DF_ROWS, print_df=True)
-    search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
-
-    start_time = time()
-    table1 = lookup_binary_search_np_vector(values, search_range, result_range)
-    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range)
-    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-if __name__ == '__main__':
-    run_string_test()

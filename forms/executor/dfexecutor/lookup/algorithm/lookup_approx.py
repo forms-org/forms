@@ -13,6 +13,7 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
+from time import time
 
 from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
 
@@ -24,32 +25,6 @@ def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
         if value_idx != -1:
             df_arr[i] = result_range[value_idx]
     return pd.DataFrame(df_arr)
-
-
-def lookup_binary_search_np(values, search_range, result_range) -> pd.DataFrame:
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
-    result_arr = [np.nan] * len(values)
-    for i in range(len(values)):
-        value, value_idx = values.iloc[i], value_idxes[i]
-        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
-            value_idx -= 1
-        if value_idx != -1:
-            result_arr[i] = result_range.iloc[value_idx]
-    return pd.DataFrame(result_arr)
-
-
-def lookup_binary_search_np_vector(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
-    greater_than_length = np.greater_equal(value_idxes, len(search_range))
-    value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
-    search_range_values = np.take(search_range, value_idxes_no_oob)
-    approximate_matches = (values.reset_index(drop=True) != search_range_values.reset_index(drop=True))
-    combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
-    adjusted_idxes = value_idxes - combined
-    res = np.take(result_range, adjusted_idxes).to_numpy()
-    nan_mask = np.equal(adjusted_idxes, -1)
-    nan_idxes = nan_mask[nan_mask].index
-    return set_dtype(res, nan_idxes)
 
 
 def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
@@ -71,3 +46,28 @@ def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
             left_idx += 1
 
     return pd.DataFrame(df_arr)
+
+
+def lookup_np(values, search_range, result_range) -> pd.DataFrame:
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    result_arr = [np.nan] * len(values)
+    for i in range(len(values)):
+        value, value_idx = values.iloc[i], value_idxes[i]
+        if value_idx >= len(search_range) or value != search_range.iloc[value_idx]:
+            value_idx -= 1
+        if value_idx != -1:
+            result_arr[i] = result_range.iloc[value_idx]
+    return pd.DataFrame(result_arr)
+
+
+def lookup_np_vector(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
+    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    greater_than_length = np.greater_equal(value_idxes, len(search_range))
+    value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
+    search_range_values = np.take(search_range, value_idxes_no_oob)
+    approximate_matches = values.to_numpy() != search_range_values.to_numpy()
+    combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
+    adjusted_idxes = value_idxes - combined
+    res = np.take(result_range, adjusted_idxes).to_numpy()
+    nan_idxes = (adjusted_idxes == -1).nonzero()
+    return set_dtype(res, nan_idxes)

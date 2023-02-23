@@ -13,16 +13,10 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
-from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import (
-    vlookup_approx_np,
-    vlookup_approx_np_vector
-)
-from forms.executor.dfexecutor.lookup.utils import (
-    get_df_bins,
-    create_alpha_df
-)
+
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector
+from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -51,7 +45,7 @@ def range_partition_df_distributed(client: Client, df: pd.DataFrame or pd.Series
     return client.gather(chunk_partitions)
 
 
-# Local numpy binary search to find the values
+# Local numpy binary search to find the values.
 def vlookup_approx_local(values_partitions, df) -> pd.DataFrame:
     values = pd.concat(values_partitions)
     if len(values) == 0:
@@ -103,46 +97,3 @@ def vlookup_approx_distributed(client: Client,
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
-
-
-def run_num_test():
-    CORES = 4
-    DF_ROWS = 1000000
-    np.random.seed(1)
-    test_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
-    values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
-    df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
-
-    start_time = time()
-    table1 = vlookup_approx_np_vector(values, df, col_idxes)
-    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-def run_string_test():
-    CORES = 4
-    DF_ROWS = 1000000
-    values, df, col_idxes = create_alpha_df(DF_ROWS, print_df=True)
-
-    start_time = time()
-    table1 = vlookup_approx_np_vector(values, df, col_idxes)
-    print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
-
-    dask_client = Client(processes=True, n_workers=CORES)
-    start_time = time()
-    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
-    print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
-
-    assert table1.astype('object').equals(table2.astype('object'))
-    print("Dataframes are equal!")
-
-
-if __name__ == '__main__':
-    run_string_test()

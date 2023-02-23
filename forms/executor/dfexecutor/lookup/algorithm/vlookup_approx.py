@@ -63,11 +63,10 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     greater_than_length = np.greater_equal(value_idxes, len(search_range))
     value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
     search_range_values = np.take(search_range, value_idxes_no_oob)
-    approximate_matches = (values.reset_index(drop=True) != search_range_values.reset_index(drop=True))
+    approximate_matches = values.to_numpy() != search_range_values.to_numpy()
     combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
     adjusted_idxes = value_idxes - combined
     row_res = np.take(df.to_numpy(), adjusted_idxes, axis=0)
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
-    nan_mask = np.equal(adjusted_idxes, -1)
-    nan_idxes = nan_mask[nan_mask].index
+    nan_idxes = (adjusted_idxes == -1).nonzero()
     return set_dtype(res, nan_idxes)

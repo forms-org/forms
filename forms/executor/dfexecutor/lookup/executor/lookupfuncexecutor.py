@@ -21,13 +21,13 @@ from forms.executor.dfexecutor.lookup.utils import (
     get_df,
     get_literal_value,
 )
-from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_binary_search_np_vector
+from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_np_vector
 
 
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, search_range, result_range = get_lookup_params(physical_subtree)
     values = values.iloc[:, 0]
-    result_df = lookup_binary_search_np_vector(values, search_range, result_range)
+    result_df = lookup_np_vector(values, search_range, result_range)
     return construct_df_table(result_df)
 
 

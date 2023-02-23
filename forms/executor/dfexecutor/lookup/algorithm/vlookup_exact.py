@@ -17,6 +17,26 @@ import pandas as pd
 from forms.executor.dfexecutor.lookup.utils import set_dtype
 
 
+def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:
+    # Performs a scan of array ARR to find value VALUE.
+    # If the value is not found, returns -1.
+    def exact_scan_search(value: any, arr: list) -> int:
+        for i in range(len(arr)):
+            if arr[i] == value:
+                return i
+        return -1
+
+    df_arr: list = []
+    for i in range(len(values)):
+        value, col_idx = values[i], col_idxes[i]
+        value_idx = exact_scan_search(value, list(df.iloc[:, 0]))
+        result = np.nan
+        if value_idx != -1:
+            result = df.iloc[value_idx, col_idx - 1]
+        df_arr.append(result)
+    return pd.DataFrame(df_arr)
+
+
 def vlookup_exact_hash(values, df, col_idxes) -> pd.DataFrame:
     search_range = df.iloc[:, 0]
     cache = {}
@@ -46,24 +66,3 @@ def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
     row_res = np.take(df.to_numpy(), result_idxes, axis=0, mode='clip')
     res = np.choose(col_idxes - 1, row_res.T).to_numpy()
     return set_dtype(res, nan_idxes)
-
-
-def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:
-    df_arr: list = []
-    for i in range(len(values)):
-        value, col_idx = values[i], col_idxes[i]
-        value_idx = exact_scan_search(value, list(df.iloc[:, 0]))
-        result = np.nan
-        if value_idx != -1:
-            result = df.iloc[value_idx, col_idx - 1]
-        df_arr.append(result)
-    return pd.DataFrame(df_arr)
-
-
-# Performs a scan of array ARR to find value VALUE.
-# If the value is not found, returns -1.
-def exact_scan_search(value: any, arr: list) -> int:
-    for i in range(len(arr)):
-        if arr[i] == value:
-            return i
-    return -1
