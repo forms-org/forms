@@ -26,7 +26,7 @@ from forms.executor.dfexecutor.lookup.utils import create_alpha_df
 
 
 CORES = 4
-DF_ROWS = 1000000
+DF_ROWS = 2000000
 np.random.seed(1)
 dask_client = None
 num_df = None

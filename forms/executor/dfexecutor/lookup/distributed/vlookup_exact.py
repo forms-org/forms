@@ -20,7 +20,8 @@ from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exa
 def hash_partition_df(df: pd.DataFrame, num_cores: int):
     hashed_df = pd.util.hash_array(df.iloc[:, 0].to_numpy()) % num_cores
     df['hash_DO_NOT_USE'] = hashed_df
-    return df.groupby('hash_DO_NOT_USE')
+    grouped = df.groupby('hash_DO_NOT_USE')
+    return [grouped.get_group(i) if i in grouped.groups else pd.Series(dtype=object) for i in range(num_cores)]
 
 
 # Chunks and hashes dataframes in df_list with a Dask client.
@@ -36,7 +37,7 @@ def hash_chunk_k_tables_distributed(client: Client, df_list: list[pd.DataFrame])
             start_idx = (i * df.shape[0]) // num_cores
             end_idx = ((i + 1) * df.shape[0]) // num_cores
             data = df[start_idx: end_idx]
-            scattered_data = client.scatter(data, workers=worker_id)
+            scattered_data = client.scatter(data, workers=worker_id, direct=True)
             chunk_partitions[df_idx].append(client.submit(hash_partition_df, scattered_data, num_cores))
     for df_idx in range(len(df_list)):
         chunk_partitions[df_idx] = client.gather(chunk_partitions[df_idx])
@@ -59,32 +60,27 @@ def vlookup_exact_hash_distributed(client: Client,
                                    values: pd.Series,
                                    df: pd.DataFrame,
                                    col_idxes: pd.Series) -> pd.DataFrame:
-    values = values.to_frame()
-    values['col_idxes_DO_NOT_USE'] = col_idxes
-    chunk_partitions = hash_chunk_k_tables_distributed(client, [values, df])
     workers = list(client.scheduler_info()['workers'].keys())
     num_cores = len(workers)
+
+    values = values.to_frame()
+    values['col_idxes_DO_NOT_USE'] = col_idxes
+
+    chunk_partitions = hash_chunk_k_tables_distributed(client, [values, df])
+
     result_futures = []
     for i in range(num_cores):
         worker_id = workers[i]
-        values_partitions, df_partitions = [], []
-        for j in range(num_cores):
-            if i in chunk_partitions[0][j].groups:
-                group = chunk_partitions[0][j].get_group(i)
-                values_partitions.append(group)
-            if i in chunk_partitions[1][j].groups:
-                group = chunk_partitions[1][j].get_group(i)
-                df_partitions.append(group)
+        values_partitions = [chunk_partitions[0][j][i] for j in range(num_cores)]
+        df_partitions = [chunk_partitions[1][j][i] for j in range(num_cores)]
 
-        if len(values_partitions) > 0:
-            scattered_values = client.scatter(values_partitions, workers=worker_id)
-        else:
-            scattered_values = pd.DataFrame(dtype=object)
+        if len(values_partitions) == 0:
+            values_partitions = [pd.DataFrame(dtype=object)]
+        scattered_values = client.scatter(values_partitions, workers=worker_id, direct=True)
 
-        if len(df_partitions) > 0:
-            scattered_df = client.scatter(df_partitions, workers=worker_id)
-        else:
-            scattered_df = pd.DataFrame(dtype=object)
+        if len(df_partitions) == 0:
+            df_partitions = [pd.DataFrame(dtype=object)]
+        scattered_df = client.scatter(df_partitions, workers=worker_id, direct=True)
 
         result_futures.append(client.submit(vlookup_exact_hash_local, scattered_values, scattered_df))
 

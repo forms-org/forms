@@ -20,14 +20,12 @@ from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
-def range_partition_df(df: pd.DataFrame or pd.Series, bins):
-    if isinstance(df, pd.DataFrame):
-        data = df.iloc[:, 0]
-    else:
-        data = df
+def range_partition_df(df: pd.DataFrame or pd.Series, bins, num_cores):
+    data = df.iloc[:, 0] if isinstance(df, pd.DataFrame) else df
     binned_df = pd.Series(np.searchsorted(bins, data), index=df.index)
     df['bin_DO_NOT_USE'] = binned_df
-    return df.groupby('bin_DO_NOT_USE')
+    grouped = df.groupby('bin_DO_NOT_USE')
+    return [grouped.get_group(i) if i in grouped.groups else pd.Series(dtype=object) for i in range(num_cores)]
 
 
 # Chunks range partitions a table based on a set of given bins.
@@ -40,9 +38,10 @@ def range_partition_df_distributed(client: Client, df: pd.DataFrame or pd.Series
         start_idx = (i * df.shape[0]) // num_cores
         end_idx = ((i + 1) * df.shape[0]) // num_cores
         data = df[start_idx: end_idx]
-        scattered_data = client.scatter(data, workers=worker_id)
-        chunk_partitions.append(client.submit(range_partition_df, scattered_data, bins))
-    return client.gather(chunk_partitions)
+        scattered_data = client.scatter(data, workers=worker_id, direct=True)
+        chunk_partitions.append(client.submit(range_partition_df, scattered_data, bins, num_cores))
+    res = client.gather(chunk_partitions)
+    return res
 
 
 # Local numpy binary search to find the values.
@@ -62,37 +61,23 @@ def vlookup_approx_distributed(client: Client,
                                col_idxes: pd.Series) -> pd.DataFrame:
     workers = list(client.scheduler_info()['workers'].keys())
     num_cores = len(workers)
+
     bins, idx_bins = get_df_bins(df, num_cores)
-
-    """
-    # It might be better to get the bins with qcut
-    start_time_test = time()
-    res, bins = pd.qcut(values, num_cores, retbins=True, labels=False)
-    print(f"qcut time: {time() - start_time_test}")
-    print(res)
-    """
-
     values = values.to_frame()
     values['col_idxes_DO_NOT_USE'] = col_idxes
+
     binned_values = range_partition_df_distributed(client, values, bins)
 
     result_futures = []
     for i in range(num_cores):
         worker_id = workers[i]
-        values_partitions = []
-        for j in range(num_cores):
-            if i in binned_values[j].groups:
-                group = binned_values[j].get_group(i)
-                values_partitions.append(group)
-        if len(values_partitions) > 0:
-            scattered_values = client.scatter(values_partitions, workers=worker_id)
-        else:
-            scattered_values = pd.Series(dtype=object)
+        values_partitions = [binned_values[j][i] for j in range(num_cores)]
+        if len(values_partitions) == 0:
+            values_partitions = [pd.Series(dtype=object)]
+        scattered_values = client.scatter(values_partitions, workers=worker_id, direct=True)
 
-        start_idx = idx_bins[i]
-        end_idx = idx_bins[i + 1] + 1
-        scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
-
+        start_idx, end_idx = idx_bins[i], idx_bins[i + 1] + 1
+        scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id, direct=True)
         result_futures.append(client.submit(vlookup_approx_local, scattered_values, scattered_df))
 
     results = client.gather(result_futures)

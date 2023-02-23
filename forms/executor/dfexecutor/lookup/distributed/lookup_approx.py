@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import numpy as np
 import pandas as pd
 from dask.distributed import Client
 from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
@@ -22,9 +23,9 @@ from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 # A test version of LOOKUP that reduces the problem to VLOOKUP.
-def lookup_approx_distributed_reduction(client, values, search_range, result_range) -> pd.DataFrame:
+def lookup_approx_distributed(client, values, search_range, result_range) -> pd.DataFrame:
     df = pd.concat([search_range, result_range], axis=1)
-    col_idxes = pd.Series([2] * len(search_range))
+    col_idxes = pd.Series(np.full(len(search_range), 2))
     return vlookup_approx_distributed(client, values, df, col_idxes)
 
 
@@ -39,7 +40,7 @@ def lookup_approx_local(values_partitions, df) -> pd.DataFrame:
 
 
 # Performs a distributed LOOKUP on the given values with a Dask client.
-def lookup_approx_distributed(client: Client,
+def lookup_approx_distributed_custom(client: Client,
                               values: pd.Series,
                               search_range: pd.Series,
                               result_range: pd.Series) -> pd.DataFrame:
@@ -54,19 +55,15 @@ def lookup_approx_distributed(client: Client,
     result_futures = []
     for i in range(num_cores):
         worker_id = workers[i]
-        values_partitions = []
-        for j in range(num_cores):
-            if i in binned_values[j].groups:
-                group = binned_values[j].get_group(i)
-                values_partitions.append(group)
+        values_partitions = [binned_values[j][i] for j in range(num_cores)]
         if len(values_partitions) > 0:
-            scattered_values = client.scatter(values_partitions, workers=worker_id)
+            scattered_values = client.scatter(values_partitions, workers=worker_id, direct=True)
         else:
             scattered_values = pd.Series(dtype=object)
 
         start_idx = idx_bins[i]
         end_idx = idx_bins[i + 1] + 1
-        scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id)
+        scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id, direct=True)
 
         result_futures.append(client.submit(lookup_approx_local, scattered_values, scattered_df))
 
