@@ -14,22 +14,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
-from forms.executor.dfexecutor.utils import construct_df_table, get_execution_node_n_formula
-from forms.executor.dfexecutor.lookup.utils import (
-    approx_binary_search,
-    clean_string_values,
-    get_df,
-    get_literal_value,
-)
-
-
-def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    values, search_range, result_range = get_lookup_params(physical_subtree)
-    values = values.iloc[:, 0]
-    result_df = lookup_binary_search_np_vector(values, search_range, result_range)
-    return construct_df_table(result_df)
+from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
 
 
 def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
@@ -64,14 +49,7 @@ def lookup_binary_search_np_vector(values: pd.Series, search_range: pd.Series, r
     res = np.take(result_range, adjusted_idxes).to_numpy()
     nan_mask = np.equal(adjusted_idxes, -1)
     nan_idxes = nan_mask[nan_mask].index
-    if np.float64 > res.dtype:
-        res = res.astype(np.float64)
-    if len(nan_idxes) > 0:
-        np.put(res, nan_idxes, np.nan)
-    res_type = type(res[0])
-    if np.issubdtype(type(res[0]), np.integer):
-        res_type = np.float64
-    return pd.DataFrame(res).astype(res_type)
+    return set_dtype(res, nan_idxes)
 
 
 def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
@@ -93,24 +71,3 @@ def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
             left_idx += 1
 
     return pd.DataFrame(df_arr)
-
-
-# Retrives parameters for LOOKUP.
-def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
-    # Verify LOOKUP param count
-    children = physical_subtree.children
-    num_children = len(children)
-    assert num_children == 2 or num_children == 3
-
-    # Retrieve params
-    size = get_execution_node_n_formula(children[1])
-    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size))
-    search_range: pd.DataFrame = get_df(children[1])
-    if num_children == 2:
-        result_range = search_range.iloc[:, -1]
-        search_range = search_range.iloc[:, 0]
-    else:
-        result_range = get_df(children[2]).iloc[:, 0]
-        search_range = search_range.iloc[:, 0]
-
-    return values, search_range, result_range

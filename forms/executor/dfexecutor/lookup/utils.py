@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import numpy as np
 import pandas as pd
 
 from forms.executor.executionnode import (
@@ -20,6 +21,7 @@ from forms.executor.executionnode import (
 from forms.executor.dfexecutor.utils import get_single_value
 
 
+# Splits the df into bins for range partitioning.
 def get_df_bins(df, num_cores):
     search_keys = df.iloc[:, 0]
     idx_bins = []
@@ -35,7 +37,20 @@ def get_df_bins(df, num_cores):
     return bins, idx_bins
 
 
-def create_alphanumeric_df(rows, print_df=False):
+# Helper to infer the data type of a lookup result.
+def set_dtype(res, nan_idxes):
+    if np.float64 > res.dtype:
+        res = res.astype(np.float64)
+    if len(nan_idxes) > 0:
+        np.put(res, nan_idxes, np.nan)
+    res_type = type(res[0])
+    if np.issubdtype(type(res[0]), np.integer):
+        res_type = np.float64
+    return pd.DataFrame(res).astype(res_type)
+
+
+# Creates a random dataframe with string values for benchmarking and testing.
+def create_alpha_df(rows, print_df=False):
     import string
     import numpy as np
     from time import time

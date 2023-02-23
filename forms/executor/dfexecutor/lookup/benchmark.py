@@ -15,7 +15,7 @@ import pandas as pd
 import time
 import random
 
-from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_binary_search, lookup_sort_merge
+from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_binary_search, lookup_sort_merge
 
 
 def create_df(size=(1000, 10), df_type="constant", start_val: float = 0, first_col_idx=True, seed=2):

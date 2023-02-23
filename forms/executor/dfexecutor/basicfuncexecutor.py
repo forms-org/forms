@@ -86,8 +86,8 @@ from forms.executor.dfexecutor.mathfuncexecutorvariable import (
     trunc_df_executor,
 )
 
-from forms.executor.dfexecutor.lookup.lookupfuncexecutor import lookup_df_executor
-from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import vlookup_df_executor
+from forms.executor.dfexecutor.lookup.executor.lookupfuncexecutor import lookup_df_executor
+from forms.executor.dfexecutor.lookup.executor.vlookupfuncexecutor import vlookup_df_executor
 
 from forms.executor.dfexecutor.textfunctionexecutor import (
     concat_executor,

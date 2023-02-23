@@ -19,13 +19,13 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.lookupfuncexecutor import (
+from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import (
     lookup_binary_search_np,
     lookup_binary_search_np_vector
 )
 from forms.executor.dfexecutor.lookup.utils import (
     get_df_bins,
-    create_alphanumeric_df
+    create_alpha_df
 )
 
 
@@ -81,7 +81,7 @@ def lookup_approx_distributed(client: Client,
     return pd.concat(results).sort_index()
 
 
-def run_test():
+def run_num_test():
     CORES = 4
     DF_ROWS = 1000000
     np.random.seed(1)
@@ -104,7 +104,7 @@ def run_test():
 def run_string_test():
     CORES = 4
     DF_ROWS = 1000000
-    values, df, col_idxes = create_alphanumeric_df(DF_ROWS, print_df=True)
+    values, df, col_idxes = create_alpha_df(DF_ROWS, print_df=True)
     search_range, result_range = df.iloc[:, 0], df.iloc[:, 1]
 
     start_time = time()

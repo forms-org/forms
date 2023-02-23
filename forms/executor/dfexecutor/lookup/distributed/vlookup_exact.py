@@ -15,12 +15,12 @@ import numpy as np
 import pandas as pd
 from time import time
 from dask.distributed import Client
-from forms.executor.dfexecutor.lookup.vlookupfuncexecutor import (
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import (
     vlookup_exact_hash,
     vlookup_exact_hash_vector
 )
 from forms.executor.dfexecutor.lookup.utils import (
-    create_alphanumeric_df
+    create_alpha_df
 )
 
 
@@ -99,7 +99,7 @@ def vlookup_exact_hash_distributed(client: Client,
     return pd.concat(results).sort_index()
 
 
-def run_test():
+def run_num_test():
     CORES = 4
     DF_ROWS = 100000
     np.random.seed(1)
@@ -122,7 +122,7 @@ def run_test():
 def run_string_test():
     CORES = 4
     DF_ROWS = 1000000
-    values, df, col_idxes = create_alphanumeric_df(DF_ROWS, print_df=True)
+    values, df, col_idxes = create_alpha_df(DF_ROWS, print_df=True)
 
     start_time = time()
     table1 = vlookup_exact_hash_vector(values, df, col_idxes)
