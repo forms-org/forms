@@ -67,6 +67,6 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     combined = np.logical_or(greater_than_length, approximate_matches).astype(int)
     adjusted_idxes = value_idxes - combined
     row_res = np.take(df.to_numpy(), adjusted_idxes, axis=0)
-    res = np.choose(col_idxes - 1, row_res.T).to_numpy()
+    res = np.choose(col_idxes.astype(int) - 1, row_res.T).to_numpy()
     nan_idxes = (adjusted_idxes == -1).nonzero()
     return set_dtype(res, nan_idxes)

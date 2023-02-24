@@ -24,7 +24,7 @@ def hash_partition_df(df: pd.DataFrame, workers):
     grouped = df.groupby('hash_DO_NOT_USE')
     scattered_groups = []
     for i in range(len(workers)):
-        df = grouped.get_group(i) if i in grouped.groups else pd.Series(dtype=object)
+        df = grouped.get_group(i) if i in grouped.groups else None
         res = client.scatter(df, workers=workers[i], direct=True)
         scattered_groups.append(res)
     return scattered_groups
@@ -55,6 +55,7 @@ def vlookup_exact_hash_local(values_partitions, df_partitions):
     values = pd.concat(values_partitions)
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
+
     df = pd.concat(df_partitions)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
     res = vlookup_exact_hash_vector(values, df, col_idxes)

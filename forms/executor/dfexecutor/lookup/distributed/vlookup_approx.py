@@ -28,7 +28,7 @@ def range_partition_df(df: pd.DataFrame or pd.Series, bins, workers):
     grouped = df.groupby('bin_DO_NOT_USE')
     scattered_groups = []
     for i in range(len(workers)):
-        df = grouped.get_group(i) if i in grouped.groups else pd.Series(dtype=object)
+        df = grouped.get_group(i) if i in grouped.groups else None
         res = client.scatter(df, workers=workers[i], direct=True)
         scattered_groups.append(res)
     return scattered_groups

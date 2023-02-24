@@ -64,5 +64,5 @@ def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
     result_idxes = values.map(cache.get)
     np.put(result_idxes.to_numpy(), nan_idxes, 1)
     row_res = np.take(df.to_numpy(), result_idxes, axis=0, mode='clip')
-    res = np.choose(col_idxes - 1, row_res.T).to_numpy()
+    res = np.choose(col_idxes.astype(int) - 1, row_res.T).to_numpy()
     return set_dtype(res, nan_idxes)

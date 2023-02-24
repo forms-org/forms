@@ -69,7 +69,7 @@ def create_alpha_df(rows, print_df=False):
     result = np.array(list(range(rows)))
     df = pd.DataFrame({0: search_keys, 1: result})
     values = pd.Series(np.random.choice(test_strings, rows, replace=False))
-    col_idxes = pd.Series([2] * rows)
+    col_idxes = pd.Series(np.full(rows, 2))
     print(f"Generated input in {time() - start_time} seconds.")
     if print_df:
         print(pd.DataFrame({0: search_keys, 1: result, "values": values, "col_idxes": col_idxes}))
