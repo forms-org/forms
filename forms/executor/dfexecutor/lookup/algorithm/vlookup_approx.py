@@ -70,3 +70,14 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     res = np.choose(col_idxes.astype(int) - 1, row_res.T).to_numpy()
     nan_idxes = (adjusted_idxes == -1).nonzero()
     return set_dtype(res, nan_idxes)
+
+
+def vlookup_approx_pd_merge_num(values, df, col_idxes) -> pd.DataFrame:
+    sorted_values = values.sort_values()
+    left = pd.DataFrame({"join_col": sorted_values.reset_index(drop=True)}).astype(np.float64)
+    right = df.rename(columns={df.columns[0]: "join_col"})
+    right["join_col"] = right["join_col"].astype(np.float64)
+    merged = pd.merge_asof(left, right, on="join_col").to_numpy()
+    chosen = np.choose(col_idxes.astype(int) - 1, merged.T).to_numpy()
+    res = pd.Series(chosen, index=sorted_values.index).sort_index().to_numpy()
+    return set_dtype(res)

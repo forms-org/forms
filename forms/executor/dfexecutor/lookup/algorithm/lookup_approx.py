@@ -13,7 +13,6 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
-from time import time
 
 from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
 
@@ -71,3 +70,11 @@ def lookup_np_vector(values: pd.Series, search_range: pd.Series, result_range: p
     res = np.take(result_range, adjusted_idxes).to_numpy()
     nan_idxes = (adjusted_idxes == -1).nonzero()
     return set_dtype(res, nan_idxes)
+
+
+def lookup_pd_merge_num(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
+    values = values.sort_values()
+    left = pd.DataFrame({"join_col": values.reset_index(drop=True)})
+    right = pd.DataFrame({"join_col": search_range, "results": result_range})
+    res = pd.merge_asof(left, right, on="join_col")
+    return pd.DataFrame(res['results'].to_numpy(), index=values.index).sort_index()

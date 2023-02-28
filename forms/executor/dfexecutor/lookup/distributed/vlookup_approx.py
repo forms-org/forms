@@ -45,7 +45,7 @@ def range_partition_df_distributed(client: Client, df: pd.DataFrame or pd.Series
         end_idx = ((i + 1) * df.shape[0]) // num_cores
         data = df[start_idx: end_idx]
         scattered_data = client.scatter(data, workers=worker_id, direct=True)
-        chunk_partitions.append(client.submit(range_partition_df, scattered_data, bins, workers))
+        chunk_partitions.append(client.submit(range_partition_df, scattered_data, bins, workers, workers=worker_id))
     res = client.gather(chunk_partitions)
     return res
 
@@ -80,7 +80,7 @@ def vlookup_approx_distributed(client: Client,
         values_partitions = [binned_values[j][i] for j in range(num_cores)]
         start_idx, end_idx = idx_bins[i], idx_bins[i + 1] + 1
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id, direct=True)
-        result_futures.append(client.submit(vlookup_approx_local, values_partitions, scattered_df))
+        result_futures.append(client.submit(vlookup_approx_local, values_partitions, scattered_df, workers=worker_id))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()

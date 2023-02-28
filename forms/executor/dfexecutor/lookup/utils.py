@@ -38,7 +38,9 @@ def get_df_bins(df, num_cores):
 
 
 # Helper to infer the data type of a lookup result.
-def set_dtype(res, nan_idxes):
+def set_dtype(res, nan_idxes=None):
+    if nan_idxes is None:
+        nan_idxes = []
     if np.float64 > res.dtype:
         res = res.astype(np.float64)
     if len(nan_idxes) > 0:

@@ -27,7 +27,7 @@ from forms.executor.dfexecutor.lookup.utils import (
     get_literal_value,
 )
 from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector, vlookup_exact_pd_merge
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -36,7 +36,7 @@ def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     if approx:
         result_df = vlookup_approx_np_vector(values, df, col_idxes)
     else:
-        result_df = vlookup_exact_hash_vector(values, df, col_idxes)
+        result_df = vlookup_exact_pd_merge(values, df, col_idxes)
     return construct_df_table(result_df)
 
 

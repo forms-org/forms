@@ -58,7 +58,7 @@ def lookup_approx_distributed_custom(client: Client,
         values_partitions = [binned_values[j][i] for j in range(num_cores)]
         start_idx, end_idx = idx_bins[i], idx_bins[i + 1] + 1
         scattered_df = client.scatter(df[start_idx:end_idx], workers=worker_id, direct=True)
-        result_futures.append(client.submit(lookup_approx_local, values_partitions, scattered_df))
+        result_futures.append(client.submit(lookup_approx_local, values_partitions, scattered_df, workers=worker_id))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()

@@ -18,8 +18,8 @@ from dask.distributed import Client
 
 from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector
 from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import vlookup_approx_distributed
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector
-from forms.executor.dfexecutor.lookup.distributed.vlookup_exact import vlookup_exact_hash_distributed
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_pd_merge
+from forms.executor.dfexecutor.lookup.distributed.vlookup_exact import vlookup_exact_distributed
 from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_np_vector
 from forms.executor.dfexecutor.lookup.distributed.lookup_approx import lookup_approx_distributed
 from forms.executor.dfexecutor.lookup.utils import create_alpha_df
@@ -73,11 +73,11 @@ def vlookup_exact_num_test():
     values, df, col_idxes = test_df.iloc[:, 0], test_df.iloc[:, 1:], pd.Series([3] * DF_ROWS)
 
     start_time = time()
-    table1 = vlookup_exact_hash_vector(values, df, col_idxes)
+    table1 = vlookup_exact_pd_merge(values, df, col_idxes)
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -89,11 +89,11 @@ def vlookup_exact_string_test():
     values, df, col_idxes = alpha_df
 
     start_time = time()
-    table1 = vlookup_exact_hash_vector(values, df, col_idxes)
+    table1 = vlookup_exact_pd_merge(values, df, col_idxes)
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_exact_hash_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))

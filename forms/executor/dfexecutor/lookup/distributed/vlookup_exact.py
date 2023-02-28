@@ -13,7 +13,7 @@
 #  limitations under the License.
 import pandas as pd
 from dask.distributed import Client, get_client
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_pd_merge
 
 
 # Locally hashes a dataframe with 1 column and groups it by hash.
@@ -44,29 +44,30 @@ def hash_chunk_k_tables_distributed(client: Client, df_list: list[pd.DataFrame])
             end_idx = ((i + 1) * df.shape[0]) // num_cores
             data = df[start_idx: end_idx]
             scattered_data = client.scatter(data, workers=worker_id, direct=True)
-            chunk_partitions[df_idx].append(client.submit(hash_partition_df, scattered_data, workers))
+            chunk_partitions[df_idx].append(client.submit(hash_partition_df, scattered_data, workers,
+                                                          workers=worker_id))
     for df_idx in range(len(df_list)):
         chunk_partitions[df_idx] = client.gather(chunk_partitions[df_idx])
     return chunk_partitions
 
 
 # Local hash join to get the result.
-def vlookup_exact_hash_local(values_partitions, df_partitions):
+def vlookup_exact_local(values_partitions, df_partitions):
     values = pd.concat(values_partitions)
     if len(values) == 0:
         return pd.DataFrame(dtype=object)
 
     df = pd.concat(df_partitions)
     values, col_idxes = values.iloc[:, 0], values.loc[:, 'col_idxes_DO_NOT_USE']
-    res = vlookup_exact_hash_vector(values, df, col_idxes)
+    res = vlookup_exact_pd_merge(values, df, col_idxes)
     return res.set_index(values.index)
 
 
 # Performs a distributed VLOOKUP on the given values with a Dask client.
-def vlookup_exact_hash_distributed(client: Client,
-                                   values: pd.Series,
-                                   df: pd.DataFrame,
-                                   col_idxes: pd.Series) -> pd.DataFrame:
+def vlookup_exact_distributed(client: Client,
+                              values: pd.Series,
+                              df: pd.DataFrame,
+                              col_idxes: pd.Series) -> pd.DataFrame:
     workers = list(client.scheduler_info()['workers'].keys())
     num_cores = len(workers)
 
@@ -79,7 +80,8 @@ def vlookup_exact_hash_distributed(client: Client,
     for i in range(num_cores):
         values_partitions = [chunk_partitions[0][j][i] for j in range(num_cores)]
         df_partitions = [chunk_partitions[1][j][i] for j in range(num_cores)]
-        result_futures.append(client.submit(vlookup_exact_hash_local, values_partitions, df_partitions))
+        result_futures.append(client.submit(vlookup_exact_local, values_partitions, df_partitions,
+                                            workers=workers[i]))
 
     results = client.gather(result_futures)
     return pd.concat(results).sort_index()
