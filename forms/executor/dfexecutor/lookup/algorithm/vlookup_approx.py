@@ -72,7 +72,7 @@ def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     return set_dtype(res, nan_idxes)
 
 
-def vlookup_approx_pd_merge_num(values, df, col_idxes) -> pd.DataFrame:
+def vlookup_approx_pd_merge(values, df, col_idxes) -> pd.DataFrame:
     sorted_values = values.sort_values()
     left = pd.DataFrame({"join_col": sorted_values.reset_index(drop=True)}).astype(np.float64)
     right = df.rename(columns={df.columns[0]: "join_col"})

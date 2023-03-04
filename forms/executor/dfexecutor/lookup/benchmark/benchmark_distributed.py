@@ -16,12 +16,14 @@ import pandas as pd
 from time import time
 from dask.distributed import Client
 
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector
-from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import vlookup_approx_distributed
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector, vlookup_approx_pd_merge
 from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_pd_merge
+from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_np_vector, lookup_pd_merge
+
+from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import vlookup_approx_distributed
 from forms.executor.dfexecutor.lookup.distributed.vlookup_exact import vlookup_exact_distributed
-from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_np_vector
 from forms.executor.dfexecutor.lookup.distributed.lookup_approx import lookup_approx_distributed
+
 from forms.executor.dfexecutor.lookup.utils import create_alpha_df
 
 
@@ -40,11 +42,11 @@ def vlookup_approx_num_test():
     df = pd.concat([pd.Series(range(DF_ROWS)), df], axis=1)
 
     start_time = time()
-    table1 = vlookup_approx_np_vector(values, df, col_idxes)
+    table1 = vlookup_approx_pd_merge(values, df, col_idxes)
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes, vlookup_approx_pd_merge)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -60,7 +62,7 @@ def vlookup_approx_string_test():
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_approx_distributed(dask_client, values, df, col_idxes, vlookup_approx_np_vector)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -77,7 +79,7 @@ def vlookup_exact_num_test():
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes, vlookup_exact_pd_merge)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -93,7 +95,7 @@ def vlookup_exact_string_test():
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes)
+    table2 = vlookup_exact_distributed(dask_client, values, df, col_idxes, vlookup_exact_pd_merge)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -106,11 +108,11 @@ def lookup_approx_num_test():
     values, search_range, result_range = test_df.iloc[:, 0], pd.Series(range(DF_ROWS)), test_df.iloc[:, 2]
 
     start_time = time()
-    table1 = lookup_np_vector(values, search_range, result_range)
+    table1 = lookup_pd_merge(values, search_range, result_range)
     print(f"Finished local LOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range)
+    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range, lookup_pd_merge)
     print(f"Finished distributed LOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -127,7 +129,7 @@ def lookup_approx_string_test():
     print(f"Finished local VLOOKUP in {time() - start_time} seconds.")
 
     start_time = time()
-    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range)
+    table2 = lookup_approx_distributed(dask_client, values, search_range, result_range, lookup_np_vector)
     print(f"Finished distributed VLOOKUP in {time() - start_time} seconds.")
 
     assert table1.astype('object').equals(table2.astype('object'))
@@ -136,7 +138,7 @@ def lookup_approx_string_test():
 
 if __name__ == '__main__':
     num_df = pd.DataFrame(np.random.randint(0, DF_ROWS, size=(DF_ROWS, 10)))
-    alpha_df = create_alpha_df(DF_ROWS, print_df=True)
+    alpha_df = create_alpha_df(DF_ROWS)
     dask_client = Client(processes=True, n_workers=CORES)
     vlookup_approx_num_test()
     vlookup_approx_string_test()

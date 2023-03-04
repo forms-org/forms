@@ -23,7 +23,7 @@ from forms.executor.dfexecutor.utils import get_single_value
 
 # Splits the df into bins for range partitioning.
 def get_df_bins(df, num_cores):
-    search_keys = df.iloc[:, 0]
+    search_keys = df.iloc[:, 0] if isinstance(df, pd.DataFrame) else df
     idx_bins = []
     bins = []
     for i in range(num_cores):

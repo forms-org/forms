@@ -72,7 +72,7 @@ def lookup_np_vector(values: pd.Series, search_range: pd.Series, result_range: p
     return set_dtype(res, nan_idxes)
 
 
-def lookup_pd_merge_num(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
+def lookup_pd_merge(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
     values = values.sort_values()
     left = pd.DataFrame({"join_col": values.reset_index(drop=True)})
     right = pd.DataFrame({"join_col": search_range, "results": result_range})
