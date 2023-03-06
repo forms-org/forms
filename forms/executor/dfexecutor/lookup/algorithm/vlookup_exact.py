@@ -64,7 +64,7 @@ def vlookup_exact_hash_vector(values, df, col_idxes) -> pd.DataFrame:
     result_idxes = values.map(cache.get)
     np.put(result_idxes.to_numpy(), nan_idxes, 1)
     row_res = np.take(df.to_numpy(), result_idxes, axis=0, mode='clip')
-    res = np.choose(col_idxes.astype(int) - 1, row_res.T).to_numpy()
+    res = row_res[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
     return set_dtype(res, nan_idxes)
 
 
@@ -72,6 +72,6 @@ def vlookup_exact_pd_merge(values, df, col_idxes) -> pd.DataFrame:
     left = pd.DataFrame({"join_col": values})
     right = df.rename(columns={df.columns[0]: "join_col"}).drop_duplicates(subset="join_col")
     merged = pd.merge(left, right, how="left", on="join_col").to_numpy()
-    chosen = np.choose(col_idxes.astype(int) - 1, merged.T).to_numpy()
+    chosen = merged[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
     res = pd.Series(chosen, index=values.index).sort_index().to_numpy()
     return set_dtype(res)

@@ -37,6 +37,16 @@ def get_df_bins(df, num_cores):
     return bins, idx_bins
 
 
+# Gets bins for df based on the quantiles of values. Only works with numerical inputs.
+def get_value_bins(values, df, num_cores):
+    search_keys = (df.iloc[:, 0] if isinstance(df, pd.DataFrame) else df).to_numpy()
+    percentiles = [i / num_cores for i in range(num_cores + 1)]
+    quantiles = np.quantile(values, percentiles)
+    idx_bins = np.searchsorted(search_keys, quantiles)
+    bins = np.take(search_keys, idx_bins)
+    return bins, idx_bins
+
+
 # Helper to infer the data type of a lookup result.
 def set_dtype(res, nan_idxes=None):
     if nan_idxes is None:
