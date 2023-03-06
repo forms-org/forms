@@ -16,7 +16,7 @@ import pandas as pd
 from typing import Callable
 from dask.distributed import Client, get_client
 
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils.utils import get_df_bins
 
 
 # Partitions a dataframe based on bins and groups by the bin id.

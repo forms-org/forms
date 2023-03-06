@@ -14,7 +14,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
+from forms.executor.dfexecutor.lookup.utils.utils import approx_binary_search, set_dtype
 
 
 def lookup_binary_search(values, search_range, result_range) -> pd.DataFrame:
@@ -48,7 +48,7 @@ def lookup_sort_merge(values, search_range, result_range) -> pd.DataFrame:
 
 
 def lookup_np(values, search_range, result_range) -> pd.DataFrame:
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = np.searchsorted(search_range.to_numpy(), values.to_numpy(), side="left")
     result_arr = [np.nan] * len(values)
     for i in range(len(values)):
         value, value_idx = values.iloc[i], value_idxes[i]
@@ -60,7 +60,7 @@ def lookup_np(values, search_range, result_range) -> pd.DataFrame:
 
 
 def lookup_np_vector(values: pd.Series, search_range: pd.Series, result_range: pd.Series) -> pd.DataFrame:
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = np.searchsorted(search_range.to_numpy(), values.to_numpy(), side="left")
     greater_than_length = np.greater_equal(value_idxes, len(search_range))
     value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
     search_range_values = np.take(search_range, value_idxes_no_oob)

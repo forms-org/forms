@@ -20,23 +20,19 @@ from forms.executor.dfexecutor.utils import (
     get_execution_node_n_formula,
     get_single_value,
 )
-from forms.executor.dfexecutor.lookup.utils import (
+from forms.executor.dfexecutor.lookup.utils.utils import (
     clean_col_idxes,
     clean_string_values,
     get_df,
     get_literal_value,
 )
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_np_vector
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_hash_vector, vlookup_exact_pd_merge
+from forms.executor.dfexecutor.lookup.api import vlookup
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
     values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
-    if approx:
-        result_df = vlookup_approx_np_vector(values, df, col_idxes)
-    else:
-        result_df = vlookup_exact_pd_merge(values, df, col_idxes)
+    result_df = vlookup(values, df, col_idxes, approx=approx)
     return construct_df_table(result_df)
 
 

@@ -24,7 +24,7 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import vlookup_
 from forms.executor.dfexecutor.lookup.distributed.vlookup_exact import vlookup_exact_distributed
 from forms.executor.dfexecutor.lookup.distributed.lookup_approx import lookup_approx_distributed
 
-from forms.executor.dfexecutor.lookup.utils import create_alpha_df
+from forms.executor.dfexecutor.lookup.utils.utils import create_alpha_df
 
 
 CORES = 4

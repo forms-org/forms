@@ -19,7 +19,7 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils.utils import get_df_bins
 
 
 # A version of LOOKUP that reduces the problem to VLOOKUP.

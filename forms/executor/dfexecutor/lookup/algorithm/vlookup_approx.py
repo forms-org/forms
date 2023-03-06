@@ -14,7 +14,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
+from forms.executor.dfexecutor.lookup.utils.utils import approx_binary_search, set_dtype
 
 
 # Uses approximate binary search.
@@ -33,7 +33,7 @@ def vlookup_approx(values, df, col_idxes) -> pd.DataFrame:
 # Uses np.searchsorted as a fast binary search.
 def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
     search_range = df.iloc[:, 0]
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = np.searchsorted(search_range.to_numpy(), values.to_numpy(), side="left")
     result_arr = [np.nan] * len(values)
     for i in range(len(values)):
         value, value_idx, col_idx = values.iloc[i], value_idxes[i], col_idxes.iloc[i]
@@ -47,7 +47,7 @@ def vlookup_approx_np(values, df, col_idxes) -> pd.DataFrame:
 # Attempt to use list comprehension for a performance increase.
 def vlookup_approx_np_lc(values, df, col_idxes) -> pd.DataFrame:
     search_range = df.iloc[:, 0]
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = np.searchsorted(search_range.to_numpy(), values.to_numpy(), side="left")
     value_idxes = [((value_idxes[i] - 1)
                     if (value_idxes[i] >= len(search_range) or values.iloc[i] != search_range.iloc[value_idxes[i]])
                     else value_idxes[i]) for i in range(len(value_idxes))]
@@ -59,7 +59,7 @@ def vlookup_approx_np_lc(values, df, col_idxes) -> pd.DataFrame:
 # Vectorizes the entire operation using numpy.
 def vlookup_approx_np_vector(values, df, col_idxes) -> pd.DataFrame:
     search_range = df.iloc[:, 0]
-    value_idxes = np.searchsorted(list(search_range), list(values), side="left")
+    value_idxes = np.searchsorted(search_range.to_numpy(), values.to_numpy(), side="left")
     greater_than_length = np.greater_equal(value_idxes, len(search_range))
     value_idxes_no_oob = np.minimum(value_idxes, len(search_range) - 1)
     search_range_values = np.take(search_range, value_idxes_no_oob)

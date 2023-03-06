@@ -14,7 +14,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.executor.dfexecutor.lookup.utils import set_dtype
+from forms.executor.dfexecutor.lookup.utils.utils import set_dtype
 
 
 def vlookup_exact_loops(values, df, col_idxes) -> pd.DataFrame:
