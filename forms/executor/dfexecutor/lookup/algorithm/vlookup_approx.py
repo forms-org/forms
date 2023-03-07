@@ -78,6 +78,6 @@ def vlookup_approx_pd_merge(values, df, col_idxes) -> pd.DataFrame:
     right = df.rename(columns={df.columns[0]: "join_col"})
     right["join_col"] = right["join_col"].astype(np.float64)
     merged = pd.merge_asof(left, right, on="join_col").to_numpy()
-    chosen = merged[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
-    res = pd.Series(chosen, index=sorted_values.index).sort_index().to_numpy()
-    return set_dtype(res)
+    res = pd.DataFrame(merged, index=sorted_values.index).sort_index().to_numpy()
+    chosen = res[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
+    return set_dtype(chosen)

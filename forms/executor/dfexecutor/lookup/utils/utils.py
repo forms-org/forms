@@ -55,8 +55,8 @@ def set_dtype(res, nan_idxes=None):
         res = res.astype(np.float64)
     if len(nan_idxes) > 0:
         np.put(res, nan_idxes, np.nan)
-    res_type = type(res[0])
-    if np.issubdtype(type(res[0]), np.integer):
+    res_type = res.dtype
+    if np.issubdtype(res_type, np.integer):
         res_type = np.float64
     return pd.DataFrame(res).astype(res_type)
 
@@ -78,13 +78,17 @@ def create_alpha_df(rows, print_df=False):
                     ]
     search_keys = np.random.choice(test_strings, rows, replace=False)
     search_keys.sort()
-    result = np.array(list(range(rows)))
-    df = pd.DataFrame({0: search_keys, 1: result})
+    result1 = np.arange(rows)
+    result2 = np.arange(rows, 0, -1)
+    # result1 = np.random.choice(test_strings, rows, replace=True)
+    # result2 = np.random.choice(test_strings, rows, replace=True)
+    df = pd.DataFrame({0: search_keys, 1: result1, 2: result2})
     values = pd.Series(np.random.choice(test_strings, rows, replace=False))
-    col_idxes = pd.Series(np.full(rows, 2))
+    # col_idxes = pd.concat([pd.Series(np.full(rows // 2, 2)), pd.Series(np.full(rows // 2, 3))])
+    col_idxes = pd.Series(np.full(rows, 3))
     print(f"Generated input in {time() - start_time} seconds.")
     if print_df:
-        print(pd.DataFrame({0: search_keys, 1: result, "values": values, "col_idxes": col_idxes}))
+        print(pd.DataFrame({0: search_keys, 1: result1, 2: result2, "values": values, "col_idxes": col_idxes}))
     return values, df, col_idxes
 
 

@@ -73,7 +73,7 @@ def lookup_approx_distributed(client: Client,
         result_futures.append(future)
 
     results = client.gather(result_futures)
-    result = np.empty(len(values))
+    result = np.empty(len(values), dtype=results[0].dtypes[0])
     for r in results:
         np.put(result, r.index, r)
     return pd.DataFrame(result)
