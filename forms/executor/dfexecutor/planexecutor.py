@@ -20,7 +20,7 @@ from time import time
 from forms.executor.dfexecutor.remotedf import partition_df, find_rows_and_cols, RemoteDF
 from forms.planner.plannode import PlanNode
 from forms.executor.table import Table, DFTable
-from forms.executor.executionnode import FunctionExecutionNode, create_intermediate_ref_node
+from forms.executor.executionnode import Function, FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
 from forms.executor.dfexecutor.basicfuncexecutor import find_function_executor
 from forms.utils.treenode import link_parent_to_children
@@ -28,6 +28,9 @@ from forms.utils.reference import axis_along_row
 from forms.core.config import FormSConfig
 from forms.executor.compiler import DFCompiler
 from forms.core.globals import forms_global
+
+from forms.executor.dfexecutor.lookup.executor.vlookupfuncexecutor import vlookup_plan_executor
+from forms.executor.dfexecutor.lookup.executor.lookupfuncexecutor import lookup_plan_executor
 
 
 def execute_one_subtree(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
@@ -71,7 +74,12 @@ class DFPlanExecutor(PlanExecutor):
         distributing_data_time = time() - start
         print(f"Distributing data time: {distributing_data_time}")
         start = time()
-        res_table = super().execute_formula_plan(df_table, formula_plan)
+        func = formula_plan.function
+        if func in plan_level_executors:
+            res_table = plan_level_executors[func](super(), df_table, formula_plan, sum(rows), self.runtime.client)
+        else:
+            res_table = super().execute_formula_plan(df_table, formula_plan)
+
         execution_time = time() - start
         print(f"Execution time: {execution_time}")
 
@@ -103,3 +111,9 @@ class DFPlanExecutor(PlanExecutor):
 
     def clean_up(self):
         pass
+
+
+plan_level_executors = {
+    Function.VLOOKUP: vlookup_plan_executor,
+    Function.LOOKUP: lookup_plan_executor
+}

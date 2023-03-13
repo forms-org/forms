@@ -49,6 +49,7 @@ class DFSimpleScheduler(BaseScheduler):
             ]
             for i in range(cores):
                 exec_subtree_list[i].set_exec_context(exec_context_list[i])
+                exec_subtree_list[i].set_metadata(cores, i)
                 exec_subtree_list[i] = remote_access_planning(exec_subtree_list[i])
             exec_subtree_list = [
                 self.compiler.compile(exec_subtree_list[i], self.exec_config.function_executor)

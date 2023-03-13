@@ -14,7 +14,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.executor.dfexecutor.lookup.utils.utils import approx_binary_search, set_dtype
+from forms.executor.dfexecutor.lookup.utils import approx_binary_search, set_dtype
 
 
 # Uses approximate binary search.

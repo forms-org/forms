@@ -19,7 +19,7 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.utils.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils import get_df_bins
 
 
 # A version of LOOKUP that reduces the problem to VLOOKUP.
@@ -73,7 +73,9 @@ def lookup_approx_distributed(client: Client,
         result_futures.append(future)
 
     results = client.gather(result_futures)
-    result = np.empty(len(values), dtype=results[0].dtypes[0])
+    dtypes = [r.dtypes[0] for r in results if len(r.dtypes) > 0]
+    dtype = object if len(dtypes) == 0 else dtypes[0]
+    result = np.empty(len(values), dtype=dtype)
     for r in results:
         np.put(result, r.index, r)
     return pd.DataFrame(result)

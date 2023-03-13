@@ -16,12 +16,15 @@ import pandas as pd
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode
 from forms.executor.dfexecutor.utils import construct_df_table, get_execution_node_n_formula
-from forms.executor.dfexecutor.lookup.utils.utils import (
+from forms.executor.dfexecutor.lookup.utils import (
     clean_string_values,
     get_df,
     get_literal_value,
+    get_ref_series,
+    get_ref_df
 )
 from forms.executor.dfexecutor.lookup.api import lookup
+from forms.executor.planexecutor import PlanExecutor
 
 
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
@@ -50,3 +53,20 @@ def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
         search_range = search_range.iloc[:, 0]
 
     return values, search_range, result_range
+
+
+def lookup_plan_executor(plan_executor: PlanExecutor, df_table, formula_plan, size, client):
+    sub_plans = formula_plan.children
+
+    values = get_ref_series(plan_executor, df_table, sub_plans[0], size)
+    search_range = get_ref_df(plan_executor.execute_formula_plan(df_table, sub_plans[1]), sub_plans[1])
+
+    if len(sub_plans) == 2:
+        result_range = search_range.iloc[:, -1]
+        search_range = search_range.iloc[:, 0]
+    else:
+        result_range = get_ref_series(plan_executor, df_table, sub_plans[2], size)
+        search_range = search_range.iloc[:, 0]
+
+    res = lookup(values, search_range, result_range, dask_client=client)
+    return DFTable(df=res)

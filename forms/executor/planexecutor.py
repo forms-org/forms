@@ -58,8 +58,8 @@ class PlanExecutor(ABC):
             if next_subtree is not None:
                 physical_subtree_list_dict[next_subtree] = physical_subtree_list
                 remote_object_dict[next_subtree] = [
-                    self.runtime.submit_one_func(self.execute_one_subtree, physical_subtree)
-                    for physical_subtree in physical_subtree_list
+                    self.runtime.submit_one_func(self.execute_one_subtree, physical_subtree_list[i])
+                    for i in range(len(physical_subtree_list))
                 ]
 
             finished_exec_subtrees = [

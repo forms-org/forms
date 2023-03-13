@@ -11,31 +11,40 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+import numpy as np
 import pandas as pd
 
 from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.planner.plannode import LiteralNode, RefType
+from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
 from forms.executor.dfexecutor.utils import (
     get_execution_node_n_formula,
     construct_df_table,
     get_single_value,
 )
-from forms.executor.dfexecutor.lookup.utils.utils import (
+from forms.executor.dfexecutor.lookup.utils import (
     clean_string_values,
     get_df,
-    get_literal_value
+    get_literal_value,
+    get_df_bins,
+    get_ref_df,
+    get_ref_series
 )
 from forms.executor.dfexecutor.lookup.api import vlookup
+from forms.executor.planexecutor import PlanExecutor
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
+    values, df, col_idxes, approx = get_vlookup_params_broadcast_df(physical_subtree)
     result_df = vlookup(values, df, col_idxes, approx=approx)
+    if result_df is None:
+        result_df = pd.DataFrame([])
     return construct_df_table(result_df)
 
 
 # Retrives parameters for VLOOKUP.
-def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
+def get_vlookup_params_broadcast_df(physical_subtree: FunctionExecutionNode) -> tuple:
     # Verify VLOOKUP param count
     children = physical_subtree.children
     num_children = len(children)
@@ -46,7 +55,73 @@ def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
     values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size).iloc[:, 0])
     df: pd.DataFrame = get_df(children[1])
     col_idxes: pd.DataFrame = get_literal_value(children[2], size).iloc[:, 0].astype(int)
+    approx = True
     if len(children) == 4:
         approx = get_single_value(children[3]) != 0
 
     return values, df, col_idxes, approx
+
+
+def get_full_node_df(df, child):
+    if isinstance(child, RefExecutionNode):
+        row, col = child.ref.row, child.ref.col
+        if child.out_ref_type == RefType.FF:
+            v = child.table.get_table_content().iloc[row, col]
+            return pd.Series(np.full(df.shape[0], v))
+        else:
+            return df.iloc[:, col]
+    else:
+        assert isinstance(child, LitExecutionNode)
+        return pd.Series(np.full(df.shape[0], child.literal))
+
+
+# Retrives parameters for VLOOKUP.
+def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode) -> tuple:
+    # Verify VLOOKUP param count
+    children = physical_subtree.children
+    num_children = len(children)
+    assert num_children == 3 or num_children == 4
+
+    cores = physical_subtree.cores
+    subtree_idx = physical_subtree.subtree_idx
+
+    # calculate global bins
+    df_child = physical_subtree.children[1]
+    full_df = df_child.table.get_table_content()
+    bins = get_df_bins(full_df.iloc[:, df_child.ref.col], cores)[0]
+
+    # get values and col_idxes
+    values_child = physical_subtree.children[0]
+    col_idxes_child: RefExecutionNode = physical_subtree.children[2]
+    all_values = get_full_node_df(full_df, values_child)
+    all_col_idxes = get_full_node_df(full_df, col_idxes_child).astype(int)
+
+    # bin locally
+    binned_data = pd.Series(np.searchsorted(bins, all_values), index=all_values.index)
+    values = all_values[binned_data == subtree_idx]
+    col_idxes = all_col_idxes[binned_data == subtree_idx]
+
+    ref, context = df_child.ref, df_child.exec_context
+    start, end = context.start_formula_idx, context.end_formula_idx
+    df: pd.DataFrame = full_df.iloc[start: end, ref.col: ref.last_col + 1]
+
+    approx = True
+    if len(children) == 4:
+        approx = get_single_value(children[3]) != 0
+
+    return values, df, col_idxes, approx
+
+
+def vlookup_plan_executor(plan_executor: PlanExecutor, df_table, formula_plan, size, client):
+    sub_plans = formula_plan.children
+
+    values = get_ref_series(plan_executor, df_table, sub_plans[0], size)
+    df = get_ref_df(plan_executor.execute_formula_plan(df_table, sub_plans[1]), sub_plans[1])
+    col_idxes = get_ref_series(plan_executor, df_table, sub_plans[2], size)
+    approx = True
+    if len(sub_plans) == 4:
+        if isinstance(sub_plans[3], LiteralNode):
+            approx = sub_plans[3].literal
+
+    res = vlookup(values, df, col_idxes.astype(int), approx, dask_client=client)
+    return DFTable(df=res)

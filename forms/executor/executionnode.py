@@ -29,6 +29,8 @@ class ExecutionNode(ABC, TreeNode):
         self.out_ref_type = out_ref_type
         self.out_ref_axis = out_ref_axis
         self.exec_context = None
+        self.cores = 1
+        self.subtree_idx = 0
 
     @abstractmethod
     def gen_exec_subtree(self):
@@ -36,6 +38,10 @@ class ExecutionNode(ABC, TreeNode):
 
     @abstractmethod
     def set_exec_context(self, exec_context: ExecutionContext):
+        pass
+
+    @abstractmethod
+    def set_metadata(self, cores: int, subtree_idx: int):
         pass
 
     @abstractmethod
@@ -63,6 +69,12 @@ class FunctionExecutionNode(ExecutionNode):
         for child in self.children:
             child.set_exec_context(exec_context)
 
+    def set_metadata(self, cores: int, subtree_idx: int):
+        self.cores = cores
+        self.subtree_idx = subtree_idx
+        for child in self.children:
+            child.set_metadata(cores, subtree_idx)
+
     def collect_ref_nodes_in_order(self) -> list:
         ref_children = []
         for child in self.children:
@@ -88,6 +100,10 @@ class RefExecutionNode(ExecutionNode):
     def set_exec_context(self, exec_context: ExecutionContext):
         self.exec_context = exec_context
 
+    def set_metadata(self, cores: int, subtree_idx: int):
+        self.cores = cores
+        self.subtree_idx = subtree_idx
+
     def set_offset(self, row_offset, col_offset):
         self.row_offset = row_offset
         self.col_offset = col_offset
@@ -107,6 +123,9 @@ class LitExecutionNode(ExecutionNode):
         return lit_node
 
     def set_exec_context(self, exec_context: ExecutionContext):
+        pass
+
+    def set_metadata(self, cores: int, subtree_idx: int):
         pass
 
     def collect_ref_nodes_in_order(self) -> list:
@@ -145,4 +164,5 @@ def create_intermediate_ref_node(table: Table, exec_subtree: FunctionExecutionNo
             axis=axis,
         )
     )
+    ref_node.set_metadata(exec_subtree.cores, exec_subtree.subtree_idx)
     return ref_node

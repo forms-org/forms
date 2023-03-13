@@ -32,6 +32,9 @@ def lookup(values: pd.Series,
            result_range: pd.Series,
            dask_client=None) -> pd.DataFrame:
 
+    if len(values) == 0:
+        return pd.DataFrame()
+
     distributed_enabled = len(values) > LOCAL_RECORD_LIMIT and dask_client is not None
     numerical = search_range.dtype <= np.float64 and values.dtype <= np.float64
 
@@ -56,6 +59,9 @@ def vlookup(values: pd.Series,
             approx=True,
             dask_client=None) -> pd.DataFrame:
 
+    if len(values) == 0:
+        return pd.DataFrame()
+
     search_range = df.iloc[:, 0]
     distributed_enabled = len(values) > LOCAL_RECORD_LIMIT and dask_client is not None
     numerical = values.dtype <= np.float64 and search_range.dtype <= np.float64
@@ -68,7 +74,9 @@ def vlookup(values: pd.Series,
         df = df.astype({df.columns[0]: values.dtype})
 
     if approx:
-        if df.shape[1] == 2:
+        if df.shape[1] == 1:
+            return lookup(values, df.iloc[:, 0], df.iloc[:, 0], dask_client)
+        elif df.shape[1] == 2:
             return lookup(values, df.iloc[:, 0], df.iloc[:, 1], dask_client)
         elif numerical and distributed_enabled:
             return vlookup_approx_distributed(dask_client, values, df, col_idxes, vlookup_approx_pd_merge)

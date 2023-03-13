@@ -20,6 +20,10 @@ from forms.executor.executionnode import (
 )
 from forms.executor.dfexecutor.utils import get_single_value
 
+from forms.planner.plannode import LiteralNode, RefNode, RefType
+from forms.executor.planexecutor import PlanExecutor
+from forms.executor.table import Table
+
 
 # Splits the df into bins for range partitioning.
 def get_df_bins(df, num_cores):
@@ -73,13 +77,10 @@ def create_alpha_df(rows, print_df=False):
                     ]
     search_keys = np.random.choice(test_strings, rows, replace=False)
     search_keys.sort()
-    result1 = np.arange(rows)
-    result2 = np.arange(rows, 0, -1)
-    # result1 = np.random.choice(test_strings, rows, replace=True)
-    # result2 = np.random.choice(test_strings, rows, replace=True)
+    result1 = np.random.choice(test_strings, rows, replace=True)
+    result2 = np.random.choice(test_strings, rows, replace=True)
     df = pd.DataFrame({0: search_keys, 1: result1, 2: result2})
     values = pd.Series(np.random.choice(test_strings, rows, replace=False))
-    # col_idxes = pd.concat([pd.Series(np.full(rows // 2, 2)), pd.Series(np.full(rows // 2, 3))])
     col_idxes = pd.Series(np.full(rows, 3))
     print(f"Generated input in {time() - start_time} seconds.")
     if print_df:
@@ -128,3 +129,26 @@ def get_df(child: RefExecutionNode) -> pd.DataFrame:
 # Clean string values by removing quotations.
 def clean_string_values(values: pd.Series):
     return values.map(lambda x: x.strip('"').strip("'") if isinstance(x, str) else x)
+
+
+def get_ref_df(table: Table, sub_plan):
+    full_table = table.get_table_content()
+    ref, ref_type = sub_plan.ref, sub_plan.out_ref_type
+    row, col, last_row, last_col = ref.row, ref.col, ref.last_row, ref.last_col
+    if last_row == row and last_col == col and ref_type == RefType.RR or ref_type == RefType.RF:
+        last_row = full_table.shape[0]
+    return full_table.iloc[row: last_row + 1, col: last_col + 1]
+
+
+def get_ref_series(plan_executor: PlanExecutor, table: Table, sub_plan, size: int):
+    if isinstance(sub_plan, LiteralNode):
+        result = pd.Series(np.full(size, sub_plan.literal))
+    elif isinstance(sub_plan, RefNode):
+        result = get_ref_df(table, sub_plan)
+    else:
+        result = get_ref_df(plan_executor.execute_formula_plan(table, sub_plan), sub_plan)
+    if result.shape == (1, 1):
+        result = pd.Series(np.full(size, result))
+    if isinstance(result, pd.DataFrame):
+        result = result.iloc[:, 0]
+    return result

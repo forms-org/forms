@@ -14,6 +14,7 @@
 
 import numpy as np
 import pandas as pd
+import string
 
 from forms.core.forms import config
 from forms.core.config import forms_config
@@ -44,20 +45,35 @@ test_df = pd.DataFrame(
 )
 
 
+DF_ROWS = 250000
+
+test_strings = [i + j + k + x + y
+    for i in string.ascii_lowercase
+    for j in string.ascii_lowercase
+    for k in string.ascii_lowercase
+    for x in string.ascii_lowercase
+    for y in string.ascii_lowercase
+]
+
+np.random.seed(1)
+
 # Larger test dataframe. 12 columns, 1000 rows
 test_df_big = pd.DataFrame(
     {
-        "col1": ["A", "B", "C", "D"] * 250,
-        "col2": [1] * 1000,
-        "col3": range(1000),
-        "col4": [1, 2, 3, 4] * 250,
-        "col5": [-1, 2, -3, 4] * 250,
-        "col6": [0] * 1000,
-        "col7": [0.4111, 1.6222, 2.93333333, 3.999] * 250,
-        "col8": [0, 30, 60, 90] * 250,
-        "col9": ["I", "VI", "IX", "ML"] * 250,
-        "col10": [np.pi / 2] * 1000,
-        "col11": [2] * 1000,
-        "col12": [16] * 1000,
+        "col1": np.tile(["A", "B", "C", "D"], (DF_ROWS // 4)),
+        "col2": np.tile([1], DF_ROWS),
+        "col3": range(DF_ROWS),
+        "col4": np.tile([1, 2, 3, 4], (DF_ROWS // 4)),
+        "col5": np.tile([-1, 2, -3, 4], (DF_ROWS // 4)),
+        "col6": np.tile([0], DF_ROWS),
+        "col7": np.tile([0.4111, 1.6222, 2.93333333, 3.999], (DF_ROWS // 4)),
+        "col8": np.tile([0, 30, 60, 90], (DF_ROWS // 4)),
+        "col9": np.tile(["I", "VI", "IX", "ML"], (DF_ROWS // 4)),
+        "col10": np.tile([np.pi / 2], DF_ROWS),
+        "col11": np.tile([2], DF_ROWS),
+        "col12": np.tile([16], DF_ROWS),
+        "col13": test_strings[:DF_ROWS],
+        "col14": range(DF_ROWS),
+        "col15": np.random.choice(test_strings, DF_ROWS, replace=False)
     }
 )

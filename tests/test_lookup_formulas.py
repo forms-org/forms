@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 import forms
-from tests.test_config import test_df_big
+from tests.test_config import test_df_big, DF_ROWS
 
 df = pd.DataFrame([])
 
@@ -25,56 +25,61 @@ df = pd.DataFrame([])
 def execute_before_and_after_one_test():
     global df
     df = test_df_big
-    forms.config(cores=4, function_executor="df_pandas_executor", partition_shape=(4, 1))
+    cores = 4
+    forms.config(cores=cores, function_executor="df_pandas_executor", partition_shape=(cores, 1))
     yield
 
 
 def test_compute_lookup():
     global df
-    computed_df = forms.compute_formula(df, "=LOOKUP(C1 + 0.5, C1:C1000, G1:G1000)")
-    expected_df = pd.DataFrame(np.array([0.4111, 1.6222, 2.93333333, 3.999] * 250))
+    computed_df = forms.compute_formula(df, f"=LOOKUP(C1 + 0.5, C1:C{DF_ROWS}, G1:G{DF_ROWS})")
+    expected_df = pd.DataFrame(np.tile([0.4111, 1.6222, 2.93333333, 3.999], DF_ROWS // 4))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=LOOKUP(C1, C1:G1000)")
-    expected_df = pd.DataFrame(np.array([0.4111, 1.6222, 2.93333333, 3.999] * 250))
+    computed_df = forms.compute_formula(df, f"=LOOKUP(C1, C1:G{DF_ROWS})")
+    expected_df = pd.DataFrame(np.tile([0.4111, 1.6222, 2.93333333, 3.999], DF_ROWS // 4))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=LOOKUP(1.5, C1:C1000, G1:G1000)")
-    expected_df = pd.DataFrame(np.array([1.6222] * 1000))
+    computed_df = forms.compute_formula(df, f"=LOOKUP(1.5, C1:C{DF_ROWS}, G1:G{DF_ROWS})")
+    expected_df = pd.DataFrame(np.tile(1.6222, DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=LOOKUP(1.5, C1:G1000)")
-    expected_df = pd.DataFrame(np.array([1.6222] * 1000))
+    computed_df = forms.compute_formula(df, f"=LOOKUP(1.5, C1:G{DF_ROWS})")
+    expected_df = pd.DataFrame(np.tile(1.6222, DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=LOOKUP(-1, C1:C1000, G1:G1000)")
+    computed_df = forms.compute_formula(df, f"=LOOKUP(-1, C1:C{DF_ROWS}, G1:G{DF_ROWS})")
     assert computed_df.iloc[:, 0].isnull().all()
 
 
 def test_compute_vlookup_exact():
     global df
-    computed_df = forms.compute_formula(df, '=VLOOKUP("B", A1:I1000, 3, FALSE)')
-    expected_df = pd.DataFrame(np.array([1] * 1000))
+    computed_df = forms.compute_formula(df, f'=VLOOKUP("B", A1:I{DF_ROWS}, 3, FALSE)')
+    expected_df = pd.DataFrame(np.tile([1], DF_ROWS))
     assert np.array_equal(computed_df.values, expected_df.values)
-    computed_df = forms.compute_formula(df, "=VLOOKUP(1, C1:I1000, 5, 0)")
-    expected_df = pd.DataFrame(np.array([1.6222] * 1000))
+    computed_df = forms.compute_formula(df, f"=VLOOKUP(1, C1:I{DF_ROWS}, 5, 0)")
+    expected_df = pd.DataFrame(np.tile([1.6222], DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=VLOOKUP(1.5, C1:I1000, 5, FALSE)")
+    computed_df = forms.compute_formula(df, f"=VLOOKUP(1.5, C1:I{DF_ROWS}, 5, FALSE)")
     assert computed_df.iloc[:, 0].isnull().all()
 
 
 def test_compute_vlookup_approx():
     global df
-    computed_df = forms.compute_formula(df, "=VLOOKUP(1.5, C1:I1000, 5, 1)")
-    expected_df = pd.DataFrame(np.array([1.6222] * 1000))
+    computed_df = forms.compute_formula(df, f"=VLOOKUP(1.5, C1:I{DF_ROWS}, 5, 1)")
+    expected_df = pd.DataFrame(np.tile([1.6222], DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    computed_df = forms.compute_formula(df, "=SUM(VLOOKUP(1.5, C1:I1000, 5, 1), VLOOKUP(1.5, C1:I1000, 5, 1))")
-    expected_df = pd.DataFrame(np.array([3.2444] * 1000))
+    computed_df = forms.compute_formula(df, f"=SUM(VLOOKUP(1.5, C1:I{DF_ROWS}, 5, 1), VLOOKUP(1.5, C1:I{DF_ROWS}, 5, 1))")
+    expected_df = pd.DataFrame(np.tile([3.2444], DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    # computed_df = forms.compute_formula(df, "=VLOOKUP(1001, C1:I1000, 5, TRUE)")
-    # expected_df = pd.DataFrame(np.array([3.999] * 1000))
-    # assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    # computed_df = forms.compute_formula(df, "=VLOOKUP(-1, C1:I1000, 5, 1)")
-    # assert computed_df.iloc[:, 0].isnull().all()
-    # computed_df = forms.compute_formula(df, "=VLOOKUP(C1, $C$1:$I$1000, $C$6)")
-    # expected_df = pd.DataFrame(np.array([0.4111, 1.6222, 2.93333333, 3.999] * 250))
-    # assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
-    # computed_df = forms.compute_formula(df, "=VLOOKUP($C$4, C1:I1000, $C$6)")
-    # expected_df = pd.DataFrame(np.array([3.999] * 1000))
-    # assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, f"=VLOOKUP({DF_ROWS + 1}, C1:I{DF_ROWS}, 5, TRUE)")
+    expected_df = pd.DataFrame(np.tile([3.999], DF_ROWS))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, f"=VLOOKUP(-1, C1:I{DF_ROWS}, 5, 1)")
+    assert computed_df.iloc[:, 0].isnull().all()
+    computed_df = forms.compute_formula(df, f"=VLOOKUP(C1, C1:I{DF_ROWS}, $C$6)")
+    expected_df = pd.DataFrame(np.tile([0.4111, 1.6222, 2.93333333, 3.999], (DF_ROWS // 4)))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, f"=VLOOKUP($C$4, C1:I{DF_ROWS}, $C$6)")
+    expected_df = pd.DataFrame(np.tile([3.999], DF_ROWS))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+
+    # Below executions are for performance only
+    forms.compute_formula(df, f"=TRIM(VLOOKUP(M1, M1:O{DF_ROWS}, 3))")
+    forms.compute_formula(df, f"=VLOOKUP(M1, M1:O{DF_ROWS}, 3)")
