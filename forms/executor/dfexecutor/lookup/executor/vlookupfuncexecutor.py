@@ -16,22 +16,20 @@ import pandas as pd
 from forms.executor.table import DFTable
 from forms.executor.executionnode import FunctionExecutionNode
 from forms.executor.dfexecutor.utils import (
-    construct_df_table,
     get_execution_node_n_formula,
+    construct_df_table,
     get_single_value,
 )
 from forms.executor.dfexecutor.lookup.utils.utils import (
-    clean_col_idxes,
     clean_string_values,
     get_df,
-    get_literal_value,
+    get_literal_value
 )
 from forms.executor.dfexecutor.lookup.api import vlookup
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, df, col_idxes, approx = get_vlookup_params(physical_subtree)
-    values, col_idxes = values.iloc[:, 0], col_idxes.iloc[:, 0]
     result_df = vlookup(values, df, col_idxes, approx=approx)
     return construct_df_table(result_df)
 
@@ -45,10 +43,9 @@ def get_vlookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
 
     # Retrieve params
     size = get_execution_node_n_formula(children[1])
-    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size))
+    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size).iloc[:, 0])
     df: pd.DataFrame = get_df(children[1])
-    col_idxes: pd.DataFrame = clean_col_idxes(get_literal_value(children[2], size))
-    approx: bool = True
+    col_idxes: pd.DataFrame = get_literal_value(children[2], size).iloc[:, 0].astype(int)
     if len(children) == 4:
         approx = get_single_value(children[3]) != 0
 

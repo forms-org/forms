@@ -24,17 +24,12 @@ from forms.executor.dfexecutor.utils import get_single_value
 # Splits the df into bins for range partitioning.
 def get_df_bins(df, num_cores):
     search_keys = df.iloc[:, 0] if isinstance(df, pd.DataFrame) else df
-    idx_bins = []
-    bins = []
+    idx_bins, bins = [0], []
     for i in range(num_cores):
-        start_idx = (i * df.shape[0]) // num_cores
         end_idx = ((i + 1) * df.shape[0]) // num_cores
-        if start_idx == 0:
-            idx_bins.append(0)
         idx_bins.append(end_idx - 1)
         bins.append(search_keys[end_idx - 1])
-    bins.pop(-1)
-    return bins, idx_bins
+    return bins[:-1], idx_bins
 
 
 # Gets bins for df based on the quantiles of values. Only works with numerical inputs.
@@ -131,10 +126,5 @@ def get_df(child: RefExecutionNode) -> pd.DataFrame:
 
 
 # Clean string values by removing quotations.
-def clean_string_values(values: pd.DataFrame):
-    return values.applymap(lambda x: x.strip('"').strip("'") if isinstance(x, str) else x)
-
-
-# Clean column indices by casting floats to integers.
-def clean_col_idxes(col_idxes: pd.DataFrame):
-    return col_idxes.applymap(lambda x: int(x))
+def clean_string_values(values: pd.Series):
+    return values.map(lambda x: x.strip('"').strip("'") if isinstance(x, str) else x)
