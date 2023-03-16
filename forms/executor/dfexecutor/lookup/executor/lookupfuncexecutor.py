@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import pandas as pd
 
 from forms.executor.table import DFTable
@@ -29,7 +30,6 @@ from forms.executor.planexecutor import PlanExecutor
 
 def lookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     values, search_range, result_range = get_lookup_params(physical_subtree)
-    values = values.iloc[:, 0]
     result_df = lookup(values, search_range, result_range)
     return construct_df_table(result_df)
 
@@ -43,7 +43,7 @@ def get_lookup_params(physical_subtree: FunctionExecutionNode) -> tuple:
 
     # Retrieve params
     size = get_execution_node_n_formula(children[1])
-    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size))
+    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size).iloc[:, 0])
     search_range: pd.DataFrame = get_df(children[1])
     if num_children == 2:
         result_range = search_range.iloc[:, -1]

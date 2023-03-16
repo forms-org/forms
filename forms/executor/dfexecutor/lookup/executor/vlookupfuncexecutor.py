@@ -36,10 +36,12 @@ from forms.executor.planexecutor import PlanExecutor
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    values, df, col_idxes, approx = get_vlookup_params_broadcast_df(physical_subtree)
+    values, df, col_idxes, approx = get_vlookup_params_broadcast_values(physical_subtree)
     result_df = vlookup(values, df, col_idxes, approx=approx)
     if result_df is None:
         result_df = pd.DataFrame([])
+    elif len(result_df) == len(values):
+        result_df = result_df.set_index(values.index)
     return construct_df_table(result_df)
 
 
@@ -85,43 +87,49 @@ def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode)
     cores = physical_subtree.cores
     subtree_idx = physical_subtree.subtree_idx
 
-    # calculate global bins
+    # get df, values and col_idxes
     df_child = physical_subtree.children[1]
+    ref, context = df_child.ref, df_child.exec_context
     full_df = df_child.table.get_table_content()
-    bins = get_df_bins(full_df.iloc[:, df_child.ref.col], cores)[0]
-
-    # get values and col_idxes
     values_child = physical_subtree.children[0]
     col_idxes_child: RefExecutionNode = physical_subtree.children[2]
-    all_values = get_full_node_df(full_df, values_child)
+    all_values = clean_string_values(get_full_node_df(full_df, values_child))
     all_col_idxes = get_full_node_df(full_df, col_idxes_child).astype(int)
-
-    # bin locally
-    binned_data = pd.Series(np.searchsorted(bins, all_values), index=all_values.index)
-    values = all_values[binned_data == subtree_idx]
-    col_idxes = all_col_idxes[binned_data == subtree_idx]
-
-    ref, context = df_child.ref, df_child.exec_context
-    start, end = context.start_formula_idx, context.end_formula_idx
-    df: pd.DataFrame = full_df.iloc[start: end, ref.col: ref.last_col + 1]
-
     approx = True
     if len(children) == 4:
         approx = get_single_value(children[3]) != 0
+
+    full_df = full_df.iloc[:, ref.col: ref.last_col + 1]
+    if approx:
+        bins = get_df_bins(full_df.iloc[:, 0], cores)[0]
+        binned_data = pd.Series(np.searchsorted(bins, all_values), index=all_values.index)
+        values = all_values[binned_data == subtree_idx]
+        col_idxes = all_col_idxes[binned_data == subtree_idx]
+        start, end = context.start_formula_idx, context.end_formula_idx
+        df: pd.DataFrame = full_df.iloc[start: end]
+    else:
+        values_hash = pd.util.hash_array(all_values.to_numpy()) % cores
+        search_range = full_df.iloc[:, 0].astype(all_values.dtype)
+        search_range_hash = pd.util.hash_array(search_range.to_numpy()) % cores
+        values = all_values[values_hash == subtree_idx]
+        col_idxes = all_col_idxes[values_hash == subtree_idx]
+        df = full_df[search_range_hash == subtree_idx]
 
     return values, df, col_idxes, approx
 
 
 def vlookup_plan_executor(plan_executor: PlanExecutor, df_table, formula_plan, size, client):
     sub_plans = formula_plan.children
+    assert len(sub_plans) == 3 or len(sub_plans) == 4
 
-    values = get_ref_series(plan_executor, df_table, sub_plans[0], size)
+    values = clean_string_values(get_ref_series(plan_executor, df_table, sub_plans[0], size))
     df = get_ref_df(plan_executor.execute_formula_plan(df_table, sub_plans[1]), sub_plans[1])
-    col_idxes = get_ref_series(plan_executor, df_table, sub_plans[2], size)
+    col_idxes = get_ref_series(plan_executor, df_table, sub_plans[2], size).astype(int)
     approx = True
     if len(sub_plans) == 4:
         if isinstance(sub_plans[3], LiteralNode):
-            approx = sub_plans[3].literal
+            literal = sub_plans[3].literal
+            approx = literal != 0 and str(literal).strip().lower() != "false"
 
     res = vlookup(values, df, col_idxes.astype(int), approx, dask_client=client)
     return DFTable(df=res)

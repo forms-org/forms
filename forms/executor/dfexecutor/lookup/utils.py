@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import numpy as np
 import pandas as pd
 
@@ -152,3 +153,12 @@ def get_ref_series(plan_executor: PlanExecutor, table: Table, sub_plan, size: in
     if isinstance(result, pd.DataFrame):
         result = result.iloc[:, 0]
     return result
+
+
+def combine_results(results, size):
+    dtypes = [r.dtypes[0] for r in results if len(r.dtypes) > 0]
+    dtype = object if len(dtypes) == 0 else dtypes[0]
+    result = np.empty(size, dtype=dtype)
+    for r in results:
+        np.put(result, r.index, r)
+    return pd.DataFrame(result)

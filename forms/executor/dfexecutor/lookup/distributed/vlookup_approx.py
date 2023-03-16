@@ -11,12 +11,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import numpy as np
 import pandas as pd
 from typing import Callable
 from dask.distributed import Client, get_client
 
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils import get_df_bins, combine_results
 
 
 # Partitions a dataframe based on bins and groups by the bin id.
@@ -80,7 +81,4 @@ def vlookup_approx_distributed(client: Client,
         result_futures.append(future)
 
     results = client.gather(result_futures)
-    result = np.empty(len(values), dtype=results[0].dtypes[0])
-    for r in results:
-        np.put(result, r.index, r)
-    return pd.DataFrame(result)
+    return combine_results(results, len(values))

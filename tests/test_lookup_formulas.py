@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import pytest
 import pandas as pd
 import numpy as np
@@ -58,6 +59,9 @@ def test_compute_vlookup_exact():
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
     computed_df = forms.compute_formula(df, f"=VLOOKUP(1.5, C1:I{DF_ROWS}, 5, FALSE)")
     assert computed_df.iloc[:, 0].isnull().all()
+    computed_df = forms.compute_formula(df, f'=VLOOKUP(M1, M1:O{DF_ROWS}, 2)')
+    expected_df = pd.DataFrame(np.arange(DF_ROWS))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
 
 
 def test_compute_vlookup_approx():
@@ -78,6 +82,9 @@ def test_compute_vlookup_approx():
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
     computed_df = forms.compute_formula(df, f"=VLOOKUP($C$4, C1:I{DF_ROWS}, $C$6)")
     expected_df = pd.DataFrame(np.tile([3.999], DF_ROWS))
+    assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
+    computed_df = forms.compute_formula(df, f'=VLOOKUP("aaaaa", M1:O{DF_ROWS}, 2)')
+    expected_df = pd.DataFrame(np.tile([0], DF_ROWS))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
 
     # Below executions are for performance only

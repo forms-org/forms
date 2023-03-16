@@ -45,7 +45,7 @@ test_df = pd.DataFrame(
 )
 
 
-DF_ROWS = 250000
+DF_ROWS = 1000000
 
 test_strings = [i + j + k + x + y
     for i in string.ascii_lowercase

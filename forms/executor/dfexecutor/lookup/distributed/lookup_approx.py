@@ -11,15 +11,17 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import numpy as np
 import pandas as pd
 from collections.abc import Callable
 from dask.distributed import Client
+
 from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import (
     vlookup_approx_distributed,
     range_partition_df_distributed
 )
-from forms.executor.dfexecutor.lookup.utils import get_df_bins
+from forms.executor.dfexecutor.lookup.utils import get_df_bins, combine_results
 
 
 # A version of LOOKUP that reduces the problem to VLOOKUP.
@@ -73,9 +75,5 @@ def lookup_approx_distributed(client: Client,
         result_futures.append(future)
 
     results = client.gather(result_futures)
-    dtypes = [r.dtypes[0] for r in results if len(r.dtypes) > 0]
-    dtype = object if len(dtypes) == 0 else dtypes[0]
-    result = np.empty(len(values), dtype=dtype)
-    for r in results:
-        np.put(result, r.index, r)
-    return pd.DataFrame(result)
+    return combine_results(results, len(values))
+
