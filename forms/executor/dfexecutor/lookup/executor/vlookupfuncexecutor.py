@@ -36,7 +36,10 @@ from forms.executor.planexecutor import PlanExecutor
 
 
 def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
-    values, df, col_idxes, approx = get_vlookup_params_broadcast_values(physical_subtree)
+    children = physical_subtree.children
+    num_children = len(children)
+    assert num_children == 3 or num_children == 4
+    values, df, col_idxes, approx = get_vlookup_params_broadcast_df(physical_subtree)
     result_df = vlookup(values, df, col_idxes, approx=approx)
     if result_df is None:
         result_df = pd.DataFrame([])
@@ -45,61 +48,57 @@ def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return construct_df_table(result_df)
 
 
-# Retrives parameters for VLOOKUP.
-def get_vlookup_params_broadcast_df(physical_subtree: FunctionExecutionNode) -> tuple:
-    # Verify VLOOKUP param count
-    children = physical_subtree.children
-    num_children = len(children)
-    assert num_children == 3 or num_children == 4
-
-    # Retrieve params
-    size = get_execution_node_n_formula(children[1])
-    values: pd.DataFrame = clean_string_values(get_literal_value(children[0], size).iloc[:, 0])
-    df: pd.DataFrame = get_df(children[1])
-    col_idxes: pd.DataFrame = get_literal_value(children[2], size).iloc[:, 0].astype(int)
-    approx = True
-    if len(children) == 4:
-        approx = get_single_value(children[3]) != 0
-
-    return values, df, col_idxes, approx
-
-
-def get_full_node_df(df, child):
+def get_series_from_full_df(df, child):
     if isinstance(child, RefExecutionNode):
-        row, col = child.ref.row, child.ref.col
+        row, last_row, col, last_col = child.ref.row, child.ref.last_row, child.ref.col, child.ref.last_col
         if child.out_ref_type == RefType.FF:
-            v = child.table.get_table_content().iloc[row, col]
+            v = df.iloc[row, col]
             return pd.Series(np.full(df.shape[0], v))
-        else:
+        elif row == last_row:
             return df.iloc[:, col]
+        return df.iloc[row: last_row + 1, col: last_col + 1]
     else:
         assert isinstance(child, LitExecutionNode)
         return pd.Series(np.full(df.shape[0], child.literal))
 
 
-# Retrives parameters for VLOOKUP.
-def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode) -> tuple:
-    # Verify VLOOKUP param count
+def get_vlookup_params_broadcast_df(physical_subtree: FunctionExecutionNode) -> tuple:
     children = physical_subtree.children
-    num_children = len(children)
-    assert num_children == 3 or num_children == 4
+    values_child = physical_subtree.children[0]
+    df_child: RefExecutionNode = physical_subtree.children[1]
+    col_idxes_child = physical_subtree.children[2]
 
+    df_ref, context = df_child.ref, df_child.exec_context
+    start, end = context.start_formula_idx, context.end_formula_idx
+
+    full_df = df_child.table.get_table_content()
+    all_values = clean_string_values(get_series_from_full_df(full_df, values_child))
+    all_col_idxes = get_series_from_full_df(full_df, col_idxes_child).astype(int)
+
+    values: pd.DataFrame = all_values.iloc[start: end]
+    df: pd.DataFrame = full_df.iloc[:, df_ref.col: df_ref.last_col + 1]
+    col_idxes: pd.DataFrame = all_col_idxes.iloc[start: end]
+    approx = get_single_value(children[3]) != 0 if len(children) == 4 else True
+
+    return values, df, col_idxes, approx
+
+
+def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode) -> tuple:
+    children = physical_subtree.children
     cores = physical_subtree.cores
     subtree_idx = physical_subtree.subtree_idx
 
-    # get df, values and col_idxes
-    df_child = physical_subtree.children[1]
-    ref, context = df_child.ref, df_child.exec_context
-    full_df = df_child.table.get_table_content()
     values_child = physical_subtree.children[0]
-    col_idxes_child: RefExecutionNode = physical_subtree.children[2]
-    all_values = clean_string_values(get_full_node_df(full_df, values_child))
-    all_col_idxes = get_full_node_df(full_df, col_idxes_child).astype(int)
-    approx = True
-    if len(children) == 4:
-        approx = get_single_value(children[3]) != 0
+    df_child = physical_subtree.children[1]
+    col_idxes_child = physical_subtree.children[2]
 
-    full_df = full_df.iloc[:, ref.col: ref.last_col + 1]
+    df_ref, context = df_child.ref, df_child.exec_context
+    full_df = df_child.table.get_table_content()
+    all_values = clean_string_values(get_series_from_full_df(full_df, values_child))
+    all_col_idxes = get_series_from_full_df(full_df, col_idxes_child).astype(int)
+    approx = get_single_value(children[3]) != 0 if len(children) == 4 else True
+
+    full_df = full_df.iloc[:, df_ref.col: df_ref.last_col + 1]
     if approx:
         bins = get_df_bins(full_df.iloc[:, 0], cores)[0]
         binned_data = pd.Series(np.searchsorted(bins, all_values), index=all_values.index)
