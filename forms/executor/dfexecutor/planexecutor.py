@@ -17,8 +17,9 @@ import numpy as np
 
 from time import time
 
-from forms.executor.dfexecutor.remotedf import partition_df, find_rows_and_cols, RemoteDF
-from forms.planner.plannode import PlanNode
+from forms.executor.dfexecutor.remotedf import partition_df, range_partition_df, hash_partition_df, find_rows_and_cols,\
+    RemoteDF, PartitionType
+from forms.planner.plannode import PlanNode, RefNode, LiteralNode
 from forms.executor.table import Table, DFTable
 from forms.executor.executionnode import Function, FunctionExecutionNode, create_intermediate_ref_node
 from forms.executor.planexecutor import PlanExecutor
@@ -60,6 +61,35 @@ class DFPlanExecutor(PlanExecutor):
         num_row_partitions = self.forms_config.partition_shape[0]
         num_col_partitions = self.forms_config.partition_shape[1]
         partitions = partition_df(df, num_row_partitions, num_col_partitions)
+        func = formula_plan.function
+        partition_type = PartitionType.BLOCK
+        if func == Function.VLOOKUP:
+            children = formula_plan.children
+            c0, c1, c2 = children[0], children[1], children[2]
+            if isinstance(c0, RefNode) and \
+                    isinstance(c1, RefNode) and \
+                    isinstance(c2, LiteralNode):
+                approx = True
+                if len(children) == 4:
+                    if isinstance(children[3], LiteralNode):
+                        literal = children[3].literal
+                        approx = literal != 0 and str(literal).strip().lower() != "false"
+                if approx:
+                    start = time()
+                    bin_col = df.iloc[:, c1.ref.col]
+                    bins = [bin_col[p[0].index[-1]] for p in partitions[:-1]]
+                    value_partitions = range_partition_df(df, c0.ref.col, bins)
+                    partitions = np.append(partitions, value_partitions, axis=1)
+                    partition_type = PartitionType.RANGE
+                    print(f"Range partitioning time: {time() - start}")
+                else:
+                    start = time()
+                    new_df = hash_partition_df(df, c1.ref.col, self.forms_config.cores, shuffle_entire_df=True)
+                    value_partitions = hash_partition_df(df, c0.ref.col, self.forms_config.cores)
+                    partitions = np.append(new_df, value_partitions, axis=1)
+                    partition_type = PartitionType.HASH
+                    print(f"Hash partitioning time: {time() - start}")
+
         rows, cols = find_rows_and_cols(partitions)
 
         start = time()
@@ -69,24 +99,22 @@ class DFPlanExecutor(PlanExecutor):
                 for one_row in partitions
             ]
         )
-        remote_df = RemoteDF(remote_object_array, rows, cols)
+        remote_df = RemoteDF(remote_object_array, rows, cols, partition_type=partition_type)
         df_table = DFTable(df, remote_df)
         distributing_data_time = time() - start
         print(f"Distributing data time: {distributing_data_time}")
         start = time()
-        func = formula_plan.function
-        if func in plan_level_executors:
+        if partition_type == PartitionType.BLOCK and func in plan_level_executors:
             res_table = plan_level_executors[func](super(), df_table, formula_plan, sum(rows), self.runtime.client)
         else:
             res_table = super().execute_formula_plan(df_table, formula_plan)
-
         execution_time = time() - start
         print(f"Execution time: {execution_time}")
 
         assert isinstance(res_table, DFTable)
         forms_global.put_one_metric("distributing_data_time", distributing_data_time)
         forms_global.put_one_metric("execution_time", execution_time)
-        return res_table.get_table_content()
+        return res_table.get_table_content(sort_index=(partition_type != PartitionType.BLOCK))
 
     def collect_results(self, remote_object_list, physical_subtree_list, axis: int) -> Table:
         shape = (len(remote_object_list), 1) if axis == axis_along_row else (1, len(remote_object_list))

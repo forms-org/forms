@@ -18,19 +18,9 @@ import pandas as pd
 from forms.executor.table import DFTable
 from forms.planner.plannode import LiteralNode, RefType
 from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
-from forms.executor.dfexecutor.utils import (
-    get_execution_node_n_formula,
-    construct_df_table,
-    get_single_value,
-)
-from forms.executor.dfexecutor.lookup.utils import (
-    clean_string_values,
-    get_df,
-    get_literal_value,
-    get_df_bins,
-    get_ref_df,
-    get_ref_series
-)
+from forms.executor.dfexecutor.remotedf import PartitionType
+from forms.executor.dfexecutor.utils import construct_df_table, get_single_value
+from forms.executor.dfexecutor.lookup.utils import clean_string_values, get_df_bins, get_ref_df, get_ref_series
 from forms.executor.dfexecutor.lookup.api import vlookup
 from forms.executor.planexecutor import PlanExecutor
 
@@ -39,13 +29,39 @@ def vlookup_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     children = physical_subtree.children
     num_children = len(children)
     assert num_children == 3 or num_children == 4
-    values, df, col_idxes, approx = get_vlookup_params_broadcast_df(physical_subtree)
+    if children[1].table.get_partition_type() == PartitionType.BLOCK:
+        values, df, col_idxes, approx = get_vlookup_params_broadcast_df(physical_subtree)
+    else:
+        values, df, col_idxes, approx = get_vlookup_params_shuffle(physical_subtree)
+
     result_df = vlookup(values, df, col_idxes, approx=approx)
     if result_df is None:
         result_df = pd.DataFrame([])
     elif len(result_df) == len(values):
         result_df = result_df.set_index(values.index)
     return construct_df_table(result_df)
+
+
+def get_vlookup_params_shuffle(physical_subtree: FunctionExecutionNode) -> tuple:
+    subtree_idx = physical_subtree.subtree_idx
+
+    children = physical_subtree.children
+    values_child = physical_subtree.children[0]
+    df_child: RefExecutionNode = physical_subtree.children[1]
+    col_idxes_child = physical_subtree.children[2]
+
+    df_ref, context = df_child.ref, df_child.exec_context
+    assert isinstance(df_child.table, DFTable)
+    full_df = df_child.table.get_df_partition(subtree_idx, 0)
+    start, end = min(context.start_formula_idx, full_df.index[0]), max(context.end_formula_idx, full_df.index[-1] + 1)
+
+    df = full_df.loc[start: end].iloc[:, df_ref.col: df_ref.last_col + 1]
+    values = clean_string_values(values_child.table.get_df_partition(subtree_idx, 1).iloc[:, 0])
+    col_idxes = pd.Series(np.full(len(values), col_idxes_child.literal), dtype=int)
+
+    approx = get_single_value(children[3]) != 0 if len(children) == 4 else True
+
+    return values, df, col_idxes, approx
 
 
 def get_series_from_full_df(df, child):
@@ -84,10 +100,10 @@ def get_vlookup_params_broadcast_df(physical_subtree: FunctionExecutionNode) -> 
 
 
 def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode) -> tuple:
-    children = physical_subtree.children
     cores = physical_subtree.cores
     subtree_idx = physical_subtree.subtree_idx
 
+    children = physical_subtree.children
     values_child = physical_subtree.children[0]
     df_child = physical_subtree.children[1]
     col_idxes_child = physical_subtree.children[2]

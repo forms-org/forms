@@ -62,7 +62,7 @@ test_df_big = pd.DataFrame(
     {
         "col1": np.tile(["A", "B", "C", "D"], (DF_ROWS // 4)),
         "col2": np.tile([1], DF_ROWS),
-        "col3": range(DF_ROWS),
+        "col3": np.arange(DF_ROWS),
         "col4": np.tile([1, 2, 3, 4], (DF_ROWS // 4)),
         "col5": np.tile([-1, 2, -3, 4], (DF_ROWS // 4)),
         "col6": np.tile([0], DF_ROWS),
@@ -73,7 +73,7 @@ test_df_big = pd.DataFrame(
         "col11": np.tile([2], DF_ROWS),
         "col12": np.tile([16], DF_ROWS),
         "col13": test_strings[:DF_ROWS],
-        "col14": range(DF_ROWS),
+        "col14": np.arange(DF_ROWS - 1, -1, -1),
         "col15": np.random.choice(test_strings, DF_ROWS, replace=False)
     }
 )

@@ -52,12 +52,18 @@ class DFTable(Table):
             return self.remote_df.get_num_of_cols()
         return self.df.shape[1]
 
-    def get_table_content(self) -> pd.DataFrame:
+    def get_table_content(self, sort_index=False) -> pd.DataFrame:
         if self.df is None:
             start = time()
-            self.df = self.remote_df.get_df_content()
+            self.df = self.remote_df.get_df_content(sort_index=sort_index)
             # print(f"Get table content time: {time() - start}")
         return self.df
+
+    def get_df_partition(self, row_part_idx, col_part_idx) -> pd.DataFrame:
+        return self.remote_df.get_df_partition(row_part_idx, col_part_idx)
+
+    def get_partition_type(self):
+        return self.remote_df.partition_type
 
     def gen_table_for_execution(self) -> Table:
         return DFTable(None, remote_df=self.remote_df)

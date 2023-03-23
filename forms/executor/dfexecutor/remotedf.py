@@ -13,6 +13,7 @@
 #  limitations under the License.
 import numpy as np
 import pandas as pd
+from enum import Enum, auto
 import math
 
 from forms.executor.dfexecutor.remotepartition import RemotePartition
@@ -36,10 +37,35 @@ def partition_df(df: pd.DataFrame, num_row_partitions=1, num_col_partitions=1):
     return partitions
 
 
+def range_partition_df(df: pd.DataFrame, col_idx: int, bins: list[int]):
+    partitions = np.empty(shape=(len(bins) + 1, 1), dtype=pd.DataFrame)
+    data = df.iloc[:, col_idx]
+    binned_df = pd.Series(np.searchsorted(bins, data), index=df.index)
+    for i in range(len(bins) + 1):
+        partitions[i][0] = data[binned_df == i].to_frame()
+    return partitions
+
+
+def hash_partition_df(df: pd.DataFrame, col_idx: int, cores: int, shuffle_entire_df=False):
+    partitions = np.empty(shape=(cores, 1), dtype=pd.DataFrame)
+    hash_col = df.iloc[:, col_idx]
+    hashed_df = pd.util.hash_array(hash_col.to_numpy()) % cores
+    data = df if shuffle_entire_df else hash_col.to_frame()
+    for i in range(cores):
+        partitions[i][0] = data[hashed_df == i]
+    return partitions
+
+
 def find_rows_and_cols(partitions: np.ndarray):
     rows = np.array([[one_partition.shape[0] for one_partition in one_row] for one_row in partitions])
     cols = np.array([[one_partition.shape[1] for one_partition in one_row] for one_row in partitions])
     return rows, cols
+
+
+class PartitionType(Enum):
+    BLOCK = auto()
+    RANGE = auto()
+    HASH = auto()
 
 
 class RemoteDF:
@@ -51,7 +77,9 @@ class RemoteDF:
         remote_partitions: np.ndarray = None,
         num_rows: int = None,
         num_cols: int = None,
+        partition_type: PartitionType = PartitionType.BLOCK
     ):
+        self.partition_type = partition_type
         if remote_partitions is not None:
             self.remote_partitions = remote_partitions
             self.num_rows = num_rows
@@ -75,19 +103,21 @@ class RemoteDF:
             self.num_rows = total_rows
             self.num_cols = total_cols
 
-    def get_df_content(self) -> pd.DataFrame:
-        return pd.concat(
-            [
-                pd.concat(
-                    [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
-                    axis=1,
-                    ignore_index=True,
-                )
-                for one_row in self.remote_partitions
-            ],
-            axis=0,
-            ignore_index=True,
-        )
+    def get_df_content(self, sort_index=False) -> pd.DataFrame:
+        row_partitions = [
+            pd.concat(
+                [one_partition.remote_obj.get_computed_result() for one_partition in one_row],
+                axis=1,
+                ignore_index=True,
+            )
+            for one_row in self.remote_partitions
+        ]
+        if not sort_index:
+            return pd.concat(row_partitions, axis=0, ignore_index=True)
+        return pd.concat(row_partitions, axis=0).sort_index()
+
+    def get_df_partition(self, row_part_idx, col_part_idx):
+        return self.remote_partitions[row_part_idx][col_part_idx].remote_obj.get_computed_result()
 
     def get_num_of_rows(self) -> int:
         return self.num_rows
