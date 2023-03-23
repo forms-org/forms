@@ -15,8 +15,9 @@ import numpy as np
 import pandas as pd
 
 from forms.executor.dfexecutor.lookup.algorithm.lookup_approx import lookup_pd_merge, lookup_np_vector
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_pd_merge, vlookup_approx_np_vector
-from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_pd_merge
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_approx import vlookup_approx_pd_merge, \
+    vlookup_approx_np_vector, vlookup_approx_constants
+from forms.executor.dfexecutor.lookup.algorithm.vlookup_exact import vlookup_exact_pd_merge, vlookup_exact_constants
 
 from forms.executor.dfexecutor.lookup.distributed.lookup_approx import lookup_approx_distributed
 from forms.executor.dfexecutor.lookup.distributed.vlookup_approx import vlookup_approx_distributed
@@ -74,7 +75,9 @@ def vlookup(values: pd.Series,
         df = df.astype({df.columns[0]: values.dtype})
 
     if approx:
-        if df.shape[1] == 1:
+        if values.nunique() == 1 and col_idxes.nunique() == 1:
+            return vlookup_approx_constants(values.iloc[0], df, col_idxes.iloc[0], len(values))
+        elif df.shape[1] == 1:
             return lookup(values, df.iloc[:, 0], df.iloc[:, 0], dask_client)
         elif df.shape[1] == 2:
             return lookup(values, df.iloc[:, 0], df.iloc[:, 1], dask_client)
@@ -87,7 +90,9 @@ def vlookup(values: pd.Series,
         else:
             return vlookup_approx_np_vector(values, df, col_idxes)
 
-    if distributed_enabled:
+    if values.nunique() == 1 and col_idxes.nunique() == 1:
+        return vlookup_exact_constants(values.iloc[0], df, col_idxes.iloc[0], len(values))
+    elif distributed_enabled:
         return vlookup_exact_distributed(dask_client, values, df, col_idxes, vlookup_exact_pd_merge)
     else:
         return vlookup_exact_pd_merge(values, df, col_idxes)

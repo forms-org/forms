@@ -81,3 +81,14 @@ def vlookup_approx_pd_merge(values, df, col_idxes) -> pd.DataFrame:
     res = pd.DataFrame(merged, index=sorted_values.index).sort_index().to_numpy()
     chosen = res[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
     return set_dtype(chosen)
+
+
+def vlookup_approx_constants(value, df, col_idx, size) -> pd.DataFrame:
+    if value < df.iloc[0, 0]:
+        val = np.nan
+    else:
+        row_idx = np.searchsorted(df.iloc[:, 0].to_numpy(), value)
+        if row_idx == size or df.iloc[row_idx, 0] != value:
+            row_idx -= 1
+        val = df.iloc[row_idx, int(col_idx - 1)]
+    return pd.DataFrame(np.full(size, val))

@@ -75,3 +75,12 @@ def vlookup_exact_pd_merge(values, df, col_idxes) -> pd.DataFrame:
     chosen = merged[np.arange(len(col_idxes)), col_idxes.astype(int) - 1]
     res = pd.Series(chosen, index=values.index).sort_index().to_numpy()
     return set_dtype(res)
+
+
+def vlookup_exact_constants(value, df, col_idx, size) -> pd.DataFrame:
+    val = np.nan
+    search_range = df.iloc[:, 0]
+    matches = search_range[search_range == value].index
+    if len(matches) > 0:
+        val = df.iloc[matches[0], int(col_idx - 1)]
+    return pd.DataFrame(np.full(size, val))

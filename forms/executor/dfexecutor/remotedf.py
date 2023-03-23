@@ -49,7 +49,7 @@ def range_partition_df(df: pd.DataFrame, col_idx: int, bins: list[int]):
 def hash_partition_df(df: pd.DataFrame, col_idx: int, cores: int, shuffle_entire_df=False):
     partitions = np.empty(shape=(cores, 1), dtype=pd.DataFrame)
     hash_col = df.iloc[:, col_idx]
-    hashed_df = pd.util.hash_array(hash_col.to_numpy()) % cores
+    hashed_df = np.vectorize(hash)(hash_col) % cores
     data = df if shuffle_entire_df else hash_col.to_frame()
     for i in range(cores):
         partitions[i][0] = data[hashed_df == i]

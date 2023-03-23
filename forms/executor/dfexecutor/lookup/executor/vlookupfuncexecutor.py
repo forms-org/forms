@@ -53,13 +53,18 @@ def get_vlookup_params_shuffle(physical_subtree: FunctionExecutionNode) -> tuple
     df_ref, context = df_child.ref, df_child.exec_context
     assert isinstance(df_child.table, DFTable)
     full_df = df_child.table.get_df_partition(subtree_idx, 0)
-    start, end = min(context.start_formula_idx, full_df.index[0]), max(context.end_formula_idx, full_df.index[-1] + 1)
+
+    approx = get_single_value(children[3]) != 0 if len(children) == 4 else True
+
+    if approx:
+        ref_start, ref_end = context.start_formula_idx, context.end_formula_idx
+    else:
+        ref_start, ref_end = df_ref.row, df_ref.last_row + 1
+    start, end = min(ref_start, full_df.index[0]), max(ref_end, full_df.index[-1] + 1)
 
     df = full_df.loc[start: end].iloc[:, df_ref.col: df_ref.last_col + 1]
     values = clean_string_values(values_child.table.get_df_partition(subtree_idx, 1).iloc[:, 0])
     col_idxes = pd.Series(np.full(len(values), col_idxes_child.literal), dtype=int)
-
-    approx = get_single_value(children[3]) != 0 if len(children) == 4 else True
 
     return values, df, col_idxes, approx
 
@@ -123,9 +128,9 @@ def get_vlookup_params_broadcast_values(physical_subtree: FunctionExecutionNode)
         start, end = context.start_formula_idx, context.end_formula_idx
         df: pd.DataFrame = full_df.iloc[start: end]
     else:
-        values_hash = pd.util.hash_array(all_values.to_numpy()) % cores
+        values_hash = np.vectorize(hash)(all_values) % cores
         search_range = full_df.iloc[:, 0].astype(all_values.dtype)
-        search_range_hash = pd.util.hash_array(search_range.to_numpy()) % cores
+        search_range_hash = np.vectorize(hash)(search_range) % cores
         values = all_values[values_hash == subtree_idx]
         col_idxes = all_col_idxes[values_hash == subtree_idx]
         df = full_df[search_range_hash == subtree_idx]
