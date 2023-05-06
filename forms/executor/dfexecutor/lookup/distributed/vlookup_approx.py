@@ -14,6 +14,9 @@
 
 import numpy as np
 import pandas as pd
+
+from time import time
+
 from typing import Callable
 from dask.distributed import Client, get_client
 
@@ -69,6 +72,7 @@ def vlookup_approx_distributed(client: Client,
     bins, idx_bins = get_df_bins(df, num_cores)
     data = pd.DataFrame({'values': values, 'col_idxes': col_idxes})
 
+    start_time = time()
     binned_values = range_partition_df_distributed(client, data, bins)
 
     result_futures = []
@@ -80,5 +84,11 @@ def vlookup_approx_distributed(client: Client,
         future = client.submit(vlookup_approx_local, data_partitions, scattered_df, lookup_func, workers=worker_id)
         result_futures.append(future)
 
+    dist_time = time() - start_time
+    print(f'Distributing data time: {dist_time}')
+
+    start_time = time()
     results = client.gather(result_futures)
+    exec_time = time() - start_time
+    print(f'Execution time: {exec_time}')
     return combine_results(results, len(values))

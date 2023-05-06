@@ -25,7 +25,7 @@ from forms.executor.dfexecutor.lookup.distributed.vlookup_exact import vlookup_e
 
 
 # Arbitrary constant for number of rows to switch to distributed
-LOCAL_RECORD_LIMIT = 500_000
+LOCAL_RECORD_LIMIT = 0
 
 
 def lookup(values: pd.Series,

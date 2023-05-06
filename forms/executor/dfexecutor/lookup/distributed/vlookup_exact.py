@@ -11,9 +11,12 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-import numpy as np
 
+import numpy as np
 import pandas as pd
+
+from time import time
+
 from collections.abc import Callable
 from dask.distributed import Client, get_client
 
@@ -73,6 +76,7 @@ def vlookup_exact_distributed(client: Client,
     num_cores = len(workers)
     data = pd.DataFrame({'values': values, 'col_idxes': col_idxes})
 
+    start_time = time()
     data_hash_partitions, df_hash_partitions = hash_chunk_k_tables_distributed(client, [data, df])
 
     result_futures = []
@@ -82,5 +86,11 @@ def vlookup_exact_distributed(client: Client,
         future = client.submit(vlookup_exact_local, data_partitions, df_partitions, lookup_func, workers=workers[i])
         result_futures.append(future)
 
+    dist_time = time() - start_time
+    print(f'Distributing data time: {dist_time}')
+
+    start_time = time()
     results = client.gather(result_futures)
+    exec_time = time() - start_time
+    print(f'Execution time: {exec_time}')
     return combine_results(results, len(values))
