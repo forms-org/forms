@@ -14,18 +14,23 @@
 
 
 class FormSConfig:
-    def __init__(self):
-        self.cores = 1
-        self.scheduler = "simple"
-        self.enable_logical_rewriting = False
-        self.enable_physical_opt = False
-        self.runtime = "dask"
-        self.function_executor = "df_pandas_executor"
-        self.cost_model = "simple"
-        self.enable_communication_opt = False
-        self.enable_sumif_opt = False
-        self.along_row_first = False
-        self.partition_shape = (1, 1)
+    def __init__(self, enable_rewriting):
+        self.enable_rewriting = enable_rewriting
 
 
-forms_config = FormSConfig()
+class DFConfig(FormSConfig):
+    def __init__(self, enable_rewriting):
+        super().__init__(enable_rewriting)
+
+
+class DBConfig(FormSConfig):
+    def __init__(self, db_url: str, enable_rewriting):
+        super().__init__(enable_rewriting)
+        self.db_url = db_url
+
+
+class DFExecContext:
+    def __init__(self, start_formula_idx: int, end_formula_idx: int, axis: int):
+        self.start_formula_idx = start_formula_idx
+        self.end_formula_idx = end_formula_idx
+        self.axis = axis

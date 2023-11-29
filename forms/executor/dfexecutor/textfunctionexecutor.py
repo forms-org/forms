@@ -18,16 +18,9 @@
 import math
 
 import pandas as pd
-from forms.utils.reference import RefType
-from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode, RefExecutionNode, LitExecutionNode
-from forms.executor.dfexecutor.utils import (
-    construct_df_table,
-    get_single_value,
-    get_reference_indices,
-    fill_in_nan,
-    get_value_rr,
-)
+from forms.executor.dfexecutor.dftable import DFTable
+from forms.executor.dfexecutor.dfexecnode import DFFuncExecNode
+from forms.executor.dfexecutor.utils import construct_df_table, get_single_value
 from typing import Callable
 from forms.utils.exceptions import FormSException
 import re
@@ -38,7 +31,7 @@ from datetime import datetime, date, timedelta
 # Example usages: CONCATENATE(A1, A2, A3), CONCATENATE(A2:B7)
 
 
-def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def concat_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
@@ -46,10 +39,10 @@ def concat_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
         return s + "".join(to_concat)
 
     kwargs = {"to_concat": values[1:]}
-    return construct_df_table(values[0].applymap(concat, **kwargs))
+    return construct_df_table(values[0].map(concat, **kwargs))
 
 
-def concatenate_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def concatenate_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
@@ -57,11 +50,11 @@ def concatenate_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
         return s + "".join(to_concatenate)
 
     kwargs = {"to_concatenate": values[1:]}
-    return construct_df_table(values[0].applymap(concatenate, **kwargs))
+    return construct_df_table(values[0].map(concatenate, **kwargs))
 
 
 # 2 parameters, s1 and s2 to compare
-def exact_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def exact_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) == 2
     values = get_string_function_values(physical_subtree)
 
@@ -69,7 +62,7 @@ def exact_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
 
 # 2 parameters, search_for and text_to_search, optional 'starting at' 3rd parameter
-def find_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def find_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) >= 2
     values = get_string_function_values(physical_subtree)
 
@@ -78,14 +71,14 @@ def find_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
     if len(values) == 3:
         kwargs = {"search_for": values[0], "starting_at": values[2]}
-        return construct_df_table(values[1].applymap(find, **kwargs))
+        return construct_df_table(values[1].map(find, **kwargs))
     else:
         kwargs = {"search_for": values[0]}
-        return construct_df_table(values[1].applymap(find, **kwargs))
+        return construct_df_table(values[1].map(find, **kwargs))
 
 
 # 1 parameter, string, optional number_of_characters from left 2nd parameter (default = 1)
-def left_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def left_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) >= 1
     values = get_string_function_values(physical_subtree)
 
@@ -94,25 +87,25 @@ def left_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
     if len(values) == 2:
         kwargs = {"num_characters": values[1]}
-        return construct_df_table(values[0].applymap(left, **kwargs))
+        return construct_df_table(values[0].map(left, **kwargs))
     else:
-        return construct_df_table(values[0].applymap(left))
+        return construct_df_table(values[0].map(left))
 
 
 # 1 parameter
-def len_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def len_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: len(x))
 
 
 # 1 parameter
-def lower_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def lower_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.lower())
 
 
 # 3 parameters, string starting_at extract_length
 # First character in string = index 1
 # If we reach end of string before reading extract_length characters, return [starting_at:end of string]
-def mid_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def mid_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) == 3
     values = get_string_function_values(physical_subtree)
 
@@ -120,11 +113,11 @@ def mid_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
         return text[starting_at : min(starting_at + num_characters, len(text))]
 
     kwargs = {"starting_at": values[1], "num_characters": values[2]}
-    return construct_df_table(values[0].applymap(mid, **kwargs))
+    return construct_df_table(values[0].map(mid, **kwargs))
 
 
 # 4 parameters, text, position, length, new_text
-def replace_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def replace_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) == 4
     values = get_string_function_values(physical_subtree)
 
@@ -132,11 +125,11 @@ def replace_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
         return text[:position] + new_text + text[position + length :]
 
     kwargs = {"position": values[1], "length": values[2], "new_text": values[3]}
-    return construct_df_table(values[0].applymap(replace, **kwargs))
+    return construct_df_table(values[0].map(replace, **kwargs))
 
 
 # 1 parameter, string, optional number_of_characters from right 2nd parameter (default = 1)
-def right_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def right_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert len(physical_subtree.children) >= 1
     values = get_string_function_values(physical_subtree)
 
@@ -145,18 +138,18 @@ def right_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 
     if len(values) == 2:
         kwargs = {"num_characters": values[1]}
-        return construct_df_table(values[0].applymap(right, **kwargs))
+        return construct_df_table(values[0].map(right, **kwargs))
     else:
-        return construct_df_table(values[0].applymap(right))
+        return construct_df_table(values[0].map(right))
 
 
 # 1 parameter
-def trim_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def trim_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.strip())
 
 
 # 1 parameter
-def upper_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def upper_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return apply_single_value_func(physical_subtree, lambda x: x.upper())
 
 
@@ -164,7 +157,7 @@ def upper_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
 # If string, check that each character is alphanumeric else remove
 # If time, returns a float from 0 to 1. Eqn: # seconds in parameter number / # seconds in a day
 # If date, regex for date format
-def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def value_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def value(text):
         try:
             # Handle certain inputs, expect well-formatted inputs so we can just search for ':'
@@ -231,12 +224,12 @@ def value_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return apply_single_value_func(physical_subtree, value)
 
 
-def get_string_function_value(physical_subtree: FunctionExecutionNode) -> pd.DataFrame:
+def get_string_function_value(physical_subtree: DFFuncExecNode) -> pd.DataFrame:
     assert len(physical_subtree.children) == 1
     return get_single_value(physical_subtree.children[0])
 
 
-def get_string_function_values(physical_subtree: FunctionExecutionNode) -> list:
+def get_string_function_values(physical_subtree: DFFuncExecNode) -> list:
     values = []
     assert len(physical_subtree.children) >= 2
     for child in physical_subtree.children:
@@ -244,7 +237,7 @@ def get_string_function_values(physical_subtree: FunctionExecutionNode) -> list:
     return values
 
 
-def apply_single_value_func(physical_subtree: FunctionExecutionNode, func: Callable) -> DFTable:
+def apply_single_value_func(physical_subtree: DFFuncExecNode, func: Callable) -> DFTable:
     value = get_string_function_value(physical_subtree)
-    df = value.applymap(func)
+    df = value.map(func)
     return construct_df_table(df)

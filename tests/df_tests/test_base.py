@@ -15,14 +15,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.core.forms import config
-from forms.core.config import forms_config
-
-
-def test_config():
-    config(2, "NotSimple")
-    assert forms_config.cores == 2
-    assert forms_config.scheduler == "NotSimple"
+from forms.core.forms import open_workbook_from_df
 
 
 test_df = pd.DataFrame(
@@ -41,3 +34,8 @@ test_df = pd.DataFrame(
         "col12": [16] * 40,
     }
 )
+
+
+def test_open():
+    wb = open_workbook_from_df(test_df)
+    wb.close()

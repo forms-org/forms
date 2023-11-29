@@ -105,15 +105,11 @@ class Function(Enum):
     FLOOR = "floor"
     FLOOR_MATH = "floor.math"
     FLOOR_PRECISE = "floor.precise"
-    ISO_CEILING = "iso.ceiling"
     ROMAN = "roman"
     ROUND = "round"
     ROUNDDOWN = "rounddown"
     ROUNDUP = "roundup"
     TRUNC = "trunc"
-
-    # This is a generic function for supporting formula execution based on the formulas lib
-    FORMULAS = "formulas"
 
 
 def from_function_str(function_str: str) -> Function:
@@ -210,7 +206,6 @@ pandas_supported_functions = {
     Function.FLOOR,
     Function.FLOOR_MATH,
     Function.FLOOR_PRECISE,
-    Function.ISO_CEILING,
     Function.ROMAN,
     Function.ROUND,
     Function.ROUNDDOWN,
@@ -218,9 +213,7 @@ pandas_supported_functions = {
     Function.TRUNC,
 }
 
-formulas_unsupported_functions = set()
-formulas_supported_functions = set(Function) - formulas_unsupported_functions
-
+db_supported_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
 
 # The following is for supporting the formulas executor
 def from_function_to_open_value(function: Function) -> str:
@@ -238,6 +231,5 @@ class FunctionType(Enum):
 
 
 class FunctionExecutor(Enum):
-    df_pandas_executor = auto()
-    df_formulas_executor = auto()
-    df_mixed_executor = auto()
+    df_executor = auto()
+    db_executor = auto()

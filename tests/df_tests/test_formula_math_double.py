@@ -15,40 +15,38 @@ import pytest
 import pandas as pd
 import numpy as np
 
-import forms
-from tests.test_config import test_df
+from forms.core.forms import open_workbook_from_df
+from tests.df_tests.test_base import test_df
 
-df = pd.DataFrame([])
+wb = open_workbook_from_df(test_df)
 
 
 @pytest.fixture(autouse=True)
 def execute_before_and_after_one_test():
-    global df
-    df = test_df
-    forms.config(cores=4, function_executor="df_pandas_executor")
+    global wb
     yield
 
 
 def test_compute_atan2():
-    global df
-    computed_df = forms.compute_formula(df, "=ATAN2(D1, E1)")
+    global wb
+    computed_df = wb.compute_formula("=ATAN2(D1, E1)")
     expected_df = pd.DataFrame(np.array([2.356, 0.785] * 20))
     assert np.allclose(computed_df.values, expected_df.values, atol=1e-03)
 
 
 def test_compute_decimal():
-    global df
-    computed_df = forms.compute_formula(df, "=DECIMAL(C1, 16)")
+    global wb
+    computed_df = wb.compute_formula("=DECIMAL(C1, 16)")
     expected_df = pd.DataFrame(np.array([10, 11, 12, 13] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
-    computed_df = forms.compute_formula(df, "=DECIMAL(11, 8)")
+    computed_df = wb.compute_formula("=DECIMAL(11, 8)")
     expected_df = pd.DataFrame(np.array([9] * 40))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_mod():
-    global df
-    computed_df = forms.compute_formula(df, "=MOD(D1, K1)")
+    global wb
+    computed_df = wb.compute_formula("=MOD(D1, K1)")
     expected_df = pd.DataFrame(np.array([1, 0] * 20))
     assert np.array_equal(computed_df.values, expected_df.values)
 
@@ -59,24 +57,24 @@ def test_compute_mod():
 # "Banker's rounding" is the default for Python.
 # More info: https://en.wikipedia.org/wiki/Rounding#Round_half_to_even
 def test_compute_mround():
-    global df
-    computed_df = forms.compute_formula(df, "=MROUND(D1, K1)")
+    global wb
+    computed_df = wb.compute_formula("=MROUND(D1, K1)")
     expected_df = pd.DataFrame(np.array([0, 2, 4, 4] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_power():
-    global df
-    computed_df = forms.compute_formula(df, "=POWER(D1, 3)")
+    global wb
+    computed_df = wb.compute_formula("=POWER(D1, 3)")
     expected_df = pd.DataFrame(np.array([1, 8, 27, 64] * 10))
     assert np.array_equal(computed_df.values, expected_df.values)
-    computed_df = forms.compute_formula(df, "=POWER(-5, 3)")
+    computed_df = wb.compute_formula("=POWER(-5, 3)")
     expected_df = pd.DataFrame(np.array([-125] * 40))
     assert np.array_equal(computed_df.values, expected_df.values)
 
 
 def test_compute_rand_between():
-    global df
-    computed_df = forms.compute_formula(df, "=RANDBETWEEN(F1, K1)")
+    global wb
+    computed_df = wb.compute_formula("=RANDBETWEEN(F1, K1)")
     for i in list(computed_df):
         assert 0 <= i <= 2

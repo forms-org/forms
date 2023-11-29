@@ -34,7 +34,8 @@ def parse_formula(formula_string: str, axis: int) -> PlanNode:
         raise AxisNotSupportedException(f"Axis {axis} not supported")
     global formula_apply_axis
     formula_apply_axis = axis
-    tokens = Tokenizer(formula_string).items
+    tokenlizer = Tokenizer(formula_string)
+    tokens = tokenlizer.items
     pos = 0
     return build_from_subexpression(tokens, pos)[0]
 

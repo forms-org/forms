@@ -37,11 +37,10 @@ class PlanRewriter:
 
     def rewrite_plan(self, root: PlanNode) -> PlanNode:
         plan_tree = root
-        if self.forms_config.enable_logical_rewriting:
+        if self.forms_config.enable_rewriting:
             for rule in full_rewriting_rule_list:
                 plan_tree = apply_one_rule(plan_tree, rule)
 
-        if self.forms_config.enable_physical_opt:
             for rule in full_physical_rule_list:
                 plan_tree = apply_one_rule(plan_tree, rule)
 

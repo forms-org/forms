@@ -18,7 +18,7 @@ from openpyxl.formula.tokenizer import Token
 class TreeNode:
     def __init__(self):
         self.parent = None
-        self.children = None
+        self.children = []
         self.out_ref_type = None
         self.out_ref_axis = None
 

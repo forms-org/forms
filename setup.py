@@ -21,7 +21,7 @@ setup(
     description="A Python API for Intelligent Data Discovery",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/totemtang/forms",
+    url="https://github.com/forms-org/forms",
     author="Dixin Tang",
     author_email="totem825@gmail.com",
     license="Apache-2.0 License",

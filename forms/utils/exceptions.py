@@ -29,14 +29,6 @@ class FunctionNotSupportedException(FormSException):
     """Exception raised for not supported function"""
 
 
-class SchedulerNotSupportedException(FormSException):
-    """Exception raised for not supported scheduler"""
-
-
-class RuntimeNotSupportedException(FormSException):
-    """Exception raised for not supported runtime"""
-
-
 class FormulaStringSyntaxErrorException(FormSException):
     """Exception raised for wrong formula syntax"""
 
@@ -47,27 +39,3 @@ class FormulaStringNotSupportedException(FormSException):
 
 class AxisNotSupportedException(FormSException):
     """Exception raised for unsupported axis"""
-
-
-class ExecutorNotSupportedException(FormSException):
-    """Exception raised for unsupported Executor"""
-
-
-class FunctionExecutorNotSupportedException(FormSException):
-    """Exception raised for unsupported FunctionExecutor"""
-
-
-class CostModelNotSupportedException(FormSException):
-    """Exception raised for unsupported CostModel"""
-
-
-class NonScalarNotSupportedException(FormSException):
-    """Exception raised for non-scalar output"""
-
-
-class EmptyStringNotSupportedException(FormSException):
-    """Exception raised for empty text function output"""
-
-
-class PhaseNotSupportedException(FormSException):
-    """Exception raised for unsupported Phase"""

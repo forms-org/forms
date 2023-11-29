@@ -13,19 +13,9 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.core.config import FormSConfig
 from forms.utils.reference import Ref, RefType, origin_ref
-from forms.utils.functions import (
-    Function,
-    arithmetic_functions,
-    pandas_supported_functions,
-    formulas_supported_functions,
-    FunctionExecutor,
-    distributive_functions,
-)
-from forms.utils.exceptions import InvalidArithmeticInputException, FunctionNotSupportedException
+from forms.utils.functions import Function
 from forms.utils.treenode import TreeNode
-from forms.utils.optimizations import FRRFOptimization
 
 
 class PlanNode(ABC, TreeNode):
@@ -34,10 +24,6 @@ class PlanNode(ABC, TreeNode):
 
     @abstractmethod
     def populate_ref_info(self):
-        pass
-
-    @abstractmethod
-    def validate(self, forms_config: FormSConfig):
         pass
 
     @abstractmethod
@@ -53,9 +39,6 @@ class RefNode(PlanNode):
         self.out_ref_axis = ref_axis
 
     def populate_ref_info(self):
-        pass
-
-    def validate(self, forms_config: FormSConfig):
         pass
 
     def replicate_node(self):
@@ -75,9 +58,6 @@ class LiteralNode(PlanNode):
     def populate_ref_info(self):
         pass
 
-    def validate(self, forms_config: FormSConfig):
-        pass
-
     def replicate_node(self):
         literal_node = LiteralNode(self.literal, self.out_ref_axis)
         literal_node.open_value = self.open_value
@@ -90,7 +70,6 @@ class FunctionNode(PlanNode):
         self.ref = origin_ref
         self.out_ref_axis = ref_axis
         self.function = function
-        self.fr_rf_optimization = FRRFOptimization.NOOPT
 
     def populate_ref_info(self):
         for child in self.children:
@@ -102,37 +81,6 @@ class FunctionNode(PlanNode):
             self.out_ref_type = RefType.FF
         else:
             self.out_ref_type = RefType.RR
-
-    def validate(self, forms_config: FormSConfig):
-        for child in self.children:
-            child.validate(forms_config)
-        if self.function in arithmetic_functions:
-            if any(is_reference_range(child) for child in self.children):
-                raise InvalidArithmeticInputException(
-                    "Not supporting range input for arithmetic functions"
-                )
-        if (
-            forms_config.function_executor == FunctionExecutor.df_pandas_executor.name.lower()
-            and self.function not in pandas_supported_functions
-        ):
-            raise FunctionNotSupportedException(
-                f"Function {self.function} is not supported by pandas executors"
-            )
-        if (
-            forms_config.function_executor == FunctionExecutor.df_formulas_executor.name.lower()
-            and self.function not in formulas_supported_functions
-        ):
-            raise FunctionNotSupportedException(
-                f"Function {self.function} is not supported by formula executors"
-            )
-        if forms_config.enable_sumif_opt and self.function is not Function.SUMIF:
-            raise FunctionNotSupportedException(
-                f"Function {self.function} does not support SUMIF optimization"
-            )
-        if forms_config.along_row_first and self.function not in distributive_functions:
-            raise FunctionNotSupportedException(
-                f"Function {self.function} does not support along row direction first"
-            )
 
     def replicate_node(self):
         function_node = FunctionNode(self.function, self.out_ref_axis)

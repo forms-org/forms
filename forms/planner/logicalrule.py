@@ -51,16 +51,10 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     new_child = child
     if isinstance(child, RefNode) and (
         child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT
-    ):
-        if parent.function in distributive_functions:
-            new_child = parent.replicate_node()
-            new_child.seps = []
-            link_parent_to_children(new_child, [child])
-        elif parent.function == Function.AVG:
-            new_child = parent.replicate_node()
-            new_child.function = Function.SUM
-            new_child.seps = []
-            link_parent_to_children(new_child, [child])
+    ) and (parent.function in distributive_functions):
+        new_child = parent.replicate_node()
+        new_child.seps = []
+        link_parent_to_children(new_child, [child])
         new_child.out_ref_type = child.out_ref_type
     return new_child
 
@@ -209,11 +203,11 @@ class AverageIfRule(RewritingRule):
         return plan_node
 
 
-factor_out_rule_list = [DistFactorOutRule, AlgebraicFactorOutRule]
-factor_in_rule_list = [DistFactorInRule, AlgebraicFactorInRule]
+factor_out_rule_list = [DistFactorOutRule]
+factor_in_rule_list = [DistFactorInRule]
 if_push_down_rule_list = [AverageIfRule, IfPushDownRule]
 
 full_rewriting_rule_list = [PlusToSumRule]
 full_rewriting_rule_list.extend(factor_out_rule_list)
-full_rewriting_rule_list.extend(if_push_down_rule_list)
+# full_rewriting_rule_list.extend(if_push_down_rule_list)
 full_rewriting_rule_list.extend(factor_in_rule_list)

@@ -14,4 +14,6 @@
 
 # Register APIs
 from ._version import __version__, version_info
-from forms.core.forms import compute_formula, config, print_spreadsheet_view
+from forms.core.forms import open_workbook_from_df, open_workbook_from_db, DFWorkbook, DBWorkbook
+
+__all__ = ["open_workbook_from_df", "open_workbook_from_db", "DFWorkbook", "DBWorkbook"]

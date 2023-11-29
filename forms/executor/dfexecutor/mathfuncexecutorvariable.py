@@ -12,12 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import math
+import numpy
 import pandas as pd
 from typing import Callable
 import roman
 
-from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.executor.dfexecutor.dftable import DFTable
+from forms.executor.dfexecutor.dfexecnode import DFFuncExecNode
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
     get_single_value,
@@ -27,14 +28,14 @@ from forms.executor.dfexecutor.mathfuncexecutordouble import math_double_df_exec
 from forms.utils.exceptions import FunctionNotSupportedException
 
 
-def ceiling_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def ceiling_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def ceiling(x, y=1):
         return math.ceil(x / y) * y
 
     return math_variable_df_executor(physical_subtree, ceiling)
 
 
-def ceiling_math_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def ceiling_math_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def ceiling_math(x, y=1, mode=0):
         if mode == 0:
             return math.ceil(x / y) * y
@@ -44,7 +45,7 @@ def ceiling_math_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable
     return math_variable_df_executor(physical_subtree, ceiling_math)
 
 
-def ceiling_precise_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def ceiling_precise_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def ceiling_precise(x, y=1):
         y = abs(y)
         return math.ceil(x / y) * y
@@ -52,14 +53,14 @@ def ceiling_precise_df_executor(physical_subtree: FunctionExecutionNode) -> DFTa
     return math_variable_df_executor(physical_subtree, ceiling_precise)
 
 
-def floor_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def floor_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def floor(x, y=1):
         return math.floor(x / y) * y
 
     return math_variable_df_executor(physical_subtree, floor)
 
 
-def floor_math_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def floor_math_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def floor_math(x, y=1, mode=0):
         if mode == 0:
             return math.floor(x / y) * y
@@ -69,7 +70,7 @@ def floor_math_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_variable_df_executor(physical_subtree, floor_math)
 
 
-def floor_precise_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def floor_precise_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def floor_precise(x, y=1):
         y = abs(y)
         return math.floor(x / y) * y
@@ -78,39 +79,39 @@ def floor_precise_df_executor(physical_subtree: FunctionExecutionNode) -> DFTabl
 
 
 # ISO.CEILING seems to be identical to CEILING.PRECISE.
-def iso_ceiling_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def iso_ceiling_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return ceiling_precise_df_executor(physical_subtree)
 
 
 # This operator has several relaxations that make it extremely difficult to implement.
 # Since the relaxations are likely not to be used, we will hold off on implementing them for now.
 # Thus, this can be treated as a single parameter function
-def roman_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def roman_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_single_df_executor(physical_subtree, roman.toRoman)
 
 
-def round_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def round_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def round_to_place(x, y=0):
         return round(x * (10**y)) / (10**y)
 
     return math_variable_df_executor(physical_subtree, round_to_place)
 
 
-def round_down_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def round_down_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def round_down(x, y=0):
         return math.floor(x * (10**y)) / (10**y)
 
     return math_variable_df_executor(physical_subtree, round_down)
 
 
-def round_up_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def round_up_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def round_up(x, y=0):
         return math.ceil(x * (10**y)) / (10**y)
 
     return math_variable_df_executor(physical_subtree, round_up)
 
 
-def trunc_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def trunc_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def trunc(number, digits=0):
         nb_decimals = len(str(number).split(".")[1])
         if nb_decimals <= digits:
@@ -121,7 +122,7 @@ def trunc_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_variable_df_executor(physical_subtree, trunc)
 
 
-def math_variable_df_executor(physical_subtree: FunctionExecutionNode, func: Callable):
+def math_variable_df_executor(physical_subtree: DFFuncExecNode, func: Callable):
     num_children = len(physical_subtree.children)
     if num_children == 1:
         return math_single_df_executor(physical_subtree, func)
@@ -132,7 +133,7 @@ def math_variable_df_executor(physical_subtree: FunctionExecutionNode, func: Cal
     raise FunctionNotSupportedException("Function has incorrect number of parameters!")
 
 
-def math_triple_df_executor(physical_subtree: FunctionExecutionNode, func: Callable) -> DFTable:
+def math_triple_df_executor(physical_subtree: DFFuncExecNode, func: Callable) -> DFTable:
     values = get_math_triple_function_values(physical_subtree)
     first, second, third = values[0], values[1], values[2]
 
@@ -149,7 +150,8 @@ def math_triple_df_executor(physical_subtree: FunctionExecutionNode, func: Calla
         num_rows = len(third)
 
     if is_first_literal and is_second_literal and is_third_literal:
-        return construct_df_table(pd.DataFrame([func(first, second, third)]))
+        num_formulas = physical_subtree.exec_context.end_formula_idx - physical_subtree.exec_context.start_formula_idx
+        return construct_df_table(numpy.full(num_formulas, func(first, second, third)))
 
     if is_first_literal:
         first = pd.DataFrame([first] * num_rows)
@@ -165,7 +167,7 @@ def math_triple_df_executor(physical_subtree: FunctionExecutionNode, func: Calla
     return construct_df_table(df)
 
 
-def get_math_triple_function_values(physical_subtree: FunctionExecutionNode) -> list:
+def get_math_triple_function_values(physical_subtree: DFFuncExecNode) -> list:
     values = []
     assert len(physical_subtree.children) == 3
     for child in physical_subtree.children:

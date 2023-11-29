@@ -12,11 +12,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from forms.core.config import FormSConfig
-from forms.utils.functions import FunctionExecutor
-from forms.utils.exceptions import FunctionExecutorNotSupportedException
 
+class MetricsTracker:
+    def __init__(self):
+        self.metrics = {}
 
-def validate(forms_config: FormSConfig):
-    if forms_config.function_executor == FunctionExecutor.df_mixed_executor.name.lower():
-        raise FunctionExecutorNotSupportedException(f"{forms_config.function_executor} Not Supported")
+    def put_one_metric(self, key, value):
+        self.metrics[key] = value
+
+    def get_metrics(self):
+        return self.metrics

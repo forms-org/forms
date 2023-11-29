@@ -11,13 +11,14 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
 import numpy as np
 import pandas as pd
 from random import randrange
 from typing import Callable
 
-from forms.executor.table import DFTable
-from forms.executor.executionnode import FunctionExecutionNode
+from forms.executor.dfexecutor.dftable import DFTable
+from forms.executor.dfexecutor.dfexecnode import DFFuncExecNode
 
 from forms.executor.dfexecutor.utils import (
     construct_df_table,
@@ -25,11 +26,11 @@ from forms.executor.dfexecutor.utils import (
 )
 
 
-def atan2_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def atan2_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_double_df_executor(physical_subtree, np.arctan2)
 
 
-def decimal_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def decimal_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     def decimal(num, base):
         assert 2 <= base <= 36
         if isinstance(num, float):
@@ -41,19 +42,19 @@ def decimal_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
     return math_double_df_executor(physical_subtree, decimal)
 
 
-def mod_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def mod_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_double_df_executor(physical_subtree, np.mod)
 
 
-def mround_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def mround_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_double_df_executor(physical_subtree, lambda x, y: y * round(x / y))
 
 
-def power_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def power_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_double_df_executor(physical_subtree, lambda x, y: x**y)
 
 
-def rand_between_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable:
+def rand_between_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     return math_double_df_executor(physical_subtree, lambda x, y: randrange(x, y, 1))
 
 
@@ -61,11 +62,12 @@ def rand_between_df_executor(physical_subtree: FunctionExecutionNode) -> DFTable
 # is a reference, we convert the literal into a pandas DataFrame and proceed normally.
 # If both arguments are literals, then we can take a shortcut and run the function on
 # only the two arguments given.
-def math_double_df_executor(physical_subtree: FunctionExecutionNode, func: Callable) -> DFTable:
+def math_double_df_executor(physical_subtree: DFFuncExecNode, func: Callable) -> DFTable:
     values = get_math_double_function_values(physical_subtree)
     first, second = values[0], values[1]
     if not isinstance(first, pd.DataFrame) and not isinstance(second, pd.DataFrame):
-        return construct_df_table(pd.DataFrame([func(first, second)]))
+        num_formulas = physical_subtree.exec_context.end_formula_idx - physical_subtree.exec_context.start_formula_idx
+        return construct_df_table(np.full(num_formulas, func(first, second)))
     if not isinstance(first, pd.DataFrame):
         first = pd.DataFrame([first] * len(second))
     if not isinstance(second, pd.DataFrame):
@@ -74,7 +76,7 @@ def math_double_df_executor(physical_subtree: FunctionExecutionNode, func: Calla
     return construct_df_table(df)
 
 
-def get_math_double_function_values(physical_subtree: FunctionExecutionNode) -> list:
+def get_math_double_function_values(physical_subtree: DFFuncExecNode) -> list:
     values = []
     assert len(physical_subtree.children) == 2
     for child in physical_subtree.children:

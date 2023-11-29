@@ -12,20 +12,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from enum import Enum, auto
-from forms.executor.dfexecutor.planexecutor import DFPlanExecutor
-from forms.core.config import FormSConfig
-from forms.utils.exceptions import ExecutorNotSupportedException
+import pandas as pd
 
 
-class Executors(Enum):
-    DFEXECUTOR = auto()
+class DFTable:
+    def __init__(self, df: pd.DataFrame):
+        self.df = df
 
+    def get_num_of_rows(self) -> int:
+        return self.df.shape[0]
 
-executor_class_dict = {Executors.DFEXECUTOR.name.lower(): DFPlanExecutor}
+    def get_num_of_columns(self) -> int:
+        return self.df.shape[1]
 
-
-def create_executor_by_name(e_name: str, forms_config: FormSConfig):
-    if e_name.lower() in executor_class_dict.keys():
-        return executor_class_dict[e_name](forms_config)
-    raise ExecutorNotSupportedException(f"Executor {e_name} is not supported")
+    def get_table_content(self) -> pd.DataFrame:
+        return self.df
