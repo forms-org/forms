@@ -1,6 +1,0 @@
-﻿formula_str
-=SUMIF(E1:E1, ">0.5")
-=SUMIF(E1:E5, ">0.5")
-=SUMIF(E1:E10, ">0.5")
-=SUMIF(E1:E15, ">0.5")
-=SUMIF(E1:E20, ">0.5")
