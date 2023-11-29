@@ -66,7 +66,10 @@ def math_double_df_executor(physical_subtree: DFFuncExecNode, func: Callable) ->
     values = get_math_double_function_values(physical_subtree)
     first, second = values[0], values[1]
     if not isinstance(first, pd.DataFrame) and not isinstance(second, pd.DataFrame):
-        num_formulas = physical_subtree.exec_context.end_formula_idx - physical_subtree.exec_context.start_formula_idx
+        num_formulas = (
+            physical_subtree.exec_context.end_formula_idx
+            - physical_subtree.exec_context.start_formula_idx
+        )
         return construct_df_table(np.full(num_formulas, func(first, second)))
     if not isinstance(first, pd.DataFrame):
         first = pd.DataFrame([first] * len(second))

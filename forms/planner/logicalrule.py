@@ -49,9 +49,11 @@ class PlusToSumRule(RewritingRule):
 # Factor-out rules are adopted to optimize FF/FR/RF cases
 def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     new_child = child
-    if isinstance(child, RefNode) and (
-        child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT
-    ) and (parent.function in distributive_functions):
+    if (
+        isinstance(child, RefNode)
+        and (child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT)
+        and (parent.function in distributive_functions)
+    ):
         new_child = parent.replicate_node()
         new_child.seps = []
         link_parent_to_children(new_child, [child])

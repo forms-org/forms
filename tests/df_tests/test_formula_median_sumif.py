@@ -81,7 +81,7 @@ def test_compute_sumif_ff():
 
 def test_compute_sumif_rf():
     df = pd.DataFrame(np.ones((100, 5)))
-    local_wb = open_workbook_from_df(df) 
+    local_wb = open_workbook_from_df(df)
     computed_df = local_wb.compute_formula('=SUMIF(A1:C$100, "<=1")')
     expected_df = pd.DataFrame(np.arange(300, 0, -3))
     assert np.array_equal(computed_df.values, expected_df.values)
@@ -89,7 +89,7 @@ def test_compute_sumif_rf():
 
 def test_compute_sumif_fr():
     df = pd.DataFrame(np.ones((100, 5)))
-    local_wb = open_workbook_from_df(df) 
+    local_wb = open_workbook_from_df(df)
     computed_df = local_wb.compute_formula('=SUMIF(A$1:C3, ">=1")')
     expected_df = pd.DataFrame(np.arange(9, 303, 3))
     assert np.array_equal(computed_df.iloc[0:98].values, expected_df.values)
