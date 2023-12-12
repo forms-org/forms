@@ -1,38 +1,26 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: FormS Continuous Integration
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+# This workflow is triggered on pushes and pull requests to the repository.
+on: [push, pull_request]
 
 jobs:
-  lint-commit:
-    name: lint (commit)
+  build-and-test:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-      - run: npm install --save-dev @commitlint/{config-conventional,cli} commitlint-plugin-jira-rules commitlint-config-jira
-      - name: Add dependencies for commitlint action
-        run: echo "NODE_PATH=$GITHUB_WORKSPACE/node_modules" >> $GITHUB_ENV
-      - run: git remote add upstream https://github.com/lux-org/lux
-      - run: git fetch upstream
-      - run: npx commitlint --from upstream/master --to $(git log upstream/master..HEAD --pretty=format:"%h" | tail -1) --verbose
-  pre-commit:
-    name: Check pre-commit hooks
-    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.3
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11.5'
+
+    - name: Install dependencies
+      run: python -m pip install --upgrade pip
+
+    - name: Run tests
+      run: make test
+
