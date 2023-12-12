@@ -53,6 +53,14 @@ def test_compute_literal():
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
 
 
+def test_compute_average():
+    global wb
+    computed_df = wb.compute_formula("=AVERAGE(A1:B3)")
+    expected_df = pd.DataFrame(np.full(100, 1))
+    expected_df.iloc[98:100, 0] = np.NaN
+    assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
+
+
 def test_compute_max():
     global wb
     computed_df = wb.compute_formula("=MAX(A1:B3, 3)")

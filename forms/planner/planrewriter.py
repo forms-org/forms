@@ -24,7 +24,7 @@ def apply_one_rule(plan_tree: PlanNode, rule: RewritingRule) -> PlanNode:
         return plan_tree
     new_plan_tree = rule.rewrite(plan_tree)
     new_children = [
-        rule.rewrite(child) if isinstance(child, FunctionNode) else child
+        apply_one_rule(child, rule) if isinstance(child, FunctionNode) else child
         for child in new_plan_tree.children
     ]
     link_parent_to_children(new_plan_tree, new_children)

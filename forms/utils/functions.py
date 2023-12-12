@@ -120,10 +120,7 @@ def from_function_str(function_str: str) -> Function:
 
 
 arithmetic_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
-distributive_functions = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT}
-distributive_functions_if = {Function.SUMIF}
-algebraic_functions = {Function.AVG}
-algebraic_functions_if = {}
+distributive_functions = {Function.SUM, Function.MIN, Function.MAX}
 
 pandas_supported_functions = {
     # Basic functions

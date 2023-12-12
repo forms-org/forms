@@ -110,6 +110,9 @@ def test_compute_count():
 def test_compute_average():
     global wb
     computed_df = wb.compute_formula("=AVERAGE(A1:B3,A$1,A1:A$100,A$1:A1,1,1,1)")
+    # local_df = pd.DataFrame(np.ones((5, 10)))
+    # local_wb = open_workbook_from_df(local_df)
+    # computed_df = local_wb.compute_formula("=AVERAGE(A1:B3, A$1, A$1:A1, 1,1,1)")
     expected_df = pd.DataFrame(np.full(100, 1))
     expected_df.iloc[98:100, 0] = np.NaN
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)

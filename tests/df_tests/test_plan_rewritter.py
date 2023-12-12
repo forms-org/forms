@@ -57,8 +57,11 @@ def test_dist_factor_in_rewriter():
     assert all(isinstance(child, RefNode) for child in root.children)
 
 
-def test_algebraic_factor_in_rewriter():
-    root = gen_one_test_case("=Average(SUM(A1:B1), C1:D2)")
+def test_average_rewriter():
+    root = gen_one_test_case("=Average(A1:B1, C1:D2)")
 
-    assert root.function == Function.AVG
-    assert all(isinstance(child, RefNode) for child in root.children)
+    assert root.function == Function.DIVIDE
+    assert root.children[0].function == Function.SUM
+    assert root.children[1].function == Function.COUNT
+    assert all(isinstance(child, RefNode) for child in root.children[0].children)
+    assert all(isinstance(child, RefNode) for child in root.children[1].children)
