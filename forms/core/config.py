@@ -24,9 +24,20 @@ class DFConfig(FormSConfig):
 
 
 class DBConfig(FormSConfig):
-    def __init__(self, db_url: str, enable_rewriting):
+    def __init__(self, host: str, port: int, 
+                 username: str, password: str, 
+                 db_name: str, table_name: str,
+                 primary_key: list, order_key: list, 
+                 enable_rewriting: bool):
         super().__init__(enable_rewriting)
-        self.db_url = db_url
+        self.host = host
+        self.port = port
+        self.username = username
+        self.password = password
+        self.db_name = db_name
+        self.table_name = table_name
+        self.primary_key = primary_key
+        self.order_key = order_key
 
 
 class DFExecContext:
