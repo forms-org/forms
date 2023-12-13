@@ -17,7 +17,8 @@ import traceback
 import sys
 import psycopg2
 
-from forms.core.config import DBConfig, DFConfig, DFExecContext
+from forms.core.config import DBConfig, DBExecContext, DFConfig, DFExecContext
+from forms.executor.dbexecutor.dbexecutor import DBExecutor
 from forms.executor.dfexecutor.dfexecutor import DFExecutor
 
 from forms.parser.parser import parse_formula
@@ -98,18 +99,21 @@ class DBWorkbook(Workbook):
                 dbname=db_config.db_name,
             )
         except psycopg2.Error as e:
-            raise DBConfigException(f"Connection Error: {e}") 
+            raise DBConfigException(f"Connection Error: {e}")
 
         if not self.__check_primary_key():
-            raise DBConfigException(f"The specified primary key does not match the table 
-                                    {self.db_config.table_name}'s primary key")
-        
+            raise DBConfigException(
+                f"The specified primary key does not match the table {self.db_config.table_name}'s primary key"
+            )
+
         if not self.__check_order_key():
-            raise DBConfigException(f"The specified order key is not part of the table 
-                                    {self.db_config.table_name}'s columns")
-        
+            raise DBConfigException(
+                f"The specified order key is not part of the table {self.db_config.table_name}'s columns"
+            )
+
         self.num_rows = self.__get_num_rows()
-        
+        self.num_cols = self.__get_num_cols()
+
     def __check_primary_key(self) -> bool:
         try:
             cursor = self.conn.cursor()
@@ -123,13 +127,13 @@ class DBWorkbook(Workbook):
               AND tc.table_name = %s;
             """
             cursor.execute(query, (self.table_name,))
-            primary_key_columns = [row[0] for row in cursor.fetchall()] 
+            primary_key_columns = [row[0] for row in cursor.fetchall()]
             return set(primary_key_columns) == set(self.db_config.primary_key)
 
         except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}") 
+            raise DBRuntimeException(f"Cursor Error: {e}")
         finally:
-            cursor.close()       
+            cursor.close()
 
     def __check_order_key(self) -> bool:
         try:
@@ -144,7 +148,7 @@ class DBWorkbook(Workbook):
             return all(column in table_columns for column in self.db_config.order_key)
 
         except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}") 
+            raise DBRuntimeException(f"Cursor Error: {e}")
         finally:
             cursor.close()
 
@@ -156,21 +160,36 @@ class DBWorkbook(Workbook):
             return cursor.fetchone()[0]
 
         except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}") 
+            raise DBRuntimeException(f"Cursor Error: {e}")
         finally:
-            cursor.close()       
+            cursor.close()
+
+    def __get_num_cols(self):
+        try:
+            cursor = self.conn.cursor()
+            query = f"""
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_name = {self.db_config.table_name}"""
+            cursor.execute(query)
+            return cursor.fetchone()[0]
+
+        except psycopg2.Error as e:
+            raise DBRuntimeException(f"Cursor Error: {e}")
+        finally:
+            cursor.close()
 
     def compute_formula(self, formula_str: str, num_formulas: int = -1, **kwargs) -> pd.DataFrame:
         try:
             root = parse_formula_str(formula_str)
-            validate(FunctionExecutor.df_executor, self.df.shape[0], self.df.shape[1], root)
-            root = PlanRewriter(self.df_config).rewrite_plan(root)
+            validate(FunctionExecutor.db_executor, self.num_rows, self.num_cols, root)
+            root = PlanRewriter(self.db_config).rewrite_plan(root)
 
             if num_formulas <= 0:
-                num_formulas = self.df.shape[0]
-            exec_context = DFExecContext(0, num_formulas, default_axis)
-            executor = DFExecutor(self.df_config, exec_context, self.metrics_tracker)
-            res = executor.execute_formula_plan(self.df, root)
+                num_formulas = self.num_rows
+            exec_context = DBExecContext(0, num_formulas)
+            executor = DBExecutor(self.df_config, exec_context, self.metrics_tracker)
+            res = executor.execute_formula_plan(root)
             executor.clean_up()
 
             return res
@@ -178,7 +197,7 @@ class DBWorkbook(Workbook):
             traceback.print_exception(*sys.exc_info())
 
     def print_workbook(self, num_rows=10, keep_original_labels=False):
-        order_by_clause = ', '.join(self.db_config.order_key)
+        order_by_clause = ", ".join(self.db_config.order_key)
         query = f"SELECT * FROM {self.db_config.db_name} ORDER BY {order_by_clause} LIMIT {num_rows}"
         try:
             df = pd.read_sql_query(query, self.connection)
@@ -190,18 +209,26 @@ class DBWorkbook(Workbook):
         self.connection.close()
 
 
-def open_workbook_from_df(df: pd.DataFrame, enable_rewriting=True) -> DFWorkbook:
+def from_df(df: pd.DataFrame, enable_rewriting=True) -> DFWorkbook:
     return DFWorkbook(DFConfig(enable_rewriting), df)
 
 
-def open_workbook_from_db(host: str, port: int, 
-                 username: str, password: str, 
-                 db_name: str, table_name: str,
-                 primary_key: list, order_key: list,
-                 enable_rewriting=True) -> DBWorkbook:
-    return DBWorkbook(DBConfig(host, port, username, password,
-                               db_name, table_name, primary_key,
-                               order_key, enable_rewriting))
+def from_db(
+    host: str,
+    port: int,
+    username: str,
+    password: str,
+    db_name: str,
+    table_name: str,
+    primary_key: list,
+    order_key: list,
+    enable_rewriting=True,
+) -> DBWorkbook:
+    return DBWorkbook(
+        DBConfig(
+            host, port, username, password, db_name, table_name, primary_key, order_key, enable_rewriting
+        )
+    )
 
 
 """Helper Functions"""

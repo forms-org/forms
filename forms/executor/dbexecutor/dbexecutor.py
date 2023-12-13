@@ -12,8 +12,22 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# Register APIs
-from ._version import __version__, version_info
-from forms.core.forms import from_df, from_db, DFWorkbook, DBWorkbook
+import pandas as pd
+from forms.core.config import DBConfig, DBExecContext
+from forms.planner.plannode import PlanNode
+from forms.utils.metrics import MetricsTracker
 
-__all__ = ["from_df", "from_db", "DFWorkbook", "DBWorkbook"]
+
+class DBExecutor:
+    def __init__(
+        self, db_config: DBConfig, exec_context: DBExecContext, metrics_tracker: MetricsTracker
+    ):
+        self.db_config = db_config
+        self.exec_context = exec_context
+        self.metrics_tracker = metrics_tracker
+
+    def execute_formula_plan(self, formula_plan: PlanNode) -> pd.DataFrame:
+        pass
+
+    def clean_up(self):
+        pass

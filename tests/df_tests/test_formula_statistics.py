@@ -16,12 +16,12 @@ import pytest
 import pandas as pd
 import numpy as np
 
-from forms.core.forms import open_workbook_from_df
+from forms.core.forms import from_df
 
 m = 100
 n = 5
 df = pd.DataFrame(np.ones((m, n)))
-wb = open_workbook_from_df(df)
+wb = from_df(df)
 
 
 @pytest.fixture(autouse=True)

@@ -15,10 +15,10 @@ import pytest
 import pandas as pd
 import numpy as np
 
-from forms.core.forms import open_workbook_from_df
+from forms.core.forms import from_df
 from tests.df_tests.test_base import test_df
 
-wb = open_workbook_from_df(test_df)
+wb = from_df(test_df)
 
 
 @pytest.fixture(autouse=True)

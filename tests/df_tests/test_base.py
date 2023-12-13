@@ -15,7 +15,7 @@
 import numpy as np
 import pandas as pd
 
-from forms.core.forms import open_workbook_from_df
+from forms.core.forms import from_df
 
 
 test_df = pd.DataFrame(
@@ -37,5 +37,5 @@ test_df = pd.DataFrame(
 
 
 def test_open():
-    wb = open_workbook_from_df(test_df)
+    wb = from_df(test_df)
     wb.close()

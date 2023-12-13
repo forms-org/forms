@@ -11,9 +11,3 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-# Register APIs
-from ._version import __version__, version_info
-from forms.core.forms import from_df, from_db, DFWorkbook, DBWorkbook
-
-__all__ = ["from_df", "from_db", "DFWorkbook", "DBWorkbook"]

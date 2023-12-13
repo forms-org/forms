@@ -16,11 +16,14 @@
 class FormSException(Exception):
     """Base exception for FormS"""
 
+
 class DBConfigException(FormSException):
     """Exception raised for invalid DBConfig."""
 
+
 class DBRuntimeException(FormSException):
     """Exception raised for runtime error."""
+
 
 class InvalidIndexException(FormSException):
     """Exception raised for invalid reference index."""

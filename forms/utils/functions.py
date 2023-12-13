@@ -111,6 +111,16 @@ class Function(Enum):
     ROUNDUP = "roundup"
     TRUNC = "trunc"
 
+    # Control Functions
+    IF = "if"
+
+    # Lookup Functions
+    VLOOKUP = "vlookup"
+    HLOOKUP = "hlookup"
+    LOOKUP = "lookup"
+    MATCH = "match"
+    INDEX = "index"
+
 
 def from_function_str(function_str: str) -> Function:
     for function in Function:
@@ -210,7 +220,30 @@ pandas_supported_functions = {
     Function.TRUNC,
 }
 
-db_supported_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
+db_supported_functions = {
+    # Arithmetic Functions
+    Function.PLUS,
+    Function.MINUS,
+    Function.MULTIPLY,
+    Function.DIVIDE,
+    # Aggregation Functions
+    Function.SUM,
+    Function.MIN,
+    Function.MAX,
+    Function.COUNT,
+    Function.AVG,
+    Function.SUMIF,
+    Function.COUNTIF,
+    Function.AVERAGEIF,
+    # Control Function
+    Function.IF,
+    # Lookup Functions
+    Function.VLOOKUP,
+    Function.HLOOKUP,
+    Function.LOOKUP,
+    Function.MATCH,
+    Function.INDEX,
+}
 
 # The following is for supporting the formulas executor
 def from_function_to_open_value(function: Function) -> str:

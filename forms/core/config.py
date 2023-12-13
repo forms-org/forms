@@ -24,11 +24,18 @@ class DFConfig(FormSConfig):
 
 
 class DBConfig(FormSConfig):
-    def __init__(self, host: str, port: int, 
-                 username: str, password: str, 
-                 db_name: str, table_name: str,
-                 primary_key: list, order_key: list, 
-                 enable_rewriting: bool):
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        username: str,
+        password: str,
+        db_name: str,
+        table_name: str,
+        primary_key: list,
+        order_key: list,
+        enable_rewriting: bool,
+    ):
         super().__init__(enable_rewriting)
         self.host = host
         self.port = port
@@ -45,3 +52,9 @@ class DFExecContext:
         self.start_formula_idx = start_formula_idx
         self.end_formula_idx = end_formula_idx
         self.axis = axis
+
+
+class DBExecContext:
+    def __init__(self, start_formula_idx: int, end_formula_idx: int):
+        self.start_formula_idx = start_formula_idx
+        self.end_formula_idx = end_formula_idx
