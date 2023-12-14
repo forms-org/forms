@@ -21,16 +21,16 @@ from forms.utils.exceptions import (
     AxisNotSupportedException,
 )
 from forms.utils.treenode import link_parent_to_children
-from forms.utils.reference import default_axis, axis_along_row, Ref, RefType
+from forms.utils.reference import DEFAULT_AXIS, AXIS_ALONG_ROW, Ref, RefType
 
 subexpression_tokens = {Token.FUNC, Token.PAREN, Token.LITERAL, Token.OPERAND, Token.OP_PRE}
 op_in_post_tokens = {Token.OP_IN, Token.OP_POST}
 
-formula_apply_axis = default_axis
+formula_apply_axis = DEFAULT_AXIS
 
 
 def parse_formula(formula_string: str, axis: int) -> PlanNode:
-    if axis != axis_along_row:
+    if axis != AXIS_ALONG_ROW:
         raise AxisNotSupportedException(f"Axis {axis} not supported")
     global formula_apply_axis
     formula_apply_axis = axis
@@ -151,7 +151,7 @@ def parse_range(cur_pos, cur_token) -> (Ref, RefType):
     ref = Ref(row, col, last_row, last_col)
     ref_type = (
         parse_ref_type(row_relative, last_row_relative)
-        if formula_apply_axis == axis_along_row
+        if formula_apply_axis == AXIS_ALONG_ROW
         else parse_ref_type(col_relative, last_col_relative)
     )
     return ref, ref_type

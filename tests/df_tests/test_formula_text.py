@@ -38,7 +38,7 @@ from forms.executor.dfexecutor.textfunctionexecutor import (
 )
 from forms.executor.dfexecutor.dftable import DFTable
 from forms.core.config import DFExecContext
-from forms.utils.reference import Ref, RefType, axis_along_row
+from forms.utils.reference import Ref, RefType, AXIS_ALONG_ROW
 from forms.utils.functions import Function
 from forms.utils.treenode import link_parent_to_children
 
@@ -58,10 +58,10 @@ def execute_before_and_after_one_test():
 
 def compute_one_formula(ref: Ref, ref_type: RefType, function: Function, executor: Callable) -> DFTable:
     global table
-    root = DFFuncExecNode(function, Ref(0, 0), RefType.RR, axis_along_row)
-    child = DFRefExecNode(ref, table, ref_type, axis_along_row)
+    root = DFFuncExecNode(function, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child = DFRefExecNode(ref, table, ref_type, AXIS_ALONG_ROW)
     link_parent_to_children(root, [child])
-    child.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    child.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     return executor(root)
 
 
@@ -90,93 +90,93 @@ def test_execute_trim_simple_formula_rr():
 
 
 def test_execute_exact_rr():
-    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode("  TeSt Case  ", RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode("  TeSt Case  ", RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = exact_executor(parent)
     real_result = pd.DataFrame(np.full(50, True))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_concat_rr():
-    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode(" ", RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode(" ", RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = concat_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  TeSt Case   "))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_concatenate_rr():
-    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode("hello world", RefType.RR, axis_along_row)
-    child3 = DFLitExecNode(" RISE Lab", RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.EXACT, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode("hello world", RefType.RR, AXIS_ALONG_ROW)
+    child3 = DFLitExecNode(" RISE Lab", RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2, child3])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = concatenate_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  TeSt Case  hello world RISE Lab"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_find_rr():
-    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFLitExecNode("Case", RefType.RR, axis_along_row)
-    child2 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child3 = DFLitExecNode(2, RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFLitExecNode("Case", RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child3 = DFLitExecNode(2, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2, child3])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = find_executor(parent)
     real_result = pd.DataFrame(np.full(50, 7))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_left_rr():
-    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode(3, RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode(3, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = left_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  T"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_right_rr():
-    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode(3, RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode(3, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = right_executor(parent)
     real_result = pd.DataFrame(np.full(50, "e  "))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_mid_rr():
-    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode(2, RefType.RR, axis_along_row)
-    child3 = DFLitExecNode(4, RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode(2, RefType.RR, AXIS_ALONG_ROW)
+    child3 = DFLitExecNode(4, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2, child3])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = mid_executor(parent)
     real_result = pd.DataFrame(np.full(50, "TeSt"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
 
 
 def test_execute_replace_rr():
-    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, axis_along_row)
-    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, axis_along_row)
-    child2 = DFLitExecNode(7, RefType.RR, axis_along_row)
-    child3 = DFLitExecNode(6, RefType.RR, axis_along_row)
-    child4 = DFLitExecNode("Suites", RefType.RR, axis_along_row)
+    parent = DFFuncExecNode(Function.FIND, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child1 = DFRefExecNode(Ref(0, 0, 0, 0), table, RefType.RR, AXIS_ALONG_ROW)
+    child2 = DFLitExecNode(7, RefType.RR, AXIS_ALONG_ROW)
+    child3 = DFLitExecNode(6, RefType.RR, AXIS_ALONG_ROW)
+    child4 = DFLitExecNode("Suites", RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(parent, [child1, child2, child3, child4])
-    parent.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    parent.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = replace_executor(parent)
     real_result = pd.DataFrame(np.full(50, "  TeSt Suites"))
     assert np.array_equal(sub_result.df.iloc[0:50].values, real_result.values)
@@ -187,10 +187,10 @@ def test_execute_time_value():
     n = 5
     df = pd.DataFrame(np.full((m, n), "1:22:33 PM"))
     table2 = DFTable(df)
-    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
-    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(root, [child])
-    child.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    child.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = value_executor(root)
     real_result = pd.DataFrame(np.full(50, fill_value=0.557326389))
     assert np.allclose(sub_result.df.values, real_result.values, rtol=1e-03)
@@ -201,10 +201,10 @@ def test_execute_numerical_value():
     n = 5
     df = pd.DataFrame(np.full((m, n), "67.5%"))
     table2 = DFTable(df)
-    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
-    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(root, [child])
-    child.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    child.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = value_executor(root)
     real_result = pd.DataFrame(np.full(50, fill_value=0.675))
     assert np.array_equal(sub_result.df.values, real_result.values)
@@ -215,10 +215,10 @@ def test_execute_date_value():
     n = 5
     df = pd.DataFrame(np.full((m, n), "September 6, 2001"))
     table2 = DFTable(df)
-    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, axis_along_row)
-    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, axis_along_row)
+    root = DFFuncExecNode(Function.VALUE, Ref(0, 0), RefType.RR, AXIS_ALONG_ROW)
+    child = DFRefExecNode(Ref(0, 0, 0, 0), table2, RefType.RR, AXIS_ALONG_ROW)
     link_parent_to_children(root, [child])
-    child.set_exec_context(DFExecContext(50, 100, axis_along_row))
+    child.set_exec_context(DFExecContext(50, 100, AXIS_ALONG_ROW))
     sub_result = value_executor(root)
     real_result = pd.DataFrame(np.full(50, fill_value=37140))
     assert np.array_equal(sub_result.df.values, real_result.values)

@@ -129,10 +129,10 @@ def from_function_str(function_str: str) -> Function:
     raise FunctionNotSupportedException(f"Function {function_str} Not Supported")
 
 
-arithmetic_functions = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
-distributive_functions = {Function.SUM, Function.MIN, Function.MAX}
+ARITHMETIC_FUNCTIONS = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
+DISTRIBUTIVE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX}
 
-pandas_supported_functions = {
+PANDAS_SUPPORTED_FUNCTIONS = {
     # Basic functions
     Function.PLUS,
     Function.MINUS,
@@ -220,7 +220,7 @@ pandas_supported_functions = {
     Function.TRUNC,
 }
 
-db_supported_functions = {
+DB_SUPPORTED_FUNCTIONS = {
     # Arithmetic Functions
     Function.PLUS,
     Function.MINUS,
@@ -245,12 +245,13 @@ db_supported_functions = {
     Function.INDEX,
 }
 
+
 # The following is for supporting the formulas executor
 def from_function_to_open_value(function: Function) -> str:
     return function.value + "("
 
 
-close_value = ")"
+CLOSE_VALUE = ")"
 
 
 class FunctionType(Enum):
@@ -261,5 +262,5 @@ class FunctionType(Enum):
 
 
 class FunctionExecutor(Enum):
-    df_executor = auto()
-    db_executor = auto()
+    DF_EXECUTOR = auto()
+    DB_EXECUTOR = auto()

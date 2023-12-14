@@ -22,31 +22,31 @@ from forms.utils.exceptions import (
 
 from forms.utils.functions import FunctionExecutor
 from forms.utils.functions import (
-    arithmetic_functions,
-    pandas_supported_functions,
-    db_supported_functions,
+    ARITHMETIC_FUNCTIONS,
+    PANDAS_SUPPORTED_FUNCTIONS,
+    DB_SUPPORTED_FUNCTIONS,
 )
 
 
 def validate(function_executor: FunctionExecutor, num_rows: int, num_cols: int, plannode: PlanNode):
     if isinstance(plannode, FunctionNode):
-        if plannode.function in arithmetic_functions:
+        if plannode.function in ARITHMETIC_FUNCTIONS:
             if any(is_reference_range(child) for child in plannode.children):
                 raise InvalidArithmeticInputException(
                     "Not supporting range input for arithmetic functions"
                 )
 
         if (
-            function_executor == FunctionExecutor.df_executor
-            and plannode.function not in pandas_supported_functions
+            function_executor == FunctionExecutor.DF_EXECUTOR
+            and plannode.function not in PANDAS_SUPPORTED_FUNCTIONS
         ):
             raise FunctionNotSupportedException(
                 f"Function {plannode.function} is not supported by pandas executors"
             )
 
         if (
-            function_executor == FunctionExecutor.db_executor
-            and plannode.function not in db_supported_functions
+            function_executor == FunctionExecutor.DB_EXECUTOR
+            and plannode.function not in DB_SUPPORTED_FUNCTIONS
         ):
             raise FunctionNotSupportedException(
                 f"Function {plannode.function} is not supported by db executors"

@@ -17,6 +17,9 @@ import traceback
 import sys
 import psycopg2
 
+from psycopg2 import sql
+from forms.core.catalog import TableCatalog, BASE_TABLE, AUX_TABLE, ROW_ID
+
 from forms.core.config import DBConfig, DBExecContext, DFConfig, DFExecContext
 from forms.executor.dbexecutor.dbexecutor import DBExecutor
 from forms.executor.dfexecutor.dfexecutor import DFExecutor
@@ -29,7 +32,7 @@ from forms.utils.metrics import MetricsTracker
 from forms.utils.validator import validate
 
 from forms.utils.exceptions import DBConfigException, DBRuntimeException, FormSException
-from forms.utils.reference import default_axis
+from forms.utils.reference import DEFAULT_AXIS
 from abc import ABC, abstractmethod
 
 
@@ -65,18 +68,19 @@ class DFWorkbook(Workbook):
     def compute_formula(self, formula_str: str, num_formulas: int = 0, **kwargs) -> pd.DataFrame:
         try:
             root = parse_formula_str(formula_str)
-            validate(FunctionExecutor.df_executor, self.df.shape[0], self.df.shape[1], root)
+            validate(FunctionExecutor.DF_EXECUTOR, self.df.shape[0], self.df.shape[1], root)
             root = PlanRewriter(self.df_config).rewrite_plan(root)
 
             if num_formulas <= 0:
                 num_formulas = self.df.shape[0]
-            exec_context = DFExecContext(0, num_formulas, default_axis)
+            exec_context = DFExecContext(0, num_formulas, DEFAULT_AXIS)
             executor = DFExecutor(self.df_config, exec_context, self.metrics_tracker)
             res = executor.execute_formula_plan(self.df, root)
             executor.clean_up()
 
             return res
         except FormSException:
+            print(f"An error occurred: {e}")
             traceback.print_exception(*sys.exc_info())
 
     def print_workbook(self, num_rows=10, keep_original_labels=False):
@@ -90,6 +94,8 @@ class DBWorkbook(Workbook):
     def __init__(self, db_config: DBConfig):
         super().__init__()
         self.db_config = db_config
+        self.connection = None
+        self.cursor = None
         try:
             self.connection = psycopg2.connect(
                 host=db_config.host,
@@ -98,102 +104,186 @@ class DBWorkbook(Workbook):
                 password=db_config.password,
                 dbname=db_config.db_name,
             )
+            self.cursor = self.connection.cursor()
+
+            if not self.__check_primary_key():
+                raise DBConfigException(
+                    f"The specified primary key does not match the table {self.db_config.table_name}'s primary key"
+                )
+
+            if not self.__check_order_key():
+                raise DBConfigException(
+                    f"The specified order key is not part of the table {self.db_config.table_name}'s columns"
+                )
+
+            column_names, column_types = self.__get_columns_and_types()
+            self.num_columns = len(column_names)
+            self.num_rows = self.__get_num_rows()
+
+            self.base_table = TableCatalog(BASE_TABLE, column_names, column_types)
+            self.__build_auxiliary_and_base_tables()
         except psycopg2.Error as e:
-            raise DBConfigException(f"Connection Error: {e}")
-
-        if not self.__check_primary_key():
-            raise DBConfigException(
-                f"The specified primary key does not match the table {self.db_config.table_name}'s primary key"
-            )
-
-        if not self.__check_order_key():
-            raise DBConfigException(
-                f"The specified order key is not part of the table {self.db_config.table_name}'s columns"
-            )
-
-        self.num_rows = self.__get_num_rows()
-        self.num_cols = self.__get_num_cols()
+            if self.cursor is not None:
+                self.cursor.close()
+            if self.connection is not None:
+                self.connection.close()
+            raise DBRuntimeException(f"DB Runtime Error: {e}")
 
     def __check_primary_key(self) -> bool:
-        try:
-            cursor = self.conn.cursor()
-            query = """
-            SELECT kcu.column_name
-            FROM information_schema.table_constraints tc 
-            JOIN information_schema.key_column_usage kcu 
-              ON tc.constraint_name = kcu.constraint_name 
-              AND tc.table_schema = kcu.table_schema
-            WHERE tc.constraint_type = 'PRIMARY KEY' 
-              AND tc.table_name = %s;
-            """
-            cursor.execute(query, (self.table_name,))
-            primary_key_columns = [row[0] for row in cursor.fetchall()]
-            return set(primary_key_columns) == set(self.db_config.primary_key)
-
-        except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}")
-        finally:
-            cursor.close()
+        cursor = self.cursor
+        query = """
+        SELECT kcu.column_name
+        FROM information_schema.table_constraints tc 
+        JOIN information_schema.key_column_usage kcu 
+          ON tc.constraint_name = kcu.constraint_name 
+          AND tc.table_schema = kcu.table_schema
+        WHERE tc.constraint_type = 'PRIMARY KEY' 
+          AND tc.table_name = %s;
+        """
+        cursor.execute(query, (self.table_name,))
+        primary_key_columns = [row[0] for row in cursor.fetchall()]
+        self.connection.commit()
+        return set(primary_key_columns) == set(self.db_config.primary_key)
 
     def __check_order_key(self) -> bool:
-        try:
-            cursor = self.conn.cursor()
-            query = """
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name = %s;
-            """
-            cursor.execute(query, (self.db_config.table_name,))
-            table_columns = [row[0] for row in cursor.fetchall()]
-            return all(column in table_columns for column in self.db_config.order_key)
-
-        except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}")
-        finally:
-            cursor.close()
+        cursor = self.cursor
+        query = """
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = %s;
+        """
+        cursor.execute(query, (self.db_config.table_name,))
+        table_columns = [row[0] for row in cursor.fetchall()]
+        self.connection.commit()
+        return all(column in table_columns for column in self.db_config.order_key)
 
     def __get_num_rows(self):
+        cursor = self.cursor
+        query = f"SELECT COUNT(*) FROM {self.db_config.table_name}"
+        cursor.execute(query)
+        num_rows = cursor.fetchone()[0]
+        self.connection.commit()
+        return num_rows
+
+    def __get_columns_and_types(self) -> (list, list):
+        column_names = []
+        column_types = []
+        cursor = self.cursor
+        query = f"""
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = '{self.db_config.table_name}';
+        """
+        cursor.execute(query)
+        columns = cursor.fetchall()
+        for col_name, data_type in columns:
+            column_names.append(col_name)
+            column_types.append(data_type)
+        self.connection.commit()
+
+        return column_names, column_types
+
+    def __build_auxiliary_and_base_tables(self):
         try:
-            cursor = self.conn.cursor()
-            query = f"SELECT COUNT(*) FROM {self.db_config.table_name}"
-            cursor.execute(query)
-            return cursor.fetchone()[0]
+            cur = self.cursor
+            pk_cols_defs = sql.SQL(", ").join(
+                sql.SQL("{} {}").format(
+                    sql.Identifier(col), sql.SQL(self.base_table.get_column_type_by_name(col))
+                )
+                for col in self.db_config.primary_key
+            )
+            pk_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.primary_key)
+            order_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.order_key)
+
+            # Create Auxiliary Table (A)
+            cur.execute(
+                sql.SQL(
+                    """
+                CREATE TABLE IF NOT EXISTS {auxiliary_table_name} (
+                    {row_id} SERIAL PRIMARY KEY,
+                    {pk_cols_defs}
+                );
+            """
+                ).format(
+                    auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                    row_id=sql.Identifier(ROW_ID),
+                    pk_cols_defs=pk_cols_defs,
+                )
+            )
+
+            cur.execute(
+                sql.SQL(
+                    """
+                                SELECT EXISTS (SELECT 1 FROM {auxiliary_table_name}
+                                LIMIT 1);
+            """
+                ).format(auxiliary_table_name=sql.Identifier(AUX_TABLE))
+            )
+            is_empty = not cur.fetchone()[0]
+
+            # Populate Auxiliary Table with data from the Input Table
+            if is_empty:
+                cur.execute(
+                    sql.SQL(
+                        """
+                    INSERT INTO {auxiliary_table_name} ({pk_cols})
+                    SELECT {pk_cols}
+                    FROM {input_table_name}
+                    ORDER BY {order_cols};
+                """
+                    ).format(
+                        auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                        pk_cols=pk_cols_sql,
+                        input_table_name=sql.Identifier(self.db_config.table_name),
+                        order_cols=order_cols_sql,
+                    )
+                )
+
+            # Create the Base View
+            cur.execute(
+                sql.SQL(
+                    """
+                CREATE OR REPLACE VIEW {view_name} AS
+                SELECT {auxiliary_table_name}.{row_id}, {input_table_name}.*
+                FROM {input_table_name}
+                JOIN {auxiliary_table_name} ON {join_condition}
+            """
+                ).format(
+                    view_name=sql.Identifier(BASE_TABLE),
+                    row_id=sql.Identifier(ROW_ID),
+                    auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                    input_table_name=sql.Identifier(self.db_config.table_name),
+                    join_condition=sql.SQL(" AND ").join(
+                        sql.SQL("{input_table_name}.{} = {auxiliary_table_name}.{}").format(
+                            sql.Identifier(col), sql.Identifier(col)
+                        )
+                        for col in self.db_config.primary_key
+                    ),
+                )
+            )
+
+            self.connection.commit()
 
         except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}")
-        finally:
-            cursor.close()
-
-    def __get_num_cols(self):
-        try:
-            cursor = self.conn.cursor()
-            query = f"""
-            SELECT COUNT(*)
-            FROM information_schema.columns
-            WHERE table_name = {self.db_config.table_name}"""
-            cursor.execute(query)
-            return cursor.fetchone()[0]
-
-        except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}")
-        finally:
-            cursor.close()
+            self.connection.rollback()
+            raise e
 
     def compute_formula(self, formula_str: str, num_formulas: int = -1, **kwargs) -> pd.DataFrame:
         try:
             root = parse_formula_str(formula_str)
-            validate(FunctionExecutor.db_executor, self.num_rows, self.num_cols, root)
+            validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_cols, root)
             root = PlanRewriter(self.db_config).rewrite_plan(root)
 
             if num_formulas <= 0:
                 num_formulas = self.num_rows
-            exec_context = DBExecContext(0, num_formulas)
+            exec_context = DBExecContext(self.connection, self.cursor, self.base_table, 0, num_formulas)
             executor = DBExecutor(self.df_config, exec_context, self.metrics_tracker)
             res = executor.execute_formula_plan(root)
             executor.clean_up()
 
             return res
-        except FormSException:
+        except FormSException as e:
+            print(f"An error occurred: {e}")
             traceback.print_exception(*sys.exc_info())
 
     def print_workbook(self, num_rows=10, keep_original_labels=False):
@@ -203,10 +293,26 @@ class DBWorkbook(Workbook):
             df = pd.read_sql_query(query, self.connection)
             print_workbook_view(df, keep_original_labels)
         except psycopg2.Error as e:
-            raise DBRuntimeException(f"Cursor Error: {e}")
+            print(f"An error occurred: {e}")
+            traceback.print_exception(*sys.exc_info())
 
     def close(self):
-        self.connection.close()
+        try:
+            cur = self.cursor
+            cur.execute(
+                sql.SQL("DROP VIEW IF EXISTS {view_name}").format(view_name=sql.Identifier(BASE_TABLE))
+            )
+            cur.execute(
+                sql.SQL("DROP TABLE IF EXISTS {table_name}").format(table_name=sql.Identifier(AUX_TABLE))
+            )
+            self.connection.commit()
+        except psycopg2.Error as e:
+            self.connection.rollback()
+            print(f"An error occurred: {e}")
+            traceback.print_exception(*sys.exc_info())
+        finally:
+            cur.close()
+            self.connection.close()
 
 
 def from_df(df: pd.DataFrame, enable_rewriting=True) -> DFWorkbook:
@@ -224,18 +330,30 @@ def from_db(
     order_key: list,
     enable_rewriting=True,
 ) -> DBWorkbook:
-    return DBWorkbook(
-        DBConfig(
-            host, port, username, password, db_name, table_name, primary_key, order_key, enable_rewriting
+    try:
+        return DBWorkbook(
+            DBConfig(
+                host,
+                port,
+                username,
+                password,
+                db_name,
+                table_name,
+                primary_key,
+                order_key,
+                enable_rewriting,
+            )
         )
-    )
+    except FormSException as e:
+        print(f"An error occurred: {e}")
+        traceback.print_exception(*sys.exc_info())
 
 
 """Helper Functions"""
 
 
 def parse_formula_str(formula_str: str) -> PlanNode:
-    root = parse_formula(formula_str, default_axis)
+    root = parse_formula(formula_str, DEFAULT_AXIS)
     root.populate_ref_info()
     return root
 

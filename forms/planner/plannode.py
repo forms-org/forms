@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.utils.reference import Ref, RefType, origin_ref
+from forms.utils.reference import Ref, RefType, ORIGIN_REF
 from forms.utils.functions import Function
 from forms.utils.treenode import TreeNode
 
@@ -67,7 +67,7 @@ class LiteralNode(PlanNode):
 class FunctionNode(PlanNode):
     def __init__(self, function: Function, ref_axis):
         super().__init__()
-        self.ref = origin_ref
+        self.ref = ORIGIN_REF
         self.out_ref_axis = ref_axis
         self.function = function
 

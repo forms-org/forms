@@ -18,7 +18,7 @@ import pandas as pd
 from forms.executor.dfexecutor.dftable import DFTable
 from forms.executor.dfexecutor.dfexecnode import DFFuncExecNode, DFRefExecNode, DFLitExecNode
 from forms.utils.functions import Function
-from forms.utils.reference import axis_along_row, RefType
+from forms.utils.reference import AXIS_ALONG_ROW, RefType
 from forms.executor.dfexecutor.mathfuncexecutorsingle import (
     abs_df_executor,
     acos_df_executor,
@@ -161,7 +161,7 @@ def median_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
         start_row, start_column, end_row, end_column = get_reference_indices(child)
         df = df.iloc[start_row:end_row, start_column:end_column]
         # TODO: add support for axis_along_column
-        if axis == axis_along_row:
+        if axis == AXIS_ALONG_ROW:
             window_size = ref.last_row - ref.row + 1
             step = df.shape[1]
             if out_ref_type == RefType.RR:
@@ -221,7 +221,7 @@ def sumif_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
         df = df.iloc[start_row:end_row, start_column:end_column]
         df = df[operator_dict[op](df, val)].fillna(0)
         # TODO: add support for axis_along_column
-        if axis == axis_along_row:
+        if axis == AXIS_ALONG_ROW:
             window_size = ref.last_row - ref.row + 1
             if out_ref_type == RefType.RR:
                 result = df.sum(axis=1).rolling(window_size).sum().dropna()
@@ -314,7 +314,7 @@ def distributive_function_executor(physical_subtree: DFFuncExecNode, function: F
                 df = df.iloc[start_row:end_row, start_column:end_column]
                 value = None
                 # TODO: add support for axis_along_column
-                if axis == axis_along_row:
+                if axis == AXIS_ALONG_ROW:
                     window_size = ref.last_row - ref.row + 1
                     if out_ref_type == RefType.RR:
                         value = get_value_rr(df, window_size, func_first_axis, func_second_axis)

@@ -18,12 +18,12 @@ from openpyxl.formula.tokenizer import Token
 from forms.planner.plannode import PlanNode, RefNode, FunctionNode
 from forms.utils.functions import (
     Function,
-    distributive_functions,
+    DISTRIBUTIVE_FUNCTIONS,
     from_function_to_open_value,
-    close_value,
+    CLOSE_VALUE,
     FunctionType,
 )
-from forms.utils.reference import RefType, Ref, origin, axis_along_row
+from forms.utils.reference import RefType, Ref, ORIGIN, AXIS_ALONG_ROW
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.generic import same_list
 
@@ -41,7 +41,7 @@ class PlusToSumRule(RewritingRule):
         if plan_node.function == Function.PLUS:
             plan_node.function = Function.SUM
             plan_node.open_value = from_function_to_open_value(plan_node.function)
-            plan_node.close_value = close_value
+            plan_node.close_value = CLOSE_VALUE
             plan_node.func_type = FunctionType.FUNC
         return plan_node
 
@@ -52,7 +52,7 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     if (
         isinstance(child, RefNode)
         and (child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT)
-        and (parent.function in distributive_functions)
+        and (parent.function in DISTRIBUTIVE_FUNCTIONS)
     ):
         new_child = parent.replicate_node()
         new_child.seps = []
@@ -75,7 +75,7 @@ def factor_in(child: PlanNode, parent: FunctionNode) -> list:
     new_children = [child]
     if isinstance(child, FunctionNode):
         if (
-            parent.function in distributive_functions
+            parent.function in DISTRIBUTIVE_FUNCTIONS
             and child.function == parent.function
             and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):

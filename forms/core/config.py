@@ -55,6 +55,9 @@ class DFExecContext:
 
 
 class DBExecContext:
-    def __init__(self, start_formula_idx: int, end_formula_idx: int):
+    def __init__(self, conn, cursor, base_table, start_formula_idx: int, end_formula_idx: int):
+        self.conn = conn
+        self.cursor = cursor
+        self.base_table = base_table
         self.start_formula_idx = start_formula_idx
         self.end_formula_idx = end_formula_idx

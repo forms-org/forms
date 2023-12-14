@@ -19,14 +19,14 @@ from forms.planner.planrewriter import PlanRewriter
 from forms.planner.plannode import PlanNode, FunctionNode, RefNode
 from forms.core.config import DFConfig
 from forms.utils.functions import Function, FunctionExecutor
-from forms.utils.reference import default_axis
+from forms.utils.reference import DEFAULT_AXIS
 from forms.utils.validator import validate
 
 
 def gen_one_test_case(formula: str) -> PlanNode:
-    root = parse_formula(formula, default_axis)
+    root = parse_formula(formula, DEFAULT_AXIS)
     root.populate_ref_info()
-    validate(FunctionExecutor.df_executor, 1000, 1000, root)
+    validate(FunctionExecutor.DF_EXECUTOR, 1000, 1000, root)
 
     df_config = DFConfig(True)
     plan_rewriter = PlanRewriter(df_config)

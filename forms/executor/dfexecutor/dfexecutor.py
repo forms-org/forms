@@ -63,7 +63,6 @@ class DFExecutor:
         start = time()
         res_table = execute_physical_plan(physical_plan)
         execution_time = time() - start
-        print(f"Execution time: {execution_time}")
         self.metrics_tracker.put_one_metric("execution_time", execution_time)
 
         return res_table.get_table_content()

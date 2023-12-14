@@ -73,9 +73,9 @@ class Ref:
             return compare_cells(self.last_row, self.last_col, other.last_row, other.last_col)
 
     def get_row_or_column_count(self, axis: int) -> int:
-        if axis == axis_along_row:
+        if axis == AXIS_ALONG_ROW:
             return self.last_row - self.row + 1
-        elif axis == axis_along_column:
+        elif axis == AXIS_ALONG_COLUMN:
             return self.last_col - self.col + 1
         raise AxisNotSupportedException(f"Axis {axis} not supported")
 
@@ -88,9 +88,9 @@ class RefType(Enum):
     LIT = auto()
 
 
-axis_along_row = 0
-axis_along_column = 1
-default_axis = axis_along_row
+AXIS_ALONG_ROW = 0
+AXIS_ALONG_COLUMN = 1
+DEFAULT_AXIS = AXIS_ALONG_ROW
 
-origin = 0
-origin_ref = Ref(origin, origin)
+ORIGIN = 0
+ORIGIN_REF = Ref(ORIGIN, ORIGIN)

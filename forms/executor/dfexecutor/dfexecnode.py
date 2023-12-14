@@ -14,7 +14,7 @@
 
 from forms.core.config import DFExecContext
 from forms.executor.dfexecutor.dftable import DFTable
-from forms.utils.reference import Ref, RefType, origin_ref
+from forms.utils.reference import Ref, RefType, ORIGIN_REF
 from forms.utils.treenode import TreeNode, link_parent_to_children
 from forms.utils.functions import Function
 from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
@@ -53,8 +53,8 @@ class DFRefExecNode(DFExecNode):
         super().__init__(out_ref_type, out_ref_axis)
         self.table = table
         self.ref = ref
-        self.row_offset = origin_ref.row
-        self.col_offset = origin_ref.col
+        self.row_offset = ORIGIN_REF.row
+        self.col_offset = ORIGIN_REF.col
 
     def collect_ref_nodes_in_order(self) -> list:
         return [self]
@@ -95,6 +95,6 @@ def create_intermediate_ref_node(df_table: DFTable, exec_subtree: DFFuncExecNode
         if exec_subtree.out_ref_type != RefType.FF or exec_subtree.out_ref_type != RefType.LIT
         else exec_subtree.out_ref_type
     )
-    ref_node = DFRefExecNode(origin_ref, df_table, out_ref_type, exec_subtree.out_ref_axis)
+    ref_node = DFRefExecNode(ORIGIN_REF, df_table, out_ref_type, exec_subtree.out_ref_axis)
     ref_node.set_exec_context(exec_subtree.exec_context)
     return ref_node

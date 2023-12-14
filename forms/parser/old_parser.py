@@ -19,7 +19,7 @@ import jpype
 import jpype.imports
 
 from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
-from forms.utils.reference import Ref, RefType, default_axis
+from forms.utils.reference import Ref, RefType, DEFAULT_AXIS
 from forms.utils.functions import from_function_str
 from forms.utils.treenode import link_parent_to_children
 
@@ -77,12 +77,12 @@ def parse_subtree(node) -> PlanNode:
                 ref_type = RefType.FR
             else:
                 ref_type = RefType.FF
-            return RefNode(ref, ref_type, default_axis)
+            return RefNode(ref, ref_type, DEFAULT_AXIS)
         else:
-            return LiteralNode(float(node.value), default_axis)
+            return LiteralNode(float(node.value), DEFAULT_AXIS)
     else:
         function = from_function_str(str(node.value))
-        parent = FunctionNode(function, default_axis)
+        parent = FunctionNode(function, DEFAULT_AXIS)
         children = [parse_subtree(child) for child in node.children]
         link_parent_to_children(parent, children)
         return parent

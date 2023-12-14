@@ -15,11 +15,11 @@
 from forms.parser.parser import parse_formula
 from forms.planner.plannode import FunctionNode, RefNode
 from forms.utils.functions import Function
-from forms.utils.reference import Ref, RefType, default_axis
+from forms.utils.reference import Ref, RefType, DEFAULT_AXIS
 
 
 def evaluate_single_reference(ref_str: str, expected_ref: Ref, expected_ref_type: RefType):
-    root = parse_formula(f"=SUM({ref_str})", default_axis)
+    root = parse_formula(f"=SUM({ref_str})", DEFAULT_AXIS)
     assert type(root) == FunctionNode
     assert root.function == Function.SUM
 
@@ -41,7 +41,7 @@ def test_parser_single_formula_and_reference():
 
 
 def test_parser_multiple_formula_and_reference():
-    root = parse_formula("=SUM(A1 + B1, A2:B2)", default_axis)
+    root = parse_formula("=SUM(A1 + B1, A2:B2)", DEFAULT_AXIS)
     assert isinstance(root, FunctionNode)
     assert root.function == Function.SUM
 
@@ -62,7 +62,7 @@ def test_parser_multiple_formula_and_reference():
 
 
 def test_parser_arithmetic_expression_one():
-    root = parse_formula("=A1 + A1 + A1 + A1", default_axis)
+    root = parse_formula("=A1 + A1 + A1 + A1", DEFAULT_AXIS)
     expected_ref = Ref(0, 0)
     count = 0
     while isinstance(root, FunctionNode):
@@ -74,7 +74,7 @@ def test_parser_arithmetic_expression_one():
 
 
 def test_parser_arithmetic_expression_two():
-    root = parse_formula("=A1 + (A1 + (A1 + A1))", default_axis)
+    root = parse_formula("=A1 + (A1 + (A1 + A1))", DEFAULT_AXIS)
     expected_ref = Ref(0, 0)
     count = 0
     while isinstance(root, FunctionNode):
@@ -86,7 +86,7 @@ def test_parser_arithmetic_expression_two():
 
 
 def test_parser_arithmetic_expression_three():
-    root = parse_formula("=A1 + 1 + 1 + 1", default_axis)
+    root = parse_formula("=A1 + 1 + 1 + 1", DEFAULT_AXIS)
     expected_literal = 1.0
     count = 0
     while isinstance(root, FunctionNode):

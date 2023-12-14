@@ -17,7 +17,7 @@ import numpy as np
 
 from forms.executor.dfexecutor.dfexecnode import DFExecNode, DFLitExecNode, DFRefExecNode
 from forms.executor.dfexecutor.dftable import DFTable
-from forms.utils.reference import RefType, axis_along_row
+from forms.utils.reference import RefType, AXIS_ALONG_ROW
 
 
 def get_refs(exec_subtree):
@@ -122,7 +122,7 @@ def get_single_value(child: DFExecNode):
         end_idx = child.exec_context.end_formula_idx
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
-        if axis == axis_along_row:
+        if axis == AXIS_ALONG_ROW:
             start_row, start_column, end_row, end_column = get_reference_indices(child)
             df = df.iloc[start_row:end_row, start_column:end_column]
             if out_ref_type == RefType.RR:
