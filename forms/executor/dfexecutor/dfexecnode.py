@@ -14,15 +14,14 @@
 
 from forms.core.config import DFExecContext
 from forms.executor.dfexecutor.dftable import DFTable
+from forms.utils.exceptions import FormSException
 from forms.utils.reference import Ref, RefType, ORIGIN_REF
 from forms.utils.treenode import TreeNode, link_parent_to_children
 from forms.utils.functions import Function
 from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
 
-from abc import ABC
 
-
-class DFExecNode(ABC, TreeNode):
+class DFExecNode(TreeNode):
     def __init__(self, out_ref_type: RefType, out_ref_axis: int):
         super().__init__()
         self.out_ref_type = out_ref_type
@@ -41,32 +40,18 @@ class DFFuncExecNode(DFExecNode):
         self.ref = ref
         self.function = function
 
-    def collect_ref_nodes_in_order(self) -> list:
-        ref_children = []
-        for child in self.children:
-            ref_children.extend(child.collect_ref_nodes_in_order())
-        return ref_children
-
 
 class DFRefExecNode(DFExecNode):
     def __init__(self, ref: Ref, table: DFTable, out_ref_type: RefType, out_ref_axis: int):
         super().__init__(out_ref_type, out_ref_axis)
         self.table = table
         self.ref = ref
-        self.row_offset = ORIGIN_REF.row
-        self.col_offset = ORIGIN_REF.col
-
-    def collect_ref_nodes_in_order(self) -> list:
-        return [self]
 
 
 class DFLitExecNode(DFExecNode):
     def __init__(self, literal, out_ref_type: RefType, out_ref_axis: int):
         super().__init__(out_ref_type, out_ref_axis)
         self.literal = literal
-
-    def collect_ref_nodes_in_order(self) -> list:
-        return []
 
 
 def from_plan_to_execution_tree(plan_node: PlanNode, table: DFTable) -> DFExecNode:
@@ -86,7 +71,8 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: DFTable) -> DFExecNo
         children = [from_plan_to_execution_tree(child, table) for child in plan_node.children]
         link_parent_to_children(parent, children)
         return parent
-    assert False
+    else:
+        raise FormSException("Unknown plan node type: {}".format(type(plan_node)))
 
 
 def create_intermediate_ref_node(df_table: DFTable, exec_subtree: DFFuncExecNode) -> DFRefExecNode:

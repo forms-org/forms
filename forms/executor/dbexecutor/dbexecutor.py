@@ -13,8 +13,13 @@
 #  limitations under the License.
 
 import pandas as pd
+import psycopg2
 from forms.core.config import DBConfig, DBExecContext
+from forms.executor.dbexecutor.dbexecnode import from_plan_to_execution_tree
+from forms.executor.dbexecutor.scheduler import Scheduler
+from forms.executor.dbexecutor.translation import translate
 from forms.planner.plannode import PlanNode
+from forms.utils.exceptions import DBRuntimeException
 from forms.utils.metrics import MetricsTracker
 
 
@@ -27,7 +32,24 @@ class DBExecutor:
         self.metrics_tracker = metrics_tracker
 
     def execute_formula_plan(self, formula_plan: PlanNode) -> pd.DataFrame:
-        pass
+        exec_tree = from_plan_to_execution_tree(formula_plan)
+        scheduler = Scheduler(exec_tree)
+        df = None
+        try:
+            while scheduler.has_next_subtree():
+                exec_subtree = scheduler.next_substree()
+                exec_subtree_str = translate(exec_subtree)
+                if scheduler.has_next_subtree():
+                    self.db_config.cursor.execute(exec_subtree_str)
+                    scheduler.finish_one_subtree(exec_subtree)
+                else:
+                    df = pd.read_sql_query(exec_subtree_str, self.db_config.conn)
+            self.db_config.conn.commit()
+        except psycopg2.Error as e:
+            self.db_config.conn.rollback()
+            raise DBRuntimeException(e)
+
+        return df
 
     def clean_up(self):
         pass

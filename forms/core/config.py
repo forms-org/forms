@@ -13,6 +13,9 @@
 #  limitations under the License.
 
 
+from forms.core.catalog import TableCatalog
+
+
 class FormSConfig:
     def __init__(self, enable_rewriting):
         self.enable_rewriting = enable_rewriting
@@ -55,7 +58,9 @@ class DFExecContext:
 
 
 class DBExecContext:
-    def __init__(self, conn, cursor, base_table, start_formula_idx: int, end_formula_idx: int):
+    def __init__(
+        self, conn, cursor, base_table: TableCatalog, start_formula_idx: int, end_formula_idx: int
+    ):
         self.conn = conn
         self.cursor = cursor
         self.base_table = base_table
