@@ -17,3 +17,20 @@ def same_list(list_a: list, list_b: list) -> bool:
     if len(list_a) != len(list_b):
         return False
     return list_a == list_b
+
+
+def get_columns_and_types(cursor, table_name):
+    column_names = []
+    column_types = []
+    query = f"""
+    SELECT column_name, data_type
+    FROM information_schema.columns
+    WHERE table_name = '{table_name}';
+    """
+    cursor.execute(query)
+    columns = cursor.fetchall()
+    for col_name, data_type in columns:
+        column_names.append(col_name)
+        column_types.append(data_type)
+
+    return column_names, column_types

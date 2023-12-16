@@ -28,6 +28,7 @@ from forms.parser.parser import parse_formula
 from forms.planner.plannode import PlanNode
 from forms.planner.planrewriter import PlanRewriter
 from forms.utils.functions import FunctionExecutor
+from forms.utils.generic import get_columns_and_types
 from forms.utils.metrics import MetricsTracker
 from forms.utils.validator import validate
 
@@ -122,12 +123,21 @@ class DBWorkbook(Workbook):
 
             self.base_table = TableCatalog(BASE_TABLE, column_names, column_types)
             self.__build_auxiliary_and_base_tables()
+
+            self.connection.commit()
         except psycopg2.Error as e:
-            if self.cursor is not None:
-                self.cursor.close()
-            if self.connection is not None:
-                self.connection.close()
+            self.__clean_up()
             raise DBRuntimeException(f"DB Runtime Error: {e}")
+        except DBConfigException as e:
+            self.__clean_up()
+            raise e
+
+    def __clean_up(self):
+        if self.cursor is not None:
+            self.cursor.close()
+        if self.connection is not None:
+            self.connection.rollback()
+            self.connection.close()
 
     def __check_primary_key(self) -> bool:
         cursor = self.cursor
@@ -142,7 +152,6 @@ class DBWorkbook(Workbook):
         """
         cursor.execute(query, (self.table_name,))
         primary_key_columns = [row[0] for row in cursor.fetchall()]
-        self.connection.commit()
         return set(primary_key_columns) == set(self.db_config.primary_key)
 
     def __check_order_key(self) -> bool:
@@ -154,7 +163,6 @@ class DBWorkbook(Workbook):
         """
         cursor.execute(query, (self.db_config.table_name,))
         table_columns = [row[0] for row in cursor.fetchall()]
-        self.connection.commit()
         return all(column in table_columns for column in self.db_config.order_key)
 
     def __get_num_rows(self):
@@ -162,111 +170,88 @@ class DBWorkbook(Workbook):
         query = f"SELECT COUNT(*) FROM {self.db_config.table_name}"
         cursor.execute(query)
         num_rows = cursor.fetchone()[0]
-        self.connection.commit()
         return num_rows
 
     def __get_columns_and_types(self) -> (list, list):
-        column_names = []
-        column_types = []
-        cursor = self.cursor
-        query = f"""
-        SELECT column_name, data_type
-        FROM information_schema.columns
-        WHERE table_name = '{self.db_config.table_name}';
-        """
-        cursor.execute(query)
-        columns = cursor.fetchall()
-        for col_name, data_type in columns:
-            column_names.append(col_name)
-            column_types.append(data_type)
-        self.connection.commit()
-
-        return column_names, column_types
+        return get_columns_and_types(self.cursor, self.db_config.table_name)
 
     def __build_auxiliary_and_base_tables(self):
-        try:
-            cur = self.cursor
-            pk_cols_defs = sql.SQL(", ").join(
-                sql.SQL("{} {}").format(
-                    sql.Identifier(col), sql.SQL(self.base_table.get_column_type_by_name(col))
-                )
-                for col in self.db_config.primary_key
+        cur = self.cursor
+        pk_cols_defs = sql.SQL(", ").join(
+            sql.SQL("{} {}").format(
+                sql.Identifier(col), sql.SQL(self.base_table.get_column_type_by_name(col))
             )
-            pk_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.primary_key)
-            order_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.order_key)
+            for col in self.db_config.primary_key
+        )
+        pk_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.primary_key)
+        order_cols_sql = sql.SQL(", ").join(sql.Identifier(col) for col in self.db_config.order_key)
 
-            # Create Auxiliary Table (A)
-            cur.execute(
-                sql.SQL(
-                    """
-                CREATE TABLE IF NOT EXISTS {auxiliary_table_name} (
-                    {row_id} SERIAL PRIMARY KEY,
-                    {pk_cols_defs}
-                );
-            """
-                ).format(
-                    auxiliary_table_name=sql.Identifier(AUX_TABLE),
-                    row_id=sql.Identifier(ROW_ID),
-                    pk_cols_defs=pk_cols_defs,
-                )
-            )
-
-            cur.execute(
-                sql.SQL(
-                    """
-                                SELECT EXISTS (SELECT 1 FROM {auxiliary_table_name}
-                                LIMIT 1);
-            """
-                ).format(auxiliary_table_name=sql.Identifier(AUX_TABLE))
-            )
-            is_empty = not cur.fetchone()[0]
-
-            # Populate Auxiliary Table with data from the Input Table
-            if is_empty:
-                cur.execute(
-                    sql.SQL(
-                        """
-                    INSERT INTO {auxiliary_table_name} ({pk_cols})
-                    SELECT {pk_cols}
-                    FROM {input_table_name}
-                    ORDER BY {order_cols};
+        # Create Auxiliary Table (A)
+        cur.execute(
+            sql.SQL(
                 """
-                    ).format(
-                        auxiliary_table_name=sql.Identifier(AUX_TABLE),
-                        pk_cols=pk_cols_sql,
-                        input_table_name=sql.Identifier(self.db_config.table_name),
-                        order_cols=order_cols_sql,
-                    )
-                )
+            CREATE TABLE IF NOT EXISTS {auxiliary_table_name} (
+                {row_id} SERIAL PRIMARY KEY,
+                {pk_cols_defs}
+            );
+        """
+            ).format(
+                auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                row_id=sql.Identifier(ROW_ID),
+                pk_cols_defs=pk_cols_defs,
+            )
+        )
 
-            # Create the Base View
+        cur.execute(
+            sql.SQL(
+                """
+                            SELECT EXISTS (SELECT 1 FROM {auxiliary_table_name}
+                            LIMIT 1);
+        """
+            ).format(auxiliary_table_name=sql.Identifier(AUX_TABLE))
+        )
+        is_empty = not cur.fetchone()[0]
+
+        # Populate Auxiliary Table with data from the Input Table
+        if is_empty:
             cur.execute(
                 sql.SQL(
                     """
-                CREATE OR REPLACE VIEW {view_name} AS
-                SELECT {auxiliary_table_name}.{row_id}, {input_table_name}.*
+                INSERT INTO {auxiliary_table_name} ({pk_cols})
+                SELECT {pk_cols}
                 FROM {input_table_name}
-                JOIN {auxiliary_table_name} ON {join_condition}
+                ORDER BY {order_cols};
             """
                 ).format(
-                    view_name=sql.Identifier(BASE_TABLE),
-                    row_id=sql.Identifier(ROW_ID),
                     auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                    pk_cols=pk_cols_sql,
                     input_table_name=sql.Identifier(self.db_config.table_name),
-                    join_condition=sql.SQL(" AND ").join(
-                        sql.SQL("{input_table_name}.{} = {auxiliary_table_name}.{}").format(
-                            sql.Identifier(col), sql.Identifier(col)
-                        )
-                        for col in self.db_config.primary_key
-                    ),
+                    order_cols=order_cols_sql,
                 )
             )
 
-            self.connection.commit()
-
-        except psycopg2.Error as e:
-            self.connection.rollback()
-            raise e
+        # Create the Base View
+        cur.execute(
+            sql.SQL(
+                """
+            CREATE OR REPLACE VIEW {view_name} AS
+            SELECT {auxiliary_table_name}.{row_id}, {input_table_name}.*
+            FROM {input_table_name}
+            JOIN {auxiliary_table_name} ON {join_condition}
+        """
+            ).format(
+                view_name=sql.Identifier(BASE_TABLE),
+                row_id=sql.Identifier(ROW_ID),
+                auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                input_table_name=sql.Identifier(self.db_config.table_name),
+                join_condition=sql.SQL(" AND ").join(
+                    sql.SQL("{input_table_name}.{} = {auxiliary_table_name}.{}").format(
+                        sql.Identifier(col), sql.Identifier(col)
+                    )
+                    for col in self.db_config.primary_key
+                ),
+            )
+        )
 
     def compute_formula(self, formula_str: str, num_formulas: int = -1, **kwargs) -> pd.DataFrame:
         try:

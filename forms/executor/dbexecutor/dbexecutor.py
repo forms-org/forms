@@ -20,6 +20,7 @@ from forms.executor.dbexecutor.scheduler import Scheduler
 from forms.executor.dbexecutor.translation import translate
 from forms.planner.plannode import PlanNode
 from forms.utils.exceptions import DBRuntimeException
+from forms.utils.generic import get_columns_and_types
 from forms.utils.metrics import MetricsTracker
 
 
@@ -41,7 +42,10 @@ class DBExecutor:
                 exec_subtree_str = translate(exec_subtree)
                 if scheduler.has_next_subtree():
                     self.db_config.cursor.execute(exec_subtree_str)
-                    scheduler.finish_one_subtree(exec_subtree)
+                    intermediate_table = get_columns_and_types(
+                        self.db_config.cursor, exec_subtree.intermediate_table_name
+                    )
+                    scheduler.finish_one_subtree(exec_subtree, intermediate_table)
                 else:
                     df = pd.read_sql_query(exec_subtree_str, self.db_config.conn)
             self.db_config.conn.commit()

@@ -56,8 +56,11 @@ class DBFuncExecNode(DBExecNode):
     def __init__(self, function: Function, out_ref_type: RefType):
         super().__init__(out_ref_type)
         self.function = function
-        self.is_subtree_root = False
-        self.subtree_id = 0
+        self.translatable_to_window = False
+        self.intermediate_table_name = ""
+
+    def set_intermediate_table_name(self, table_name: str):
+        self.intermediate_table_name = table_name
 
     def collect_ref_nodes_in_order(self) -> list:
         ref_children = []
