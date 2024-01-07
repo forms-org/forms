@@ -76,8 +76,8 @@ def fill_in_nan(value, n_formula: int) -> pd.DataFrame:
 
 
 def get_reference_indices(ref_node: DFRefExecNode):
-    start_idx = ref_node.exec_context.start_formula_idx
-    end_idx = ref_node.exec_context.end_formula_idx
+    start_idx = ref_node.exec_context.formula_idx_start
+    end_idx = ref_node.exec_context.formula_idx_end
     out_ref_type = ref_node.out_ref_type
     ref = ref_node.ref
     row_length = ref.last_row + 1 - ref.row
@@ -118,8 +118,8 @@ def get_single_value(child: DFExecNode):
     if isinstance(child, DFRefExecNode):
         df = child.table.get_table_content()
         out_ref_type = child.out_ref_type
-        start_idx = child.exec_context.start_formula_idx
-        end_idx = child.exec_context.end_formula_idx
+        start_idx = child.exec_context.formula_idx_start
+        end_idx = child.exec_context.formula_idx_end
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
         if axis == AXIS_ALONG_ROW:

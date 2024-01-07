@@ -204,6 +204,6 @@ def get_math_single_function_values(physical_subtree: DFFuncExecNode) -> pd.Data
     child = physical_subtree.children[0]
     value = get_single_value(child)
     if isinstance(child, DFLitExecNode):
-        num_formulas = child.exec_context.end_formula_idx - child.exec_context.start_formula_idx
+        num_formulas = child.exec_context.formula_idx_end - child.exec_context.formula_idx_start
         return pd.DataFrame(numpy.full(num_formulas, value))
     return value

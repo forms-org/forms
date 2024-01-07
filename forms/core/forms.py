@@ -18,7 +18,7 @@ import sys
 import psycopg2
 
 from psycopg2 import sql
-from forms.core.catalog import TableCatalog, BASE_TABLE, AUX_TABLE, ROW_ID
+from forms.core.catalog import START_ROW_ID, TableCatalog, BASE_TABLE, AUX_TABLE, ROW_ID
 
 from forms.core.config import DBConfig, DBExecContext, DFConfig, DFExecContext
 from forms.executor.dbexecutor.dbexecutor import DBExecutor
@@ -238,7 +238,7 @@ class DBWorkbook(Workbook):
             SELECT {auxiliary_table_name}.{row_id}, {input_table_name}.*
             FROM {input_table_name}
             JOIN {auxiliary_table_name} ON {join_condition}
-        """
+            """
             ).format(
                 view_name=sql.Identifier(BASE_TABLE),
                 row_id=sql.Identifier(ROW_ID),
@@ -261,7 +261,9 @@ class DBWorkbook(Workbook):
 
             if num_formulas <= 0:
                 num_formulas = self.num_rows
-            exec_context = DBExecContext(self.connection, self.cursor, self.base_table, 0, num_formulas)
+            exec_context = DBExecContext(
+                self.connection, self.cursor, self.base_table, START_ROW_ID, START_ROW_ID + num_formulas
+            )
             executor = DBExecutor(self.df_config, exec_context, self.metrics_tracker)
             res = executor.execute_formula_plan(root)
             executor.clean_up()

@@ -16,7 +16,7 @@
 from forms.core.catalog import TableCatalog
 from forms.planner.plannode import FunctionNode, LiteralNode, PlanNode, RefNode
 from forms.utils.exceptions import FormSException
-from forms.utils.reference import ORIGIN_REF, Ref, RefType
+from forms.utils.reference import AXIS_ALONG_ROW, ORIGIN_REF, Ref, RefType
 from forms.utils.treenode import TreeNode, link_parent_to_children
 from forms.utils.functions import Function
 
@@ -38,6 +38,8 @@ class DBRefExecNode(DBExecNode):
         super().__init__(out_ref_type)
         self.ref = ref
         self.table = table
+        self.num_of_rows = ref.get_row_or_column_count(AXIS_ALONG_ROW)
+        self.cols = [table.get_table_column(i) for i in range(ref.col, ref.last_col + 1)]
 
     def collect_ref_nodes_in_order(self) -> list:
         return [self]

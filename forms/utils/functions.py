@@ -248,6 +248,13 @@ DB_SUPPORTED_FUNCTIONS = {
 DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT, Function.AVG}
 DB_AGGREGATE_IF_FUNCTIONS = {Function.SUMIF, Function.COUNTIF, Function.AVERAGEIF}
 DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF}
+DB_LOOKUP_FUNCTIONS = {
+    Function.VLOOKUP,
+    Function.HLOOKUP,
+    Function.LOOKUP,
+    Function.MATCH,
+    Function.INDEX,
+}
 
 # The following is for supporting the formulas executor
 def from_function_to_open_value(function: Function) -> str:

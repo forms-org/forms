@@ -51,18 +51,19 @@ class DBConfig(FormSConfig):
 
 
 class DFExecContext:
-    def __init__(self, start_formula_idx: int, end_formula_idx: int, axis: int):
-        self.start_formula_idx = start_formula_idx
-        self.end_formula_idx = end_formula_idx
+    def __init__(self, formula_idx_start: int, formula_idx_end: int, axis: int):
+        self.formula_idx_start = formula_idx_start
+        self.formula_idx_end = formula_idx_end
         self.axis = axis
 
 
 class DBExecContext:
     def __init__(
-        self, conn, cursor, base_table: TableCatalog, start_formula_idx: int, end_formula_idx: int
+        self, conn, cursor, base_table: TableCatalog, formula_idx_start: int, formula_idx_end: int
     ):
         self.conn = conn
         self.cursor = cursor
         self.base_table = base_table
-        self.start_formula_idx = start_formula_idx
-        self.end_formula_idx = end_formula_idx
+        self.formula_idx_start = formula_idx_start
+        self.formula_idx_end = formula_idx_end
+        self.tmp_table_index = 0

@@ -151,8 +151,8 @@ def math_triple_df_executor(physical_subtree: DFFuncExecNode, func: Callable) ->
 
     if is_first_literal and is_second_literal and is_third_literal:
         num_formulas = (
-            physical_subtree.exec_context.end_formula_idx
-            - physical_subtree.exec_context.start_formula_idx
+            physical_subtree.exec_context.formula_idx_end
+            - physical_subtree.exec_context.formula_idx_start
         )
         return construct_df_table(numpy.full(num_formulas, func(first, second, third)))
 

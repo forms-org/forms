@@ -16,6 +16,7 @@ AUX_TABLE = "FormS_A"
 BASE_TABLE = "FormS_T"
 TMP_TABLE_PREFIX = "FormS_T_"
 ROW_ID = "row_id"
+START_ROW_ID = 1
 
 
 class TableCatalog:

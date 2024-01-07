@@ -141,8 +141,8 @@ def median_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     result = None
     if physical_subtree.out_ref_type == RefType.FF:
         num_formulas = (
-            physical_subtree.exec_context.end_formula_idx
-            - physical_subtree.exec_context.start_formula_idx
+            physical_subtree.exec_context.formula_idx_end
+            - physical_subtree.exec_context.formula_idx_start
         )
         # all children must be either FF-type RefNode or LiteralNode
         df = child.table.get_table_content()
@@ -154,8 +154,8 @@ def median_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
         ref = child.ref
         df = child.table.get_table_content()
         out_ref_type = child.out_ref_type
-        start_idx = child.exec_context.start_formula_idx
-        end_idx = child.exec_context.end_formula_idx
+        start_idx = child.exec_context.formula_idx_start
+        end_idx = child.exec_context.formula_idx_end
         n_formula = end_idx - start_idx
         axis = child.exec_context.axis
         start_row, start_column, end_row, end_column = get_reference_indices(child)
@@ -204,8 +204,8 @@ def sumif_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
     assert op in operator_dict.keys()
     ref = ref_node.ref
     out_ref_type = ref_node.out_ref_type
-    start_idx = ref_node.exec_context.start_formula_idx
-    end_idx = ref_node.exec_context.end_formula_idx
+    start_idx = ref_node.exec_context.formula_idx_start
+    end_idx = ref_node.exec_context.formula_idx_end
     n_formula = end_idx - start_idx
     axis = ref_node.exec_context.axis
     if physical_subtree.out_ref_type == RefType.FF:
@@ -285,8 +285,8 @@ def distributive_function_executor(physical_subtree: DFFuncExecNode, function: F
     ) = distributive_function_to_parameters_dict[function]
     if physical_subtree.out_ref_type == RefType.FF:
         num_formulas = (
-            physical_subtree.exec_context.end_formula_idx
-            - physical_subtree.exec_context.start_formula_idx
+            physical_subtree.exec_context.formula_idx_end
+            - physical_subtree.exec_context.formula_idx_start
         )
         # all children must be either FF-type RefNode or LiteralNode
         for child in physical_subtree.children:
@@ -306,8 +306,8 @@ def distributive_function_executor(physical_subtree: DFFuncExecNode, function: F
                 ref = child.ref
                 df = child.table.get_table_content()
                 out_ref_type = child.out_ref_type
-                start_idx = child.exec_context.start_formula_idx
-                end_idx = child.exec_context.end_formula_idx
+                start_idx = child.exec_context.formula_idx_start
+                end_idx = child.exec_context.formula_idx_end
                 n_formula = end_idx - start_idx
                 axis = child.exec_context.axis
                 start_row, start_column, end_row, end_column = get_reference_indices(child)
