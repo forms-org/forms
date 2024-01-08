@@ -59,11 +59,11 @@ class DFExecContext:
 
 class DBExecContext:
     def __init__(
-        self, conn, cursor, base_table: TableCatalog, formula_idx_start: int, formula_idx_end: int
+        self, conn, cursor, base_table: TableCatalog, formula_id_start: int, formula_id_end: int
     ):
         self.conn = conn
         self.cursor = cursor
         self.base_table = base_table
-        self.formula_idx_start = formula_idx_start
-        self.formula_idx_end = formula_idx_end
+        self.formula_id_start = formula_id_start
+        self.formula_id_end = formula_id_end
         self.tmp_table_index = 0

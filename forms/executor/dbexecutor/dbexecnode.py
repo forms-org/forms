@@ -38,6 +38,7 @@ class DBRefExecNode(DBExecNode):
         super().__init__(out_ref_type)
         self.ref = ref
         self.table = table
+        self.row_idx_start = ref.row
         self.num_of_rows = ref.get_row_or_column_count(AXIS_ALONG_ROW)
         self.cols = [table.get_table_column(i) for i in range(ref.col, ref.last_col + 1)]
 

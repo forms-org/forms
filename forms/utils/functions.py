@@ -114,6 +114,11 @@ class Function(Enum):
     # Control Functions
     IF = "if"
 
+    # Comparison Functions
+    LARGER_THAN = ">"
+    EQUAL = "="
+    SMALLER_THAN = "<"
+
     # Lookup Functions
     VLOOKUP = "vlookup"
     HLOOKUP = "hlookup"
@@ -131,6 +136,7 @@ def from_function_str(function_str: str) -> Function:
 
 ARITHMETIC_FUNCTIONS = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
 DISTRIBUTIVE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX}
+COMPARISON_FUNCTIONS = {Function.LARGER_THAN, Function.EQUAL, Function.SMALLER_THAN}
 
 PANDAS_SUPPORTED_FUNCTIONS = {
     # Basic functions
@@ -228,8 +234,6 @@ DB_SUPPORTED_FUNCTIONS = {
     Function.DIVIDE,
     # Aggregation Functions
     Function.SUM,
-    Function.MIN,
-    Function.MAX,
     Function.COUNT,
     Function.AVG,
     Function.SUMIF,
@@ -237,6 +241,10 @@ DB_SUPPORTED_FUNCTIONS = {
     Function.AVERAGEIF,
     # Control Function
     Function.IF,
+    # Comparison Functions
+    Function.LARGER_THAN,
+    Function.EQUAL,
+    Function.SMALLER_THAN,
     # Lookup Functions
     Function.VLOOKUP,
     Function.HLOOKUP,
@@ -245,9 +253,9 @@ DB_SUPPORTED_FUNCTIONS = {
     Function.INDEX,
 }
 
-DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT, Function.AVG}
+DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.COUNT, Function.AVG}
 DB_AGGREGATE_IF_FUNCTIONS = {Function.SUMIF, Function.COUNTIF, Function.AVERAGEIF}
-DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF}
+DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF} | COMPARISON_FUNCTIONS
 DB_LOOKUP_FUNCTIONS = {
     Function.VLOOKUP,
     Function.HLOOKUP,
@@ -255,6 +263,7 @@ DB_LOOKUP_FUNCTIONS = {
     Function.MATCH,
     Function.INDEX,
 }
+
 
 # The following is for supporting the formulas executor
 def from_function_to_open_value(function: Function) -> str:
