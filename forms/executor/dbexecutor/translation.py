@@ -14,7 +14,7 @@
 
 from forms.core.catalog import BASE_TABLE, ROW_ID
 from forms.core.config import DBExecContext
-from forms.executor.dbexecutor.dbexecnode import DBExecNode, DBFuncExecNode, DBRefExecNode
+from forms.executor.dbexecutor.dbexecnode import DBExecNode, DBFuncExecNode, DBLitExecNode, DBRefExecNode
 
 from psycopg2 import sql
 
@@ -25,6 +25,7 @@ from forms.utils.functions import (
     DB_AGGREGATE_IF_FUNCTIONS,
     Function,
 )
+from forms.utils.reference import RefType
 
 WINDOW_PRECEDING = "PRECEDING"
 WINDOW_FOLLOWING = "FOLLOWING"
@@ -54,6 +55,8 @@ def translate(subtree: DBExecNode, exec_context: DBExecContext) -> sql.SQL:
             ret_sql = translate_lookup_function(subtree, exec_context)
         elif subtree.function == Function.MATCH:
             ret_sql = translate_match_function(subtree, exec_context)
+        elif subtree.function == Function.INDEX:
+            ret_sql = translate_index_function_to_join(subtree, exec_context)
         else:
             ret_sql = translate_using_udf(subtree, exec_context)
     else:
@@ -79,7 +82,7 @@ def translate_window_clause(subtree: DBExecNode, exec_context: DBExecContext):
         elif subtree.function in DB_AGGREGATE_IF_FUNCTIONS:
             translate_aggregate_if_functions(subtree, exec_context)
         elif subtree.function == Function.INDEX:
-            pass
+            translate_index_function_to_window(subtree, exec_context)
         else:
             assert False
     elif isinstance(subtree, DBRefExecNode):
@@ -129,26 +132,8 @@ def translate_aggregate_functions(subtree: DBFuncExecNode, exec_context: DBExecC
             )
         else:
             assert False
-        row_offset_start, start_dir = compute_offset_and_direction(
-            exec_context.formula_id_start, child.ref.row
-        )
-        row_offset_end, end_dir = compute_offset_and_direction(
-            exec_context.formula_id_start, child.ref.last_row
-        )
-        return (
-            agg_sql
-            + sql.SQL(
-                """OVER (ORDER BY {row_id}
-                                 ROWS BETWEEN {row_offset_start} {start_dir}
-                                 AND {row_offset_end} {end_dir})"""
-            ).format(
-                row_id=ROW_ID,
-                row_offset_start=row_offset_start,
-                start_dir=start_dir,
-                row_offset_end=row_offset_end,
-                end_dir=end_dir,
-            )
-        )
+        window_size_sql = compute_window_size_expression(child, exec_context)
+        return agg_sql + window_size_sql
     else:
         assert False
 
@@ -216,12 +201,27 @@ def translate_aggregate_if_functions(subtree: DBFuncExecNode, exec_context: DBEx
         assert False
 
 
-def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> (int, str):
-    ref_row_id = ref_row_idx + 1
-    if row_id < ref_row_id:
-        return (ref_row_id - row_id), WINDOW_PRECEDING
-    else:
-        return (row_id - ref_row_id), WINDOW_FOLLOWING
+def translate_index_function_to_window(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+    children = subtree.children
+    col_index = 0
+    if len(children) == 3:
+        col_index = children[2].literal
+    agg_col = children[0].cols[col_index]
+    row_idx_col = children[1].cols[0]
+    agg_sql = sql.SQL("""nth_value({agg_col},{idx_col})""").format(agg_col=agg_col, idx_col=row_idx_col)
+    window_size_sql = compute_window_size_expression(subtree.children[0], exec_context)
+    return agg_sql + window_size_sql
+
+
+def translate_reference(refNode: DBRefExecNode, exec_context: DBExecContext) -> sql.SQL:
+    ref_col = refNode.cols[0]
+    agg_sql = sql.SQL("""SUM({ref_col})""").format(ref_col=ref_col)
+    window_size_sql = compute_window_size_expression(ref_col, exec_context)
+    return agg_sql + window_size_sql
+
+
+def translate_literal(litNode: DBLitExecNode, exec_context: DBExecContext) -> sql.SQL:
+    return sql.SQL("""{literal}""").format(literal=litNode.literal)
 
 
 def translate_lookup_function(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
@@ -232,5 +232,77 @@ def translate_match_function(subtree: DBFuncExecNode, exec_context: DBExecContex
     pass
 
 
+def translate_index_function_to_join(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+    children = subtree.children
+    col_index = 0
+    if len(children) == 3:
+        col_index = children[2].literal
+    target_col = children[0].cols[col_index]
+    row_idx_col = children[1].cols[0]
+    table_name = children[0].table.table_name
+    offset = 0
+    return sql.SQL(
+        """SELECT t1.{row_id}, {target_col})
+                   FROM {table_name} t1
+                   LEFT JOIN {table_name} t2 ON t1.{row_idx_col} + {offset} = t2.{row_id}
+                   """
+    ).format(
+        row_id=sql.Identifier(ROW_ID),
+        target_col=sql.Identifier(target_col),
+        table_name=sql.Identifier(table_name),
+        row_idx_col=sql.Identifier(row_idx_col),
+        offset=sql.Identifier(offset),
+    )
+
+
 def translate_using_udf(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
     assert False
+
+
+def compute_window_size_expression(refNode: DBRefExecNode, exec_context: DBExecContext) -> sql.SQL:
+    row_offset_start, start_dir = compute_offset_and_direction(
+        exec_context.formula_id_start, refNode.ref.row
+    )
+    row_offset_end, end_dir = compute_offset_and_direction(
+        exec_context.formula_id_start, refNode.ref.last_row
+    )
+    window_size_sql = None
+    if refNode.out_ref_type == RefType.RR:
+        window_size_sql = sql.SQL(
+            """OVER (ORDER BY {row_id}
+                             ROWS BETWEEN {row_offset_start} {start_dir}
+                             AND {row_offset_end} {end_dir})"""
+        ).format(
+            row_id=ROW_ID,
+            row_offset_start=row_offset_start,
+            start_dir=start_dir,
+            row_offset_end=row_offset_end,
+            end_dir=end_dir,
+        )
+    elif refNode.out_ref_type == RefType.RF:
+        window_size_sql = sql.SQL(
+            """OVER (ORDER BY {row_id}
+                             ROWS BETWEEN {row_offset_start} {start_dir}
+                             AND UNBOUNDED FOLLOWING)"""
+        ).format(row_id=ROW_ID, row_offset_start=row_offset_start, start_dir=start_dir)
+    elif refNode.out_ref_type == RefType.FR:
+        window_size_sql = sql.SQL(
+            """OVER (ORDER BY {row_id}
+                             ROWS BETWEEN UNBOUNDED PRECEDING
+                             AND {row_offset_end} {end_dir})"""
+        ).format(
+            row_id=ROW_ID,
+            row_offset_end=row_offset_end,
+            end_dir=end_dir,
+        )
+    else:
+        assert False
+    return window_size_sql
+
+
+def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> (int, str):
+    ref_row_id = ref_row_idx + 1
+    if row_id < ref_row_id:
+        return (ref_row_id - row_id), WINDOW_PRECEDING
+    else:
+        return (row_id - ref_row_id), WINDOW_FOLLOWING
