@@ -31,8 +31,9 @@ WINDOW_PRECEDING = "PRECEDING"
 WINDOW_FOLLOWING = "FOLLOWING"
 
 
-def translate(subtree: DBExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate(subtree: DBExecNode, exec_context: DBExecContext) -> (sql.SQL, str):
     ret_sql = None
+    temp_table = None
     if isinstance(subtree, DBRefExecNode):
         ret_sql = sql.SQL(
             """
@@ -49,22 +50,31 @@ def translate(subtree: DBExecNode, exec_context: DBExecContext) -> sql.SQL:
             formula_idx_end=sql.Identifier(exec_context.formula_id_end),
         )
     elif isinstance(subtree, DBFuncExecNode):
+        base_table = find_base_table(subtree, DBFuncExecNode)
+        if base_table != BASE_TABLE:
+            temp_table = base_table
         if subtree.translatable_to_window:
-            ret_sql = translate_to_one_window_query(subtree, exec_context)
+            ret_sql = translate_to_one_window_query(subtree, exec_context, base_table)
         elif subtree.function == Function.LOOKUP:
-            ret_sql = translate_lookup_function(subtree, exec_context)
+            ret_sql = translate_lookup_function(subtree, exec_context, base_table)
         elif subtree.function == Function.MATCH:
-            ret_sql = translate_match_function(subtree, exec_context)
+            ret_sql = translate_match_function(subtree, exec_context, base_table)
         elif subtree.function == Function.INDEX:
-            ret_sql = translate_index_function_to_join(subtree, exec_context)
+            ret_sql = translate_index_function_to_join(subtree, exec_context, base_table)
         else:
-            ret_sql = translate_using_udf(subtree, exec_context)
+            ret_sql = translate_using_udf(subtree, exec_context, base_table)
     else:
         assert False
-    return ret_sql
+    return (ret_sql, temp_table)
 
 
-def translate_to_one_window_query(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def find_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
+    return BASE_TABLE
+
+
+def translate_to_one_window_query(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     ret_sql = sql.SQL("""SELECT {row_id}, """).format(row_id=ROW_ID)
     ret_sql = ret_sql + translate_window_clause(subtree, exec_context)
 
@@ -224,22 +234,83 @@ def translate_literal(litNode: DBLitExecNode, exec_context: DBExecContext) -> sq
     return sql.SQL("""{literal}""").format(literal=litNode.literal)
 
 
-def translate_lookup_function(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_lookup_function(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
+    ref_children = subtree.children[:3]
+    lit_child = subtree.children[3]
+    if (
+        all(isinstance(child, DBRefExecNode) for child in ref_children)
+        and isinstance(lit_child, DBLitExecNode)
+        and ref_children[0].out_ref_type == RefType.RR
+        and all(child.out_ref_type == RefType for child in ref_children[1:])
+    ):
+        source_col = ref_children[0].cols[0]
+        search_col = ref_children[1].cols[0]
+        target_col = ref_children[2].cols[0]
+        if lit_child.literal == 0:
+            return sql.SQL(
+                """SELECT search_id, {target_col}
+                           FROM (
+                           SELECT t1.{row_id} as search_id, MIN(t2.{row_id}) as target_id
+                           FROM {base_table} t1
+                           LEFT JOIN T t2 ON t1.{source_col} = t2.{search_col}
+                           GROUP BY search_id) Temp
+                           LEFT JOIN {base_table} t3 on Temp.target_id = t3.{row_id}"""
+            ).format(
+                source_col=sql.Identifier(source_col),
+                search_col=sql.Identifier(search_col),
+                target_col=sql.Identifier(target_col),
+                base_table=sql.Identifier(base_table),
+                row_id=sql.Identifier(ROW_ID),
+            )
+        else:
+            if lit_child.literal == 1:
+                agg_op = "max"
+                comp_op = ">="
+            elif lit_child.literal == -1:
+                agg_op = "min"
+                comp_op = "<="
+            else:
+                assert False
+            return sql.SQL(
+                """SELECT search_id, {target_col}
+                           FROM (
+                           SELECT t1.{row_id} as search_id, {agg_op}(t2.{row_id}) as target_id
+                           FROM {base_table} t1
+                           LEFT JOIN {base_table} t2 ON t1.{source_col} {comp_op} t2.{search_col}
+                           GROUP BY t1.row_id) Temp
+                           LEFT JOIN {base_table} t3 ON Temp.target_id = t3.{row_id}
+                           """
+            ).format(
+                source_col=sql.Identifier(source_col),
+                search_col=sql.Identifier(search_col),
+                target_col=sql.Identifier(target_col),
+                base_table=sql.Identifier(base_table),
+                row_id=sql.Identifier(ROW_ID),
+                agg_op=sql.Identifier(agg_op),
+                comp_op=sql.Identifier(comp_op),
+            )
+    else:
+        return translate_using_udf(subtree, exec_context)
+
+
+def translate_match_function(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     pass
 
 
-def translate_match_function(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
-    pass
-
-
-def translate_index_function_to_join(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_index_function_to_join(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     children = subtree.children
     col_index = 0
     if len(children) == 3:
         col_index = children[2].literal
     target_col = children[0].cols[col_index]
     row_idx_col = children[1].cols[0]
-    table_name = children[0].table.table_name
+    table_name = base_table
     offset = 0
     return sql.SQL(
         """SELECT t1.{row_id}, {target_col})
@@ -255,7 +326,9 @@ def translate_index_function_to_join(subtree: DBFuncExecNode, exec_context: DBEx
     )
 
 
-def translate_using_udf(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_using_udf(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     assert False
 
 
