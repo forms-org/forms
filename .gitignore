@@ -3,9 +3,9 @@ __pycache__/
 
 .ipynb_checkpoints/
 .vscode/
+forms-venv
+.venv
 doc/_build
-./venv
-venv
 # Jupyter Widget
 node_modules/
 dist/
