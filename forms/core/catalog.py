@@ -15,7 +15,7 @@
 AUX_TABLE = "FormS_A"
 BASE_TABLE = "FormS_T"
 TRANSLATE_TEMP_TABLE = "FormS_T_Temp"
-TMP_TABLE_PREFIX = "FormS_T_"
+TEMP_TABLE_PREFIX = "FormS_T_"
 ROW_ID = "row_id"
 START_ROW_ID = 1
 

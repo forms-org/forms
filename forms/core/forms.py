@@ -172,7 +172,7 @@ class DBWorkbook(Workbook):
         num_rows = cursor.fetchone()[0]
         return num_rows
 
-    def __get_columns_and_types(self) -> (list, list):
+    def __get_columns_and_types(self) -> tuple[list, list]:
         return get_columns_and_types(self.cursor, self.db_config.table_name)
 
     def __build_auxiliary_and_base_tables(self):

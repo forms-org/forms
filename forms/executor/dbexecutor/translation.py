@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from forms.core.catalog import BASE_TABLE, ROW_ID
+from forms.core.catalog import BASE_TABLE, ROW_ID, TRANSLATE_TEMP_TABLE, TEMP_TABLE_PREFIX
 from forms.core.config import DBExecContext
 from forms.executor.dbexecutor.dbexecnode import DBExecNode, DBFuncExecNode, DBLitExecNode, DBRefExecNode
 
@@ -31,9 +31,10 @@ WINDOW_PRECEDING = "PRECEDING"
 WINDOW_FOLLOWING = "FOLLOWING"
 
 
-def translate(subtree: DBExecNode, exec_context: DBExecContext) -> (sql.SQL, str):
+def translate(
+    subtree: DBExecNode, exec_context: DBExecContext, subtree_index: int, is_root_subtree: bool
+) -> tuple[sql.SQL, str]:
     ret_sql = None
-    temp_table = None
     if isinstance(subtree, DBRefExecNode):
         ret_sql = sql.SQL(
             """
@@ -46,13 +47,11 @@ def translate(subtree: DBExecNode, exec_context: DBExecContext) -> (sql.SQL, str
             row_id=sql.Identifier(ROW_ID),
             col_name=sql.Identifier(subtree.cols[0]),
             table_name=sql.Identifier(BASE_TABLE),
-            formula_idx_start=sql.Identifier(exec_context.formula_id_start),
-            formula_idx_end=sql.Identifier(exec_context.formula_id_end),
+            formula_idx_start=sql.Literal(exec_context.formula_id_start),
+            formula_idx_end=sql.Literal(exec_context.formula_id_end),
         )
     elif isinstance(subtree, DBFuncExecNode):
         base_table = find_base_table(subtree, DBFuncExecNode)
-        if base_table != BASE_TABLE:
-            temp_table = base_table
         if subtree.translatable_to_window:
             ret_sql = translate_to_one_window_query(subtree, exec_context, base_table)
         elif subtree.function == Function.LOOKUP:
@@ -63,9 +62,34 @@ def translate(subtree: DBExecNode, exec_context: DBExecContext) -> (sql.SQL, str
             ret_sql = translate_index_function_to_join(subtree, exec_context, base_table)
         else:
             ret_sql = translate_using_udf(subtree, exec_context, base_table)
+        ret_sql = get_required_formula_results(ret_sql, exec_context)
     else:
         assert False
-    return (ret_sql, temp_table)
+    if not is_root_subtree:
+        ret_sql = add_create_temp_table(ret_sql, subtree_index)
+    return ret_sql
+
+
+def get_required_formula_results(subquery: sql.SQL, exec_context: DBExecContext) -> sql.SQL:
+    return sql.SQL(
+        """SELECT * 
+                   FROM ({subquery}) AS {temp_table} 
+                   WHERE {row_id} >= {formula_id_start}
+                   AND {row_id} < {formula_id_end}"""
+    ).format(
+        subquery=subquery,
+        temp_table=sql.Identifier(TRANSLATE_TEMP_TABLE),
+        row_id=sql.Identifier(ROW_ID),
+        formula_id_start=sql.Literal(exec_context.formula_id_start),
+        formula_id_end=sql.Literal(exec_context.formula_id_end),
+    )
+
+
+def add_create_temp_table(selquery: sql.SQL, subtree_index: int) -> sql.SQL:
+    return sql.SQL(
+        """CREATE TEMP {table_name} AS
+                   {selquery}"""
+    ).format(table_name=sql.Identifier(TEMP_TABLE_PREFIX + subtree_index), selquery=selquery)
 
 
 def find_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
@@ -82,17 +106,17 @@ def translate_to_one_window_query(
 def translate_window_clause(subtree: DBExecNode, exec_context: DBExecContext):
     if isinstance(subtree, DBFuncExecNode):
         if subtree.function == Function.IF:
-            translate_if_function(subtree, exec_context)
+            return translate_if_function(subtree, exec_context)
         elif subtree.function in COMPARISON_FUNCTIONS:
-            translate_comparison_and_arithmetic_functions(subtree, exec_context)
+            return translate_comparison_and_arithmetic_functions(subtree, exec_context)
         elif subtree.function in ARITHMETIC_FUNCTIONS:
-            translate_comparison_and_arithmetic_functions(subtree, exec_context)
+            return translate_comparison_and_arithmetic_functions(subtree, exec_context)
         elif subtree.function in DB_AGGREGATE_FUNCTIONS:
-            translate_aggregate_functions(subtree, exec_context)
+            return translate_aggregate_functions(subtree, exec_context)
         elif subtree.function in DB_AGGREGATE_IF_FUNCTIONS:
-            translate_aggregate_if_functions(subtree, exec_context)
+            return translate_aggregate_if_functions(subtree, exec_context)
         elif subtree.function == Function.INDEX:
-            translate_index_function_to_window(subtree, exec_context)
+            return translate_index_function_to_window(subtree, exec_context)
         else:
             assert False
     elif isinstance(subtree, DBRefExecNode):
@@ -373,9 +397,9 @@ def compute_window_size_expression(refNode: DBRefExecNode, exec_context: DBExecC
     return window_size_sql
 
 
-def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> (int, str):
+def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> tuple[int, str]:
     ref_row_id = ref_row_idx + 1
     if row_id < ref_row_id:
-        return (ref_row_id - row_id), WINDOW_PRECEDING
+        return ((ref_row_id - row_id), WINDOW_PRECEDING)
     else:
-        return (row_id - ref_row_id), WINDOW_FOLLOWING
+        return ((row_id - ref_row_id), WINDOW_FOLLOWING)

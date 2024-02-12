@@ -1,3 +1,4 @@
+pyarrow
 psycopg2>=2.9.9
 numpy>=1.16.5
 pandas>=2.1.0
