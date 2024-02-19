@@ -99,57 +99,101 @@ def find_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
 def translate_to_one_window_query(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
 ) -> sql.SQL:
-    ret_sql = sql.SQL("""SELECT {row_id}, """).format(row_id=ROW_ID)
-    ret_sql = ret_sql + translate_window_clause(subtree, exec_context)
+    ret_sql = sql.SQL("""SELECT {row_id}, """).format(row_id=sql.Identifier(ROW_ID))
+    ret_sql = ret_sql + translate_window_clause(subtree, exec_context, base_table)
+    ret_sql = ret_sql + sql.SQL(""" FROM {table_name} t2""").format(
+        table_name=create_quantified_table_for_window_query(subtree, base_table)
+    )
+    return ret_sql
 
 
-def translate_window_clause(subtree: DBExecNode, exec_context: DBExecContext):
+def create_quantified_table_for_window_query(subtree: DBFuncExecNode, base_table: str) -> sql.SQL:
+    if (
+        subtree.function in DB_AGGREGATE_FUNCTIONS
+        or subtree.function in DB_AGGREGATE_IF_FUNCTIONS
+        or subtree.function == Function.INDEX
+    ):
+        childRef = subtree.children[0]
+        if isinstance(childRef, DBRefExecNode):
+            if childRef.out_ref_type == RefType.RF:
+                return sql.SQL(
+                    """(SELECT *
+                                   FROM {table_name} t2
+                                   WHERE t2.{row_id} <= {last_row}
+                                  )
+                               """
+                ).format(
+                    table_name=sql.Identifier(base_table),
+                    row_id=sql.Identifier(ROW_ID),
+                    last_row=sql.Identifier(childRef.ref.last_row),
+                )
+            elif childRef.out_ref_type == RefType.FR:
+                return sql.SQL(
+                    """(SELECT *
+                                   FROM {table_name} t2
+                                   WHERE t2.{row_id} >= {first_row}
+                                  )
+                               """
+                ).format(
+                    table_name=sql.Identifier(base_table),
+                    row_id=sql.Identifier(ROW_ID),
+                    first_row=sql.Identifier(childRef.ref.row),
+                )
+
+    return sql.SQL("""{table_name}""").format(table_name=sql.Identifier(base_table))
+
+
+def translate_window_clause(subtree: DBExecNode, exec_context: DBExecContext, base_table: sql):
     if isinstance(subtree, DBFuncExecNode):
         if subtree.function == Function.IF:
-            return translate_if_function(subtree, exec_context)
-        elif subtree.function in COMPARISON_FUNCTIONS:
-            return translate_comparison_and_arithmetic_functions(subtree, exec_context)
-        elif subtree.function in ARITHMETIC_FUNCTIONS:
-            return translate_comparison_and_arithmetic_functions(subtree, exec_context)
+            return translate_if_function(subtree, exec_context, base_table)
+        elif subtree.function in COMPARISON_FUNCTIONS or subtree.function in ARITHMETIC_FUNCTIONS:
+            return translate_comparison_and_arithmetic_functions(subtree, exec_context, base_table)
         elif subtree.function in DB_AGGREGATE_FUNCTIONS:
-            return translate_aggregate_functions(subtree, exec_context)
+            return translate_aggregate_functions(subtree, exec_context, base_table)
         elif subtree.function in DB_AGGREGATE_IF_FUNCTIONS:
-            return translate_aggregate_if_functions(subtree, exec_context)
+            return translate_aggregate_if_functions(subtree, exec_context, base_table)
         elif subtree.function == Function.INDEX:
             return translate_index_function_to_window(subtree, exec_context)
         else:
             assert False
     elif isinstance(subtree, DBRefExecNode):
-        pass
+        return translate_reference(subtree, exec_context, base_table)
+    elif isinstance(subtree, DBLitExecNode):
+        return translate_literal(subtree, exec_context)
     else:
-        pass
+        assert False
 
 
-def translate_if_function(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_if_function(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     children = subtree.children
     return sql.SQL(
         """CASE WHEN {condition}
                       THEN {true_result}
                       ELSE {false_result}"""
     ).format(
-        condition=translate_window_clause(children[0], exec_context),
-        true_result=translate_window_clause(children[1], exec_context),
-        false_result=translate_window_clause(children[2], exec_context),
+        condition=translate_window_clause(children[0], exec_context, base_table),
+        true_result=translate_window_clause(children[1], exec_context, base_table),
+        false_result=translate_window_clause(children[2], exec_context, base_table),
     )
 
 
 def translate_comparison_and_arithmetic_functions(
-    subtree: DBFuncExecNode, exec_context: DBExecContext
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
 ) -> sql.SQL:
     children = subtree.children
     return sql.SQL("""{left_clause} {function} {right_clause}""").format(
-        left_clause=translate_window_clause(children[0], exec_context),
+        left_clause=translate_window_clause(children[0], exec_context, base_table),
         function=subtree.function.value,
-        right_clause=translate_window_clause(children[1], exec_context),
+        right_clause=translate_window_clause(children[1], exec_context, base_table),
     )
 
 
-def translate_aggregate_functions(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_aggregate_functions(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     child = subtree.children[0]
     if isinstance(child, DBRefExecNode):
         agg_sql = None
@@ -166,13 +210,22 @@ def translate_aggregate_functions(subtree: DBFuncExecNode, exec_context: DBExecC
             )
         else:
             assert False
-        window_size_sql = compute_window_size_expression(child, exec_context)
-        return agg_sql + window_size_sql
+        if child.out_ref_type != RefType.FF:
+            window_size_sql = compute_window_size_expression(child, exec_context)
+            return agg_sql + window_size_sql
+        else:
+            return sql.SQL(
+                """(SELECT {agg_sql}
+                               FROM {table_name})
+                           """
+            ).format(agg_sql=agg_sql, table_name=base_table)
     else:
         assert False
 
 
-def translate_aggregate_if_functions(subtree: DBFuncExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_aggregate_if_functions(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+) -> sql.SQL:
     input_child = subtree.children[0]
     if isinstance(input_child, DBRefExecNode):
         output_child = input_child
@@ -187,9 +240,9 @@ def translate_aggregate_if_functions(subtree: DBFuncExecNode, exec_context: DBEx
                 agg_expression=sql.SQL("+").join(
                     sql.SQL(
                         """CASE WHEN {input_col}{condition}
-                                                         THEN {ouput_col}
-                                                         ELSE 0 END
-                                                         """
+                                THEN {ouput_col}
+                                ELSE 0 END
+                        """
                     ).format(input_col=input_cols[i], condition=condition, output_col=output_cols[i])
                     for i in range(len(input_child.cols))
                 )
@@ -199,9 +252,9 @@ def translate_aggregate_if_functions(subtree: DBFuncExecNode, exec_context: DBEx
                 agg_expression=sql.SQL("+").join(
                     sql.SQL(
                         """CASE WHEN {input_col}{condition}
-                                                         THEN 1 
-                                                         ELSE 0 END
-                                                         """
+                           THEN 1 
+                           ELSE 0 END
+                        """
                     ).format(
                         input_col=input_cols[i],
                         condition=condition,
@@ -211,26 +264,15 @@ def translate_aggregate_if_functions(subtree: DBFuncExecNode, exec_context: DBEx
             )
         else:
             assert False
-        row_offset_start, start_dir = compute_offset_and_direction(
-            exec_context.formula_id_start, input_child.ref.row
-        )
-        row_offset_end, end_dir = compute_offset_and_direction(
-            exec_context.formula_id_start, input_child.ref.last_row
-        )
-        return (
-            agg_sql
-            + sql.SQL(
-                """OVER (ORDER BY {row_id}
-                                 ROWS BETWEEN {row_offset_start} {start_dir}
-                                 AND {row_offset_end} {end_dir})"""
-            ).format(
-                row_id=ROW_ID,
-                row_offset_start=row_offset_start,
-                start_dir=start_dir,
-                row_offset_end=row_offset_end,
-                end_dir=end_dir,
-            )
-        )
+        if input_child.out_ref_type != RefType.FF:
+            window_size_sql = compute_window_size_expression(input_child, exec_context)
+            return agg_sql + window_size_sql
+        else:
+            return sql.SQL(
+                """(SELECT {agg_sql}
+                               FROM {table_name})
+                           """
+            ).format(agg_sql=agg_sql, table_name=base_table)
     else:
         assert False
 
@@ -247,11 +289,25 @@ def translate_index_function_to_window(subtree: DBFuncExecNode, exec_context: DB
     return agg_sql + window_size_sql
 
 
-def translate_reference(refNode: DBRefExecNode, exec_context: DBExecContext) -> sql.SQL:
+def translate_reference(refNode: DBRefExecNode, exec_context: DBExecContext, base_table: str) -> sql.SQL:
     ref_col = refNode.cols[0]
-    agg_sql = sql.SQL("""SUM({ref_col})""").format(ref_col=ref_col)
-    window_size_sql = compute_window_size_expression(ref_col, exec_context)
-    return agg_sql + window_size_sql
+    if refNode.out_ref_type == RefType.RR:
+        agg_sql = sql.SQL("""SUM({ref_col})""").format(ref_col=ref_col)
+        window_size_sql = compute_window_size_expression(ref_col, exec_context)
+        return agg_sql + window_size_sql
+    else:  # FF
+        return sql.SQL(
+            """(SELECT {ref_col}
+                           FROM {table_name}
+                           WHERE {row_id} = {row_offset} + 1
+                           )
+                       """
+        ).format(
+            ref_col=sql.Identifier(ref_col),
+            table_name=sql.Identifier(base_table),
+            row_id=sql.Identifier(ROW_ID),
+            row_offset=sql.Identifier(refNode.ref.row),
+        )
 
 
 def translate_literal(litNode: DBLitExecNode, exec_context: DBExecContext) -> sql.SQL:
