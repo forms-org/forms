@@ -93,7 +93,13 @@ def add_create_temp_table(selquery: sql.SQL, subtree_index: int) -> sql.SQL:
 
 
 def find_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
-    return BASE_TABLE
+    ref_node_list = subtree.collect_ref_nodes_in_order()
+    if all(ref_node.table.table_name == BASE_TABLE for ref_node in ref_node_list):
+        return BASE_TABLE
+    else:
+        return sql.SQL("""(SELECT {first_table}{row_id}, {column_list}
+                           FROM {table_list})
+                       """)
 
 
 def translate_to_one_window_query(
