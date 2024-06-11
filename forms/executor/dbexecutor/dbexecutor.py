@@ -39,7 +39,7 @@ class DBExecutor:
         try:
             while scheduler.has_next_subtree():
                 exec_subtree = scheduler.next_substree()
-                exec_subtree_str = translate(exec_subtree, exec_context)
+                exec_subtree_str = translate(exec_subtree, self.exec_context)
                 if scheduler.has_next_subtree():
                     self.db_config.cursor.execute(exec_subtree_str)
                     intermediate_table = get_columns_and_types(

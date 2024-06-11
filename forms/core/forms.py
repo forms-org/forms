@@ -80,7 +80,7 @@ class DFWorkbook(Workbook):
             executor.clean_up()
 
             return res
-        except FormSException:
+        except FormSException as e:
             print(f"An error occurred: {e}")
             traceback.print_exception(*sys.exc_info())
 
@@ -256,7 +256,7 @@ class DBWorkbook(Workbook):
     def compute_formula(self, formula_str: str, num_formulas: int = -1, **kwargs) -> pd.DataFrame:
         try:
             root = parse_formula_str(formula_str)
-            validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_cols, root)
+            validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_columns, root)
             root = PlanRewriter(self.db_config).rewrite_plan(root)
 
             if num_formulas <= 0:
@@ -264,7 +264,7 @@ class DBWorkbook(Workbook):
             exec_context = DBExecContext(
                 self.connection, self.cursor, self.base_table, START_ROW_ID, START_ROW_ID + num_formulas
             )
-            executor = DBExecutor(self.df_config, exec_context, self.metrics_tracker)
+            executor = DBExecutor(self.db_config, exec_context, self.metrics_tracker)
             res = executor.execute_formula_plan(root)
             executor.clean_up()
 

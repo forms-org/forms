@@ -30,30 +30,39 @@ from forms.utils.reference import RefType
 WINDOW_PRECEDING = "PRECEDING"
 WINDOW_FOLLOWING = "FOLLOWING"
 
+LOCAL_TEMP_TABLE_PREFIX = "FormS_Local_Temp_"
+local_temp_table_number: int = 0
+
 
 def translate(
     subtree: DBExecNode, exec_context: DBExecContext, subtree_index: int, is_root_subtree: bool
-) -> tuple[sql.SQL, str]:
-    ret_sql = None
+) -> sql.SQL:
+    global local_temp_table_number
+    local_temp_table_number = 0
+
+    subtree_temp_table_name = TEMP_TABLE_PREFIX + str(subtree_index)
+
     if isinstance(subtree, DBRefExecNode):
-        ret_sql = sql.SQL(
-            """
-            SELECT {row_id}, {col_name}
-            FROM {table_name}
-            WHERE {row_id} >= {formula_index_start}
-            AND {row_id} < {formula_index_end}
-            """
-        ).format(
-            row_id=sql.Identifier(ROW_ID),
-            col_name=sql.Identifier(subtree.cols[0]),
-            table_name=sql.Identifier(BASE_TABLE),
-            formula_idx_start=sql.Literal(exec_context.formula_id_start),
-            formula_idx_end=sql.Literal(exec_context.formula_id_end),
-        )
+        ret_sql = translate_cell_reference(subtree, exec_context, BASE_TABLE)
+        # sql.SQL(
+        #     """
+        #     SELECT {row_id}, {col_name}
+        #     FROM {table_name}
+        #     WHERE {row_id} >= {formula_index_start}
+        #     AND {row_id} < {formula_index_end}
+        #     """
+        # ).format(
+        #     row_id=sql.Identifier(ROW_ID),
+        #     col_name=sql.Identifier(subtree.cols[0]),
+        #     table_name=sql.Identifier(BASE_TABLE),
+        #     formula_idx_start=sql.Literal(exec_context.formula_id_start),
+        #     formula_idx_end=sql.Literal(exec_context.formula_id_end),
+        # ))
     elif isinstance(subtree, DBFuncExecNode):
-        base_table = find_base_table(subtree, DBFuncExecNode)
+        base_table = find_or_generate_base_table(subtree, exec_context)
         if subtree.translatable_to_window:
-            ret_sql = translate_to_one_window_query(subtree, exec_context, base_table)
+            ret_sql = translate_to_one_window_query(subtree, exec_context,
+                                                    base_table, subtree_temp_table_name)
         elif subtree.function == Function.LOOKUP:
             ret_sql = translate_lookup_function(subtree, exec_context, base_table)
         elif subtree.function == Function.MATCH:
@@ -62,22 +71,22 @@ def translate(
             ret_sql = translate_index_function_to_join(subtree, exec_context, base_table)
         else:
             ret_sql = translate_using_udf(subtree, exec_context, base_table)
-        ret_sql = get_required_formula_results(ret_sql, exec_context)
+        # ret_sql = get_required_formula_results(ret_sql, exec_context)
     else:
         assert False
     if not is_root_subtree:
-        ret_sql = add_create_temp_table(ret_sql, subtree_index)
+        ret_sql = create_temp_table(ret_sql, subtree_temp_table_name)
     return ret_sql
 
 
-def get_required_formula_results(subquery: sql.SQL, exec_context: DBExecContext) -> sql.SQL:
+def get_required_formula_results(subquery_str: sql.SQL, exec_context: DBExecContext) -> sql.SQL:
     return sql.SQL(
         """SELECT * 
                    FROM ({subquery}) AS {temp_table} 
                    WHERE {row_id} >= {formula_id_start}
                    AND {row_id} < {formula_id_end}"""
     ).format(
-        subquery=subquery,
+        subquery=subquery_str,
         temp_table=sql.Identifier(TRANSLATE_TEMP_TABLE),
         row_id=sql.Identifier(ROW_ID),
         formula_id_start=sql.Literal(exec_context.formula_id_start),
@@ -85,32 +94,67 @@ def get_required_formula_results(subquery: sql.SQL, exec_context: DBExecContext)
     )
 
 
-def add_create_temp_table(selquery: sql.SQL, subtree_index: int) -> sql.SQL:
+def next_local_temp_table_name() -> str:
+    global local_temp_table_number
+    local_temp_table_number = local_temp_table_number + 1
+    return f"{LOCAL_TEMP_TABLE_PREFIX}{local_temp_table_number}"
+
+
+def create_temp_table(sel_query: sql.SQL, subtree_temp_table_name: str) -> sql.SQL:
     return sql.SQL(
-        """CREATE TEMP {table_name} AS
-                   {selquery}"""
-    ).format(table_name=sql.Identifier(TEMP_TABLE_PREFIX + subtree_index), selquery=selquery)
+        """CREATE TEMP {table_name} AS {sel_query}"""
+    ).format(table_name=sql.Identifier(subtree_temp_table_name),
+             sel_query=sel_query)
 
 
-def find_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
+def find_or_generate_base_table(subtree: DBExecNode, exec_context: DBExecContext) -> str:
     ref_node_list = subtree.collect_ref_nodes_in_order()
     if all(ref_node.table.table_name == BASE_TABLE for ref_node in ref_node_list):
         return BASE_TABLE
     else:
-        return sql.SQL("""(SELECT {first_table}{row_id}, {column_list}
-                           FROM {table_list})
-                       """)
+        table_list = [ref_node.table.table_name for ref_node in ref_node_list]
+        join_condition_list = [f" {ref_node_list[i-1]}.{ROW_ID}={ref_node_list[i]}.{ROW_ID} "
+                               for i in range(1, len(ref_node_list) + 1)]
+        column_list = [column_str for ref_node in ref_node_list
+                       for column_str in ref_node.cols if column_str != ROW_ID]
+        return (sql.SQL("""(SELECT {first_table}.{row_id}, {columns}
+                           FROM {tables}
+                           WHERE {join_conditions}) {table_name}
+                        """)
+                .format(
+            first_table=sql.Identifier(ref_node_list[0].table.table_name),
+            row_id=sql.Identifier(ROW_ID),
+            columns=sql.Identifier(",".join(column_list)),
+            tables=sql.Identifier(",".join(table_list)),
+            join_conditions=sql.Identifier("AND".join(join_condition_list)),
+            table_name=sql.Identifier(next_local_temp_table_name())
+        ))
+
+
+def translate_cell_reference(ref_node: DBRefExecNode, exec_context: DBExecContext, base_table: str) -> sql.SQL:
+    pass
 
 
 def translate_to_one_window_query(
-    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: str
+        subtree: DBFuncExecNode,
+        exec_context: DBExecContext,
+        base_table: str,
+        subtree_temp_table_name: str
 ) -> sql.SQL:
-    ret_sql = sql.SQL("""SELECT {row_id}, """).format(row_id=sql.Identifier(ROW_ID))
-    ret_sql = ret_sql + translate_window_clause(subtree, exec_context, base_table)
-    ret_sql = ret_sql + sql.SQL(""" FROM {table_name} t2""").format(
-        table_name=create_quantified_table_for_window_query(subtree, base_table)
-    )
-    return ret_sql
+    # ret_sql = sql.SQL("""SELECT {row_id}, """).format(row_id=sql.Identifier(ROW_ID))
+    # ret_sql = ret_sql + translate_window_clause(subtree, exec_context, base_table)
+    # ret_sql = ret_sql + sql.SQL(""" FROM {table_name} t2""").format(
+    #    table_name=create_quantified_table_for_window_query(subtree, base_table)
+    # )
+    return sql.SQL(
+        """
+            SELECT {row_id}, {window_clause} AS {new_column_name}
+            FROM {base_table}
+        """).format(row_id=sql.Identifier(ROW_ID),
+                    window_clause=sql.Identifier(translate_window_clause(subtree, exec_context, base_table)),
+                    new_column_name=sql.Identifier(subtree_temp_table_name + "_A"),
+                    base_table=sql.Identifier(base_table)
+                    )
 
 
 def create_quantified_table_for_window_query(subtree: DBFuncExecNode, base_table: str) -> sql.SQL:
@@ -119,9 +163,9 @@ def create_quantified_table_for_window_query(subtree: DBFuncExecNode, base_table
         or subtree.function in DB_AGGREGATE_IF_FUNCTIONS
         or subtree.function == Function.INDEX
     ):
-        childRef = subtree.children[0]
-        if isinstance(childRef, DBRefExecNode):
-            if childRef.out_ref_type == RefType.RF:
+        child_ref = subtree.children[0]
+        if isinstance(child_ref, DBRefExecNode):
+            if child_ref.out_ref_type == RefType.RF:
                 return sql.SQL(
                     """(SELECT *
                                    FROM {table_name} t2
@@ -131,9 +175,9 @@ def create_quantified_table_for_window_query(subtree: DBFuncExecNode, base_table
                 ).format(
                     table_name=sql.Identifier(base_table),
                     row_id=sql.Identifier(ROW_ID),
-                    last_row=sql.Identifier(childRef.ref.last_row),
+                    last_row=sql.Identifier(child_ref.ref.last_row),
                 )
-            elif childRef.out_ref_type == RefType.FR:
+            elif child_ref.out_ref_type == RefType.FR:
                 return sql.SQL(
                     """(SELECT *
                                    FROM {table_name} t2
@@ -143,7 +187,7 @@ def create_quantified_table_for_window_query(subtree: DBFuncExecNode, base_table
                 ).format(
                     table_name=sql.Identifier(base_table),
                     row_id=sql.Identifier(ROW_ID),
-                    first_row=sql.Identifier(childRef.ref.row),
+                    first_row=sql.Identifier(child_ref.ref.row),
                 )
 
     return sql.SQL("""{table_name}""").format(table_name=sql.Identifier(base_table))
@@ -220,8 +264,7 @@ def translate_aggregate_functions(
             window_size_sql = compute_window_size_expression(child, exec_context)
             return agg_sql + window_size_sql
         else:
-            return sql.SQL(
-                """(SELECT {agg_sql}
+            return sql.SQL("""(SELECT {agg_sql}
                                FROM {table_name})
                            """
             ).format(agg_sql=agg_sql, table_name=base_table)
@@ -246,7 +289,7 @@ def translate_aggregate_if_functions(
                 agg_expression=sql.SQL("+").join(
                     sql.SQL(
                         """CASE WHEN {input_col}{condition}
-                                THEN {ouput_col}
+                                THEN {output_col}
                                 ELSE 0 END
                         """
                     ).format(input_col=input_cols[i], condition=condition, output_col=output_cols[i])
@@ -274,8 +317,7 @@ def translate_aggregate_if_functions(
             window_size_sql = compute_window_size_expression(input_child, exec_context)
             return agg_sql + window_size_sql
         else:
-            return sql.SQL(
-                """(SELECT {agg_sql}
+            return sql.SQL("""(SELECT {agg_sql}
                                FROM {table_name})
                            """
             ).format(agg_sql=agg_sql, table_name=base_table)
@@ -295,29 +337,28 @@ def translate_index_function_to_window(subtree: DBFuncExecNode, exec_context: DB
     return agg_sql + window_size_sql
 
 
-def translate_reference(refNode: DBRefExecNode, exec_context: DBExecContext, base_table: str) -> sql.SQL:
-    ref_col = refNode.cols[0]
-    if refNode.out_ref_type == RefType.RR:
+def translate_reference(ref_node: DBRefExecNode, exec_context: DBExecContext, base_table: str) -> sql.SQL:
+    ref_col = ref_node.cols[0]
+    if ref_node.out_ref_type == RefType.RR:
         agg_sql = sql.SQL("""SUM({ref_col})""").format(ref_col=ref_col)
         window_size_sql = compute_window_size_expression(ref_col, exec_context)
         return agg_sql + window_size_sql
     else:  # FF
-        return sql.SQL(
-            """(SELECT {ref_col}
+        return sql.SQL("""(SELECT {ref_col}
                            FROM {table_name}
                            WHERE {row_id} = {row_offset} + 1
                            )
                        """
-        ).format(
+                       ).format(
             ref_col=sql.Identifier(ref_col),
             table_name=sql.Identifier(base_table),
             row_id=sql.Identifier(ROW_ID),
-            row_offset=sql.Identifier(refNode.ref.row),
+            row_offset=sql.Identifier(ref_node.ref.row),
         )
 
 
-def translate_literal(litNode: DBLitExecNode, exec_context: DBExecContext) -> sql.SQL:
-    return sql.SQL("""{literal}""").format(literal=litNode.literal)
+def translate_literal(lit_node: DBLitExecNode, exec_context: DBExecContext) -> sql.SQL:
+    return sql.SQL("""{literal}""").format(literal=lit_node.literal)
 
 
 def translate_lookup_function(
@@ -418,15 +459,15 @@ def translate_using_udf(
     assert False
 
 
-def compute_window_size_expression(refNode: DBRefExecNode, exec_context: DBExecContext) -> sql.SQL:
+def compute_window_size_expression(ref_node: DBRefExecNode, exec_context: DBExecContext) -> sql.SQL:
     row_offset_start, start_dir = compute_offset_and_direction(
-        exec_context.formula_id_start, refNode.ref.row
+        exec_context.formula_id_start, ref_node.ref.row
     )
     row_offset_end, end_dir = compute_offset_and_direction(
-        exec_context.formula_id_start, refNode.ref.last_row
+        exec_context.formula_id_start, ref_node.ref.last_row
     )
     window_size_sql = None
-    if refNode.out_ref_type == RefType.RR:
+    if ref_node.out_ref_type == RefType.RR:
         window_size_sql = sql.SQL(
             """OVER (ORDER BY {row_id}
                              ROWS BETWEEN {row_offset_start} {start_dir}
@@ -438,13 +479,13 @@ def compute_window_size_expression(refNode: DBRefExecNode, exec_context: DBExecC
             row_offset_end=row_offset_end,
             end_dir=end_dir,
         )
-    elif refNode.out_ref_type == RefType.RF:
+    elif ref_node.out_ref_type == RefType.RF:
         window_size_sql = sql.SQL(
             """OVER (ORDER BY {row_id}
                              ROWS BETWEEN {row_offset_start} {start_dir}
                              AND UNBOUNDED FOLLOWING)"""
         ).format(row_id=ROW_ID, row_offset_start=row_offset_start, start_dir=start_dir)
-    elif refNode.out_ref_type == RefType.FR:
+    elif ref_node.out_ref_type == RefType.FR:
         window_size_sql = sql.SQL(
             """OVER (ORDER BY {row_id}
                              ROWS BETWEEN UNBOUNDED PRECEDING
@@ -462,6 +503,6 @@ def compute_window_size_expression(refNode: DBRefExecNode, exec_context: DBExecC
 def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> tuple[int, str]:
     ref_row_id = ref_row_idx + 1
     if row_id < ref_row_id:
-        return ((ref_row_id - row_id), WINDOW_PRECEDING)
+        return (ref_row_id - row_id), WINDOW_PRECEDING
     else:
-        return ((row_id - ref_row_id), WINDOW_FOLLOWING)
+        return (row_id - ref_row_id), WINDOW_FOLLOWING
