@@ -10,3 +10,5 @@ pynverse
 roman
 mpmath
 seaborn
+sqlalchemy
+docker

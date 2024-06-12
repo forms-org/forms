@@ -150,7 +150,7 @@ class DBWorkbook(Workbook):
         WHERE tc.constraint_type = 'PRIMARY KEY' 
           AND tc.table_name = %s;
         """
-        cursor.execute(query, (self.table_name,))
+        cursor.execute(query, (self.db_config.table_name,))
         primary_key_columns = [row[0] for row in cursor.fetchall()]
         return set(primary_key_columns) == set(self.db_config.primary_key)
 
