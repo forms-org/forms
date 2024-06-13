@@ -51,8 +51,6 @@ def setup_postgres():
     dbname = "forms_db"
     test_table = "test_table"
 
-    print("Hello World")
-
     # Start the PostgreSQL container
     try:
         container = docker_client.containers.run(
@@ -89,8 +87,9 @@ def setup_postgres():
         # Load a DataFrame into the database
         engine = create_engine(f'postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}')
         df = pd.DataFrame({
-            'id': [1, 2, 3],
-            'name': ['Alice', 'Bob', 'Charlie']
+            'A': [2, 2, 2, 2],
+            'B': [2, 3, 4, 5],
+            'C': [3, 2, 2, 3]
         })
         df.to_sql(test_table, engine, if_exists='replace', index=False)
 

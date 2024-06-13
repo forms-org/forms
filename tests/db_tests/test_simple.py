@@ -14,6 +14,8 @@
 
 import os
 import psycopg2
+from psycopg2 import Error
+import pytest
 
 
 def test_database_connection():
@@ -27,12 +29,16 @@ def test_database_connection():
 
     test_table = os.getenv('POSTGRES_TEST_TABLE')
 
-    with conn.cursor() as cur:
-        cur.execute(f"SELECT * FROM {test_table}")
-        result = cur.fetchall()
-        assert len(result) == 3
-        assert result[0] == (1, 'Alice')
-        assert result[1] == (2, 'Bob')
-        assert result[2] == (3, 'Charlie')
+    try:
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT * FROM {test_table}")
+            result = cur.fetchall()
+            assert len(result) == 4
+            assert result[0] == (2, 2, 3)
+            assert result[1] == (2, 3, 2)
+            assert result[2] == (2, 4, 2)
+            assert result[3] == (2, 5, 3)
+    except Error as e:
+        pytest.fail(f"Connection unsuccessful: {e}")
 
     conn.close()
