@@ -107,15 +107,15 @@ class DBWorkbook(Workbook):
             )
             self.cursor = self.connection.cursor()
 
-            if not self.__check_primary_key():
-                raise DBConfigException(
-                    f"The specified primary key does not match the table {self.db_config.table_name}'s primary key"
-                )
+            # if not self.__check_primary_key():
+            #     raise DBConfigException(
+            #         f"The specified primary key does not match the table {self.db_config.table_name}'s primary key"
+            #     )
 
-            if not self.__check_order_key():
-                raise DBConfigException(
-                    f"The specified order key is not part of the table {self.db_config.table_name}'s columns"
-                )
+            # if not self.__check_order_key():
+            #     raise DBConfigException(
+            #         f"The specified order key is not part of the table {self.db_config.table_name}'s columns"
+            #     )
 
             column_names, column_types = self.__get_columns_and_types()
             self.num_columns = len(column_names)

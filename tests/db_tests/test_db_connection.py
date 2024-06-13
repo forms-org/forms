@@ -34,10 +34,10 @@ def test_database_connection():
             cur.execute(f"SELECT * FROM {test_table}")
             result = cur.fetchall()
             assert len(result) == 4
-            assert result[0] == (2, 2, 3)
-            assert result[1] == (2, 3, 2)
-            assert result[2] == (2, 4, 2)
-            assert result[3] == (2, 5, 3)
+            assert result[0] == (1, 2, 2, 3)
+            assert result[1] == (2, 2, 3, 2)
+            assert result[2] == (3, 2, 4, 2)
+            assert result[3] == (4, 2, 5, 3)
     except Error as e:
         pytest.fail(f"Connection unsuccessful: {e}")
 

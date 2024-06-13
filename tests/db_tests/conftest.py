@@ -82,16 +82,20 @@ def setup_postgres():
         os.environ['POSTGRES_DB'] = dbname
         os.environ['POSTGRES_HOST'] = host
         os.environ['POSTGRES_PORT'] = port
-        os.environ['POSTGRES_TEST_TABLE'] = test_table
 
         # Load a DataFrame into the database
         engine = create_engine(f'postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}')
         df = pd.DataFrame({
-            'A': [2, 2, 2, 2],
-            'B': [2, 3, 4, 5],
-            'C': [3, 2, 2, 3]
+            'A': [1, 2, 3, 4],
+            'B': [2, 2, 2, 2],
+            'C': [2, 3, 4, 5],
+            'D': [3, 2, 2, 3]
         })
         df.to_sql(test_table, engine, if_exists='replace', index=False)
+
+        os.environ['POSTGRES_TEST_TABLE'] = test_table
+        os.environ['POSTGRES_PRIMARY_KEY'] = 'A'
+        os.environ['POSTGRES_ORDER_KEY'] = 'A'
 
         yield
 
