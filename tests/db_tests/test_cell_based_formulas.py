@@ -40,6 +40,10 @@ def get_wb():
     wb.close()
 
 
+def test_print_table(get_wb):
+    wb = get_wb
+    wb.print_workbook()
+
 # def test_plus(get_wb):
 #     wb = get_wb
 #     computed_df = wb.compute_formula("B1+C1")

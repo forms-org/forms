@@ -245,8 +245,12 @@ class DBWorkbook(Workbook):
                 auxiliary_table_name=sql.Identifier(AUX_TABLE),
                 input_table_name=sql.Identifier(self.db_config.table_name),
                 join_condition=sql.SQL(" AND ").join(
-                    sql.SQL("{input_table_name}.{} = {auxiliary_table_name}.{}").format(
-                        sql.Identifier(col), sql.Identifier(col)
+                    sql.SQL("""{input_table_name}.{col_one} = {auxiliary_table_name}.{col_two}""")
+                    .format(
+                        input_table_name=sql.Identifier(self.db_config.table_name),
+                        auxiliary_table_name=sql.Identifier(AUX_TABLE),
+                        col_one=sql.Identifier(col),
+                        col_two=sql.Identifier(col)
                     )
                     for col in self.db_config.primary_key
                 ),
@@ -275,7 +279,7 @@ class DBWorkbook(Workbook):
 
     def print_workbook(self, num_rows=10, keep_original_labels=False):
         order_by_clause = ", ".join(self.db_config.order_key)
-        query = f"SELECT * FROM {self.db_config.db_name} ORDER BY {order_by_clause} LIMIT {num_rows}"
+        query = f"SELECT * FROM {self.db_config.table_name} ORDER BY {order_by_clause} LIMIT {num_rows}"
         try:
             df = pd.read_sql_query(query, self.connection)
             print_workbook_view(df, keep_original_labels)
