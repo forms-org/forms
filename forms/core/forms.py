@@ -245,12 +245,13 @@ class DBWorkbook(Workbook):
                 auxiliary_table_name=sql.Identifier(AUX_TABLE),
                 input_table_name=sql.Identifier(self.db_config.table_name),
                 join_condition=sql.SQL(" AND ").join(
-                    sql.SQL("""{input_table_name}.{col_one} = {auxiliary_table_name}.{col_two}""")
-                    .format(
+                    sql.SQL(
+                        """{input_table_name}.{col_one} = {auxiliary_table_name}.{col_two}"""
+                    ).format(
                         input_table_name=sql.Identifier(self.db_config.table_name),
                         auxiliary_table_name=sql.Identifier(AUX_TABLE),
                         col_one=sql.Identifier(col),
-                        col_two=sql.Identifier(col)
+                        col_two=sql.Identifier(col),
                     )
                     for col in self.db_config.primary_key
                 ),

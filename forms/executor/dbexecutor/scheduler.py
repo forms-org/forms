@@ -26,6 +26,7 @@ from forms.utils.functions import (
 )
 from forms.utils.reference import RefType
 from forms.utils.treenode import link_parent_to_children
+from forms.core.catalog import TEMP_TABLE_PREFIX
 
 
 def break_down_into_subtrees(exec_tree: DBExecNode) -> list:
@@ -82,18 +83,12 @@ class Scheduler:
     def __init__(self, exec_tree: DBExecNode):
         self.exec_tree = exec_tree
         self.subtrees = break_down_into_subtrees(exec_tree)
+        for subtree_index, subtree in enumerate(self.subtrees):
+            if isinstance(subtree, DBFuncExecNode):
+                subtree.set_intermediate_table_name(TEMP_TABLE_PREFIX + str(subtree_index))
 
-    def next_substree(self) -> DBExecNode:
-        return self.subtrees.pop(0)
+    def next_subtree(self) -> DBExecNode:
+        return self.subtrees.pop()
 
     def has_next_subtree(self) -> bool:
         return len(self.subtrees) > 0
-
-    def finish_one_subtree(self, exec_subtree: DBExecNode, intermediate_table):
-        intermediate_ref_node = create_intermediate_ref_node(intermediate_table, exec_subtree)
-
-        parent = exec_subtree.parent
-        children = parent.children
-        children[children.index(exec_subtree)] = intermediate_ref_node
-
-        link_parent_to_children(parent, children)

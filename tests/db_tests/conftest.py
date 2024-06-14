@@ -27,13 +27,7 @@ def wait_for_postgres(host, port, user, password, dbname, timeout=15):
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
-            conn = psycopg2.connect(
-                dbname=dbname,
-                user=user,
-                password=password,
-                host=host,
-                port=port
-            )
+            conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
             conn.close()
             return True
         except Error:
@@ -41,7 +35,7 @@ def wait_for_postgres(host, port, user, password, dbname, timeout=15):
     raise Exception("PostgreSQL did not start within the given timeout")
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def setup_postgres():
     docker_client = docker.from_env()
     host = "localhost"
@@ -58,44 +52,33 @@ def setup_postgres():
             environment={
                 "POSTGRES_USER": postgres_user,
                 "POSTGRES_PASSWORD": password,
-                "POSTGRES_DB": dbname
+                "POSTGRES_DB": dbname,
             },
             ports={"5432/tcp": int(port)},
-            detach=True
+            detach=True,
         )
     except DockerException as e:
         raise Exception(f"Failed to start PostgreSQL container: {e}")
 
     try:
         # Wait for the PostgreSQL service to be ready
-        wait_for_postgres(
-            host=host,
-            port=port,
-            user=postgres_user,
-            password=password,
-            dbname=dbname
-        )
+        wait_for_postgres(host=host, port=port, user=postgres_user, password=password, dbname=dbname)
 
         # Set the environment variables for the database connection
-        os.environ['POSTGRES_USER'] = postgres_user
-        os.environ['POSTGRES_PASSWORD'] = password
-        os.environ['POSTGRES_DB'] = dbname
-        os.environ['POSTGRES_HOST'] = host
-        os.environ['POSTGRES_PORT'] = port
+        os.environ["POSTGRES_USER"] = postgres_user
+        os.environ["POSTGRES_PASSWORD"] = password
+        os.environ["POSTGRES_DB"] = dbname
+        os.environ["POSTGRES_HOST"] = host
+        os.environ["POSTGRES_PORT"] = port
 
         # Load a DataFrame into the database
-        engine = create_engine(f'postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}')
-        df = pd.DataFrame({
-            'a': [1, 2, 3, 4],
-            'b': [2, 2, 2, 2],
-            'c': [2, 3, 4, 5],
-            'd': [3, 2, 2, 3]
-        })
-        df.to_sql(test_table, engine, if_exists='replace', index=False)
+        engine = create_engine(f"postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}")
+        df = pd.DataFrame({"a": [1, 2, 3, 4], "b": [2, 2, 2, 2], "c": [2, 3, 4, 5], "d": [3, 2, 2, 3]})
+        df.to_sql(test_table, engine, if_exists="replace", index=False)
 
-        os.environ['POSTGRES_TEST_TABLE'] = test_table
-        os.environ['POSTGRES_PRIMARY_KEY'] = 'a'
-        os.environ['POSTGRES_ORDER_KEY'] = 'a'
+        os.environ["POSTGRES_TEST_TABLE"] = test_table
+        os.environ["POSTGRES_PRIMARY_KEY"] = "a"
+        os.environ["POSTGRES_ORDER_KEY"] = "a"
 
         yield
 

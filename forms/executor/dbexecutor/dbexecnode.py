@@ -93,7 +93,7 @@ def from_plan_to_execution_tree(plan_node: PlanNode, table: TableCatalog) -> DBE
         raise FormSException("Unknown plan node type: {}".format(type(plan_node)))
 
 
-def create_intermediate_ref_node(table: TableCatalog, exec_subtree: DBFuncExecNode) -> DBFuncExecNode:
+def create_intermediate_ref_node(table: TableCatalog, exec_subtree: DBFuncExecNode) -> DBRefExecNode:
     out_ref_type = (
         RefType.RR
         if exec_subtree.out_ref_type != RefType.FF or exec_subtree.out_ref_type != RefType.LIT

@@ -23,15 +23,15 @@ from forms.core.forms import from_db
 @pytest.fixture(scope="module")
 def get_wb():
     wb = from_db(
-        host=os.getenv('POSTGRES_HOST'),
-        port=int(os.getenv('POSTGRES_PORT')),
-        username=os.getenv('POSTGRES_USER'),
-        password=os.getenv('POSTGRES_PASSWORD'),
-        db_name=os.getenv('POSTGRES_DB'),
-        table_name=os.getenv('POSTGRES_TEST_TABLE'),
-        primary_key=[os.getenv('POSTGRES_PRIMARY_KEY')],
-        order_key=[os.getenv('POSTGRES_ORDER_KEY')],
-        enable_rewriting=False
+        host=os.getenv("POSTGRES_HOST"),
+        port=int(os.getenv("POSTGRES_PORT")),
+        username=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        db_name=os.getenv("POSTGRES_DB"),
+        table_name=os.getenv("POSTGRES_TEST_TABLE"),
+        primary_key=[os.getenv("POSTGRES_PRIMARY_KEY")],
+        order_key=[os.getenv("POSTGRES_ORDER_KEY")],
+        enable_rewriting=False,
     )
 
     # Yield the object to be used in tests
@@ -44,10 +44,9 @@ def test_print_table(get_wb):
     wb = get_wb
     wb.print_workbook()
 
-# def test_plus(get_wb):
-#     wb = get_wb
-#     computed_df = wb.compute_formula("B1+C1")
-#     expected_df = pd.DataFrame({
-#         "A": [4, 5, 6, 7]
-#     })
-#     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
+
+def test_plus(get_wb):
+    wb = get_wb
+    computed_df = wb.compute_formula("=B1+C1")
+    expected_df = pd.DataFrame({"row_id": [1, 2, 3, 4], "A": [4, 5, 6, 7]})
+    assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
