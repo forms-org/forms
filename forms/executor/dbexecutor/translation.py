@@ -237,9 +237,11 @@ def translate_if_function(
 ) -> Composable:
     children = subtree.children
     return sql.SQL(
-        """CASE WHEN {condition}
-                      THEN {true_result}
-                      ELSE {false_result}"""
+        """CASE
+                WHEN {condition}
+                THEN {true_result}
+                ELSE {false_result}
+           END"""
     ).format(
         condition=translate_window_clause(children[0], exec_context, base_table),
         true_result=translate_window_clause(children[1], exec_context, base_table),
@@ -495,7 +497,7 @@ def compute_window_size_expression(ref_node: DBRefExecNode, exec_context: DBExec
     )
     if ref_node.out_ref_type == RefType.RR:
         window_size_sql = sql.SQL(
-            """OVER (ORDER BY {row_id}
+            """ OVER (ORDER BY {row_id}
                              ROWS BETWEEN {row_offset_start} {start_dir}
                              AND {row_offset_end} {end_dir})"""
         ).format(
@@ -532,7 +534,7 @@ def compute_window_size_expression(ref_node: DBRefExecNode, exec_context: DBExec
 
 def compute_offset_and_direction(row_id: int, ref_row_idx: int) -> tuple[int, sql.SQL]:
     ref_row_id = ref_row_idx + 1
-    if row_id < ref_row_id:
-        return (ref_row_id - row_id), WINDOW_PRECEDING
+    if row_id > ref_row_id:
+        return (row_id - ref_row_id), WINDOW_PRECEDING
     else:
-        return (row_id - ref_row_id), WINDOW_FOLLOWING
+        return (ref_row_id - row_id), WINDOW_FOLLOWING
