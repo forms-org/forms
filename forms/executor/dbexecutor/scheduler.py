@@ -16,7 +16,6 @@ from forms.executor.dbexecutor.dbexecnode import (
     DBExecNode,
     DBFuncExecNode,
     DBLitExecNode,
-    create_intermediate_ref_node,
 )
 from forms.utils.functions import (
     DB_AGGREGATE_FUNCTIONS,
@@ -43,11 +42,8 @@ def set_translatable_to_window(func_node: DBFuncExecNode):
     if func_node.function in DB_AGGREGATE_FUNCTIONS and len(func_node.children) == 1:
         func_node.translatable_to_window = True
     elif func_node.function in DB_AGGREGATE_IF_FUNCTIONS:
-        if func_node.children[0].out_ref_type == RefType.RR and isinstance(
-            func_node.children[1], DBLitExecNode
-        ):
-            if len(func_node.children) == 3 and func_node.children[2].out_ref_type == RefType.RR:
-                func_node.translatable_to_window = True
+        if isinstance(func_node.children[1], DBLitExecNode):
+            func_node.translatable_to_window = True
     elif func_node.function in DB_CELL_REFERENCE_FUNCTIONS:
         func_node.translatable_to_window = True
     elif func_node.function == Function.INDEX:
@@ -55,7 +51,7 @@ def set_translatable_to_window(func_node: DBFuncExecNode):
             func_node.children[0].out_ref_type != RefType.FF
             and func_node.children[1].out_ref_type == RefType.RR
         ):
-            if len(func_node.children) == 3 and func_node.children[2].out_ref_type == RefType.FF:
+            if len(func_node.children) == 3 and isinstance(func_node.children[2], DBLitExecNode):
                 func_node.translatable_to_window = True
     else:
         func_node.translatable_to_window = False

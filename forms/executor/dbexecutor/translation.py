@@ -299,16 +299,19 @@ def translate_aggregate_if_functions(
         output_child = input_child
         if len(subtree.children) == 3:
             output_child = subtree.children[2]
-        condition = subtree.children[1].lieteral
+        condition = subtree.children[1].literal.replace('"', "")
         input_cols = input_child.cols
         output_cols = output_child.cols
         if subtree.function == Function.SUMIF:
             agg_sql = sql.SQL("""SUM({agg_expression})""").format(
                 agg_expression=sql.SQL("+").join(
                     sql.SQL(
-                        """CASE WHEN {input_col}{condition}
+                        """ 
+                            CASE
+                                WHEN {input_col}{condition}
                                 THEN {output_col}
-                                ELSE 0 END
+                                ELSE 0
+                            END
                         """
                     ).format(
                         input_col=sql.Identifier(input_cols[i]),
@@ -354,7 +357,7 @@ def translate_index_function_to_window(
     children = subtree.children
     col_index = 0
     if len(children) == 3:
-        col_index = children[2].literal
+        col_index = int(children[2].literal)
     agg_col = children[0].cols[col_index]
     row_idx_col = children[1].cols[0]
     agg_sql = sql.SQL("""nth_value({agg_col},{idx_col})""").format(
@@ -400,26 +403,39 @@ def translate_lookup_function(
         all(isinstance(child, DBRefExecNode) for child in ref_children)
         and isinstance(lit_child, DBLitExecNode)
         and ref_children[0].out_ref_type == RefType.RR
-        and all(child.out_ref_type == RefType for child in ref_children[1:])
+        and all(child.out_ref_type == RefType.FF for child in ref_children[1:])
     ):
         source_col = ref_children[0].cols[0]
         search_col = ref_children[1].cols[0]
         target_col = ref_children[2].cols[0]
+
+        table_one = next_local_temp_table_name()
+        table_two = next_local_temp_table_name()
+        table_three = next_local_temp_table_name()
+        temp_table = next_local_temp_table_name()
         if lit_child.literal == 0:
             return sql.SQL(
-                """SELECT search_id, {target_col}
-                           FROM (
-                           SELECT t1.{row_id} as search_id, MIN(t2.{row_id}) as target_id
-                           FROM {base_table} t1
-                           LEFT JOIN T t2 ON t1.{source_col} = t2.{search_col}
-                           GROUP BY search_id) Temp
-                           LEFT JOIN {base_table} t3 on Temp.target_id = t3.{row_id}"""
+                """
+                    SELECT search_id, {target_col}
+                    FROM (
+                           SELECT {table_one}.{row_id} as search_id, MIN({table_two}.{row_id}) as target_id
+                           FROM {base_table} {table_one}
+                           LEFT JOIN {base_table} {table_two} ON {table_one}.{source_col} = {table_two}.{search_col}
+                           GROUP BY search_id
+                         ) {temp_table}
+                    LEFT JOIN {base_table} {table_three} on {temp_table}.target_id = {table_three}.{row_id}
+                    ORDER BY search_id
+                """
             ).format(
                 source_col=sql.Identifier(source_col),
                 search_col=sql.Identifier(search_col),
                 target_col=sql.Identifier(target_col),
                 base_table=base_table,
+                temp_table=sql.Identifier(temp_table),
                 row_id=sql.Identifier(ROW_ID),
+                table_one=sql.Identifier(table_one),
+                table_two=sql.Identifier(table_two),
+                table_three=sql.Identifier(table_three),
             )
         else:
             if lit_child.literal == 1:
@@ -431,20 +447,26 @@ def translate_lookup_function(
             else:
                 assert False
             return sql.SQL(
-                """SELECT search_id, {target_col}
-                           FROM (
-                           SELECT t1.{row_id} as search_id, {agg_op}(t2.{row_id}) as target_id
-                           FROM {base_table} t1
-                           LEFT JOIN {base_table} t2 ON t1.{source_col} {comp_op} t2.{search_col}
-                           GROUP BY t1.row_id) Temp
-                           LEFT JOIN {base_table} t3 ON Temp.target_id = t3.{row_id}
-                           """
+                """
+                        SELECT search_id, {target_col}
+                        FROM (
+                           SELECT {table_one}.{row_id} as search_id, {agg_op}({table_two}.{row_id}) as target_id
+                           FROM {base_table} {table_one}
+                           LEFT JOIN {base_table} {table_two} ON {table_one}.{source_col} {comp_op} {table_two}.{search_col}
+                           GROUP BY {table_one}.row_id) {temp_table}
+                        LEFT JOIN {base_table} {table_three} ON {temp_table}.target_id = {table_three}.{row_id}
+                        ORDER BY search_id
+                """
             ).format(
                 source_col=sql.Identifier(source_col),
                 search_col=sql.Identifier(search_col),
                 target_col=sql.Identifier(target_col),
                 base_table=base_table,
+                temp_table=sql.Identifier(temp_table),
                 row_id=sql.Identifier(ROW_ID),
+                table_one=sql.Identifier(table_one),
+                table_two=sql.Identifier(table_two),
+                table_three=sql.Identifier(table_three),
                 agg_op=sql.SQL(agg_op),
                 comp_op=sql.SQL(comp_op),
             )
@@ -464,21 +486,29 @@ def translate_index_function_to_join(
     children = subtree.children
     col_index = 0
     if len(children) == 3:
-        col_index = children[2].literal
+        col_index = int(children[2].literal)
     target_col = children[0].cols[col_index]
     row_idx_col = children[1].cols[0]
-    offset = 0
+    alias_one = next_local_temp_table_name()
+    alias_two = next_local_temp_table_name()
+    offset = 1
+
     return sql.SQL(
-        """SELECT t1.{row_id}, {target_col})
-                   FROM {table_name} t1
-                   LEFT JOIN {table_name} t2 ON t1.{row_idx_col} + {offset} = t2.{row_id}
-                   """
+        """
+            SELECT {table_one}.{row_id}, {table_two}.{target_col}
+            FROM {table_name} {table_one}
+            LEFT JOIN {table_name} {table_two} 
+            ON {table_one}.{row_idx_col} + {offset} = {table_two}.{row_id}
+            ORDER BY {table_one}.{row_id}
+        """
     ).format(
         row_id=sql.Identifier(ROW_ID),
         target_col=sql.Identifier(target_col),
         table_name=base_table,
         row_idx_col=sql.Identifier(row_idx_col),
         offset=sql.Literal(offset),
+        table_one=sql.SQL(alias_one),
+        table_two=sql.SQL(alias_two),
     )
 
 
