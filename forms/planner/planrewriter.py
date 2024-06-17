@@ -13,7 +13,7 @@
 #  limitations under the License.
 
 from forms.planner.plannode import PlanNode, FunctionNode
-from forms.planner.logicalrule import RewritingRule, full_rewriting_rule_list
+from forms.planner.logicalrule import RewritingRule, full_rewrite_rule_list
 from forms.planner.physicalrule import full_physical_rule_list
 from forms.core.config import FormSConfig
 from forms.utils.treenode import link_parent_to_children
@@ -38,7 +38,7 @@ class PlanRewriter:
     def rewrite_plan(self, root: PlanNode) -> PlanNode:
         plan_tree = root
         if self.forms_config.enable_rewriting:
-            for rule in full_rewriting_rule_list:
+            for rule in full_rewrite_rule_list:
                 plan_tree = apply_one_rule(plan_tree, rule)
 
             for rule in full_physical_rule_list:

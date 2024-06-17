@@ -23,7 +23,7 @@ from forms.utils.functions import (
     CLOSE_VALUE,
     FunctionType,
 )
-from forms.utils.reference import RefType, Ref, ORIGIN, AXIS_ALONG_ROW
+from forms.utils.reference import RefType, Ref, ORIGIN, AXIS_ALONG_ROW, DEFAULT_AXIS
 from forms.utils.treenode import link_parent_to_children
 from forms.utils.generic import same_list
 
@@ -50,9 +50,9 @@ class PlusToSumRule(RewritingRule):
 def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     new_child = child
     if (
-        isinstance(child, RefNode)
-        and (child.out_ref_type != RefType.RR and child.out_ref_type != RefType.LIT)
-        and (parent.function in DISTRIBUTIVE_FUNCTIONS)
+            isinstance(child, RefNode)
+            and child.out_ref_type != RefType.LIT
+            and (parent.function in DISTRIBUTIVE_FUNCTIONS)
     ):
         new_child = parent.replicate_node()
         new_child.seps = []
@@ -64,10 +64,26 @@ def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
 class DistFactorOutRule(RewritingRule):
     @staticmethod
     def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        ret_plan_node = plan_node
         if len(plan_node.children) > 1:
             new_children = [factor_out(child, plan_node) for child in plan_node.children]
             link_parent_to_children(plan_node, new_children)
-        return plan_node
+            if plan_node.function == Function.SUM:
+                ret_plan_node = DistFactorOutRule.convert_sum_to_plus(plan_node)
+        return ret_plan_node
+
+    @staticmethod
+    def convert_sum_to_plus(plan_node: FunctionNode) -> FunctionNode:
+        parent = plan_node.parent
+        children = plan_node.children
+        while len(children) > 1:
+            plus_children = children[0:2]
+            plus_parent = FunctionNode(Function.PLUS, DEFAULT_AXIS)
+            link_parent_to_children(plus_parent, plus_children)
+            children = [plus_parent] + children[2:]
+        if parent is not None:
+            link_parent_to_children(parent, children)
+        return children[0]
 
 
 # Factor-in rules are adopted to optimize the RR case
@@ -75,16 +91,16 @@ def factor_in(child: PlanNode, parent: FunctionNode) -> list:
     new_children = [child]
     if isinstance(child, FunctionNode):
         if (
-            parent.function in DISTRIBUTIVE_FUNCTIONS
-            and child.function == parent.function
-            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+                parent.function in DISTRIBUTIVE_FUNCTIONS
+                and child.function == parent.function
+                and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
             parent.seps += child.seps
         elif (
-            parent.function == Function.AVG
-            and child.function == Function.SUM
-            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+                parent.function == Function.AVG
+                and child.function == Function.SUM
+                and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
             parent.seps += child.seps
@@ -141,4 +157,5 @@ class AverageRule(RewritingRule):
         return plan_node
 
 
-full_rewriting_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
+# full_rewriting_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
+full_rewrite_rule_list = [DistFactorOutRule]
