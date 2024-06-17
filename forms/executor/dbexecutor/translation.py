@@ -64,13 +64,19 @@ def translate(
                 subtree, exec_context, base_table, intermediate_table_name
             )
         elif subtree.function == Function.LOOKUP:
-            ret_sql = translate_lookup_function(subtree, exec_context, base_table)
+            ret_sql = translate_lookup_function(
+                subtree, exec_context, base_table, intermediate_table_name
+            )
         elif subtree.function == Function.MATCH:
-            ret_sql = translate_match_function(subtree, exec_context, base_table)
+            ret_sql = translate_match_function(
+                subtree, exec_context, base_table, intermediate_table_name
+            )
         elif subtree.function == Function.INDEX:
-            ret_sql = translate_index_function_to_join(subtree, exec_context, base_table)
+            ret_sql = translate_index_function_to_join(
+                subtree, exec_context, base_table, intermediate_table_name
+            )
         else:
-            ret_sql = translate_using_udf(subtree, exec_context, base_table)
+            ret_sql = translate_using_udf(subtree, exec_context, base_table, intermediate_table_name)
         # ret_sql = get_required_formula_results(ret_sql, exec_context)
     else:
         assert False
@@ -100,9 +106,8 @@ def next_local_temp_table_name() -> str:
 
 
 def create_temp_table(sel_query: Composable, subtree_temp_table_name: str) -> Composable:
-    return sql.SQL("""CREATE TEMP {table_name} AS {sel_query}""").format(
-        sel_query=sel_query,
-        table_name=sql.Identifier(subtree_temp_table_name)
+    return sql.SQL("""CREATE TEMP TABLE {table_name} AS {sel_query}""").format(
+        sel_query=sel_query, table_name=sql.Identifier(subtree_temp_table_name)
     )
 
 
@@ -118,14 +123,14 @@ def find_or_generate_base_table(subtree: DBExecNode) -> Composable:
                 table_two=sql.Identifier(ref_node_list[i].table.table_name),
                 row_id=sql.Identifier(ROW_ID),
             )
-            for i in range(1, len(ref_node_list) + 1)
+            for i in range(1, len(ref_node_list))
         ]
-        column_list = [
-            sql.Identifier(column_str)
-            for ref_node in ref_node_list
-            for column_str in ref_node.cols
-            if column_str != ROW_ID
-        ]
+        column_list = []
+        for ref_node in ref_node_list:
+            for column_str in ref_node.cols:
+                if column_str != ROW_ID:
+                    column_list.append(sql.Identifier(column_str))
+
         return sql.SQL(
             """(SELECT {first_table}.{row_id}, {columns}
                            FROM {tables}
@@ -396,7 +401,10 @@ def translate_literal(lit_node: DBLitExecNode) -> Composable:
 
 
 def translate_lookup_function(
-    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
+    subtree: DBFuncExecNode,
+    exec_context: DBExecContext,
+    base_table: Composable,
+    subtree_temp_table_name: str,
 ) -> Composable:
     ref_children = subtree.children[:3]
     lit_child = subtree.children[3]
@@ -417,7 +425,7 @@ def translate_lookup_function(
         if lit_child.literal == 0:
             return sql.SQL(
                 """
-                    SELECT search_id, {target_col}
+                    SELECT search_id AS {row_id}, {target_col} AS {new_column_name}
                     FROM (
                            SELECT {table_one}.{row_id} as search_id, MIN({table_two}.{row_id}) as target_id
                            FROM {base_table} {table_one}
@@ -437,6 +445,7 @@ def translate_lookup_function(
                 table_one=sql.Identifier(table_one),
                 table_two=sql.Identifier(table_two),
                 table_three=sql.Identifier(table_three),
+                new_column_name=sql.Identifier(subtree_temp_table_name + TEMP_TABLE_COL_SUFFIX),
             )
         else:
             if lit_child.literal == 1:
@@ -476,13 +485,19 @@ def translate_lookup_function(
 
 
 def translate_match_function(
-    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
+    subtree: DBFuncExecNode,
+    exec_context: DBExecContext,
+    base_table: Composable,
+    subtree_temp_table_name: str,
 ) -> Composable:
     pass
 
 
 def translate_index_function_to_join(
-    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
+    subtree: DBFuncExecNode,
+    exec_context: DBExecContext,
+    base_table: Composable,
+    subtree_temp_table_name: str,
 ) -> Composable:
     children = subtree.children
     col_index = 0
@@ -496,7 +511,7 @@ def translate_index_function_to_join(
 
     return sql.SQL(
         """
-            SELECT {table_one}.{row_id}, {table_two}.{target_col}
+            SELECT {table_one}.{row_id} AS {row_id}, {table_two}.{target_col} AS {new_column_name}
             FROM {table_name} {table_one}
             LEFT JOIN {table_name} {table_two} 
             ON {table_one}.{row_idx_col} + {offset} = {table_two}.{row_id}
@@ -510,11 +525,15 @@ def translate_index_function_to_join(
         offset=sql.Literal(offset),
         table_one=sql.SQL(alias_one),
         table_two=sql.SQL(alias_two),
+        new_column_name=sql.Identifier(subtree_temp_table_name + TEMP_TABLE_COL_SUFFIX),
     )
 
 
 def translate_using_udf(
-    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
+    subtree: DBFuncExecNode,
+    exec_context: DBExecContext,
+    base_table: Composable,
+    subtree_temp_table_name: str,
 ) -> Composable:
     pass
 

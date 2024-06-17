@@ -38,6 +38,7 @@ class DBConfig(FormSConfig):
         primary_key: list,
         order_key: list,
         enable_rewriting: bool,
+        enable_pipelining: bool,
     ):
         super().__init__(enable_rewriting)
         self.host = host
@@ -48,6 +49,7 @@ class DBConfig(FormSConfig):
         self.table_name = table_name
         self.primary_key = primary_key
         self.order_key = order_key
+        self.enable_pipelining = enable_pipelining
 
 
 class DFExecContext:

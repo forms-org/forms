@@ -51,7 +51,7 @@ class DBExecutor:
 
     def execute_formula_plan(self, formula_plan: PlanNode) -> pd.DataFrame:
         exec_tree = from_plan_to_execution_tree(formula_plan, self.exec_context.base_table)
-        scheduler = Scheduler(exec_tree)
+        scheduler = Scheduler(exec_tree, self.db_config.enable_pipelining)
         df = None
         try:
             while scheduler.has_next_subtree():
@@ -64,11 +64,14 @@ class DBExecutor:
                     exec_subtree, self.exec_context, intermediate_table_name, is_root_subtree
                 )
                 if scheduler.has_next_subtree():
+                    sql_str = sql_composable.as_string(self.exec_context.conn)
                     self.exec_context.cursor.execute(sql_composable)
                     col_names, col_types = get_columns_and_types(
                         self.exec_context.cursor, intermediate_table_name
                     )
-                    intermediate_table = TableCatalog(intermediate_table_name, col_names, col_types)
+                    intermediate_table = TableCatalog(
+                        intermediate_table_name, col_names[1:], col_types[1:]
+                    )
                     finish_one_subtree(intermediate_table, exec_subtree)
                 else:
                     sql_str = sql_composable.as_string(self.exec_context.conn)

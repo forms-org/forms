@@ -24,21 +24,20 @@ from forms.utils.functions import (
     Function,
 )
 from forms.utils.reference import RefType
-from forms.utils.treenode import link_parent_to_children
 from forms.core.catalog import TEMP_TABLE_PREFIX
 
 
-def break_down_into_subtrees(exec_tree: DBExecNode) -> list:
+def break_down_into_subtrees(exec_tree: DBExecNode, enable_pipelining: bool) -> list:
     if isinstance(exec_tree, DBFuncExecNode):
         set_translatable_to_window(exec_tree)
         subtrees = []
-        generate_subtrees(exec_tree, True, subtrees)
+        generate_subtrees(exec_tree, True, enable_pipelining, subtrees)
         return subtrees
     else:
         return [exec_tree]
 
 
-def set_translatable_to_window(func_node: DBFuncExecNode):
+def set_translatable_to_window(func_node: DBFuncExecNode) -> None:
     if func_node.function in DB_AGGREGATE_FUNCTIONS and len(func_node.children) == 1:
         func_node.translatable_to_window = True
     elif func_node.function in DB_AGGREGATE_IF_FUNCTIONS:
@@ -61,24 +60,26 @@ def set_translatable_to_window(func_node: DBFuncExecNode):
             set_translatable_to_window(child)
 
 
-def generate_subtrees(exec_tree: DBFuncExecNode, init_search: bool, subtrees: list):
-    if exec_tree.translatable_to_window:
+def generate_subtrees(
+    exec_tree: DBFuncExecNode, init_search: bool, enable_pipelining: bool, subtrees: list
+):
+    if exec_tree.translatable_to_window and enable_pipelining:
         if init_search:
             subtrees.append(exec_tree)
         for child in exec_tree.children:
             if isinstance(child, DBFuncExecNode):
-                generate_subtrees(child, False, subtrees)
+                generate_subtrees(child, False, enable_pipelining, subtrees)
     else:
         subtrees.append(exec_tree)
         for child in exec_tree.children:
             if isinstance(child, DBFuncExecNode):
-                generate_subtrees(child, True, subtrees)
+                generate_subtrees(child, True, enable_pipelining, subtrees)
 
 
 class Scheduler:
-    def __init__(self, exec_tree: DBExecNode):
+    def __init__(self, exec_tree: DBExecNode, enable_pipelining: bool):
         self.exec_tree = exec_tree
-        self.subtrees = break_down_into_subtrees(exec_tree)
+        self.subtrees = break_down_into_subtrees(exec_tree, enable_pipelining)
         for subtree_index, subtree in enumerate(self.subtrees):
             if isinstance(subtree, DBFuncExecNode):
                 subtree.set_intermediate_table_name(TEMP_TABLE_PREFIX + str(subtree_index))

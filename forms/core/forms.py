@@ -321,6 +321,7 @@ def from_db(
     primary_key: list,
     order_key: list,
     enable_rewriting=True,
+    enable_pipelining=True,
 ) -> DBWorkbook:
     try:
         return DBWorkbook(
@@ -334,6 +335,7 @@ def from_db(
                 primary_key,
                 order_key,
                 enable_rewriting,
+                enable_pipelining,
             )
         )
     except FormSException as e:
