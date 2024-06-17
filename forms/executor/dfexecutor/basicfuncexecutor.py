@@ -165,7 +165,7 @@ def median_df_executor(physical_subtree: DFFuncExecNode) -> DFTable:
             window_size = ref.last_row - ref.row + 1
             step = df.shape[1]
             if out_ref_type == RefType.RR:
-                new_df = pd.concat([pd.Series([np.NaN]), df.stack()])
+                new_df = pd.concat([pd.Series([np.nan]), df.stack()])
                 window_size = window_size * step
                 result = new_df.rolling(window_size, step=step).median().dropna()
             elif out_ref_type == RefType.FR:
