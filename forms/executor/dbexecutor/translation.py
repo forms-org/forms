@@ -99,9 +99,10 @@ def next_local_temp_table_name() -> str:
     return f"{LOCAL_TEMP_TABLE_PREFIX}{local_temp_table_number}"
 
 
-def create_temp_table(sel_query: sql.SQL, subtree_temp_table_name: str) -> Composable:
+def create_temp_table(sel_query: Composable, subtree_temp_table_name: str) -> Composable:
     return sql.SQL("""CREATE TEMP {table_name} AS {sel_query}""").format(
-        table_name=sql.Identifier(subtree_temp_table_name), sel_query=sql.Identifier(sel_query)
+        sel_query=sel_query,
+        table_name=sql.Identifier(subtree_temp_table_name)
     )
 
 

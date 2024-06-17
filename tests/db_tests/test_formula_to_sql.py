@@ -45,6 +45,14 @@ def test_print_table(get_wb):
     wb.print_workbook()
 
 
+# Mixed formulas
+# def test_mixed_formulas(get_wb):
+#     wb = get_wb
+#     computed_df = wb.compute_formula("=A1+INDEX(D$1:D$4,A1)")
+#     expected_df = pd.DataFrame({"row_id": [1, 2, 3, 4], "A": [3, 3, 4, np.nan]})
+#     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
+
+
 # Lookup formulas
 
 # TODO: index function is correct, but pandas does not execute "nth_value()" function in SQL
