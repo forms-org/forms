@@ -50,9 +50,9 @@ class PlusToSumRule(RewritingRule):
 def factor_out(child: PlanNode, parent: FunctionNode) -> PlanNode:
     new_child = child
     if (
-            isinstance(child, RefNode)
-            and child.out_ref_type != RefType.LIT
-            and (parent.function in DISTRIBUTIVE_FUNCTIONS)
+        isinstance(child, RefNode)
+        and child.out_ref_type != RefType.LIT
+        and (parent.function in DISTRIBUTIVE_FUNCTIONS)
     ):
         new_child = parent.replicate_node()
         new_child.seps = []
@@ -68,8 +68,18 @@ class DistFactorOutRule(RewritingRule):
         if len(plan_node.children) > 1:
             new_children = [factor_out(child, plan_node) for child in plan_node.children]
             link_parent_to_children(plan_node, new_children)
+        return ret_plan_node
+
+
+class DBDistFactorOutRule(RewritingRule):
+    @staticmethod
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        ret_plan_node = plan_node
+        if len(plan_node.children) > 1:
+            new_children = [factor_out(child, plan_node) for child in plan_node.children]
+            link_parent_to_children(plan_node, new_children)
             if plan_node.function == Function.SUM:
-                ret_plan_node = DistFactorOutRule.convert_sum_to_plus(plan_node)
+                ret_plan_node = DBDistFactorOutRule.convert_sum_to_plus(plan_node)
         return ret_plan_node
 
     @staticmethod
@@ -91,16 +101,16 @@ def factor_in(child: PlanNode, parent: FunctionNode) -> list:
     new_children = [child]
     if isinstance(child, FunctionNode):
         if (
-                parent.function in DISTRIBUTIVE_FUNCTIONS
-                and child.function == parent.function
-                and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+            parent.function in DISTRIBUTIVE_FUNCTIONS
+            and child.function == parent.function
+            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
             parent.seps += child.seps
         elif (
-                parent.function == Function.AVG
-                and child.function == Function.SUM
-                and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
+            parent.function == Function.AVG
+            and child.function == Function.SUM
+            and all([grandchild.out_ref_type == RefType.RR for grandchild in child.children])
         ):
             new_children = child.children
             parent.seps += child.seps
@@ -157,5 +167,5 @@ class AverageRule(RewritingRule):
         return plan_node
 
 
-# full_rewriting_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
-full_rewrite_rule_list = [DistFactorOutRule]
+df_full_rewrite_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
+db_full_rewrite_rule_list = [DBDistFactorOutRule]

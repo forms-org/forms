@@ -16,17 +16,12 @@
 from forms.core.catalog import TableCatalog
 
 
-class FormSConfig:
+class DFConfig:
     def __init__(self, enable_rewriting):
-        self.enable_rewriting = enable_rewriting
+        self.df_enable_rewriting = enable_rewriting
 
 
-class DFConfig(FormSConfig):
-    def __init__(self, enable_rewriting):
-        super().__init__(enable_rewriting)
-
-
-class DBConfig(FormSConfig):
+class DBConfig:
     def __init__(
         self,
         host: str,
@@ -40,7 +35,6 @@ class DBConfig(FormSConfig):
         enable_rewriting: bool,
         enable_pipelining: bool,
     ):
-        super().__init__(enable_rewriting)
         self.host = host
         self.port = port
         self.username = username
@@ -50,6 +44,7 @@ class DBConfig(FormSConfig):
         self.primary_key = primary_key
         self.order_key = order_key
         self.enable_pipelining = enable_pipelining
+        self.db_enable_rewriting = enable_rewriting
 
 
 class DFExecContext:

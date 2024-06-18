@@ -26,7 +26,7 @@ from forms.executor.dfexecutor.dfexecutor import DFExecutor
 
 from forms.parser.parser import parse_formula
 from forms.planner.plannode import PlanNode
-from forms.planner.planrewriter import PlanRewriter
+from forms.planner.planrewriter import rewrite_plan
 from forms.utils.functions import FunctionExecutor
 from forms.utils.generic import get_columns_and_types
 from forms.utils.metrics import MetricsTracker
@@ -70,7 +70,7 @@ class DFWorkbook(Workbook):
         try:
             root = parse_formula_str(formula_str)
             validate(FunctionExecutor.DF_EXECUTOR, self.df.shape[0], self.df.shape[1], root)
-            root = PlanRewriter(self.df_config).rewrite_plan(root)
+            root = rewrite_plan(root, df_enable_rewriting=self.df_config.df_enable_rewriting)
 
             if num_formulas <= 0:
                 num_formulas = self.df.shape[0]
@@ -262,7 +262,7 @@ class DBWorkbook(Workbook):
         try:
             root = parse_formula_str(formula_str)
             validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_columns, root)
-            root = PlanRewriter(self.db_config).rewrite_plan(root)
+            root = rewrite_plan(root, db_enable_rewriting=self.db_config.db_enable_rewriting)
 
             if num_formulas <= 0:
                 num_formulas = self.num_rows

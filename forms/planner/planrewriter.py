@@ -13,9 +13,8 @@
 #  limitations under the License.
 
 from forms.planner.plannode import PlanNode, FunctionNode
-from forms.planner.logicalrule import RewritingRule, full_rewrite_rule_list
+from forms.planner.logicalrule import RewritingRule, db_full_rewrite_rule_list, df_full_rewrite_rule_list
 from forms.planner.physicalrule import full_physical_rule_list
-from forms.core.config import FormSConfig
 from forms.utils.treenode import link_parent_to_children
 
 
@@ -31,17 +30,19 @@ def apply_one_rule(plan_tree: PlanNode, rule: RewritingRule) -> PlanNode:
     return new_plan_tree
 
 
-class PlanRewriter:
-    def __init__(self, form_config: FormSConfig):
-        self.forms_config = form_config
-
-    def rewrite_plan(self, root: PlanNode) -> PlanNode:
-        plan_tree = root
-        if self.forms_config.enable_rewriting:
-            for rule in full_rewrite_rule_list:
+def rewrite_plan(
+    root: PlanNode, df_enable_rewriting: bool = False, db_enable_rewriting: bool = False
+) -> PlanNode:
+    plan_tree = root
+    if df_enable_rewriting or db_enable_rewriting:
+        if df_enable_rewriting:
+            for rule in df_full_rewrite_rule_list:
+                plan_tree = apply_one_rule(plan_tree, rule)
+        else:
+            for rule in db_full_rewrite_rule_list:
                 plan_tree = apply_one_rule(plan_tree, rule)
 
-            for rule in full_physical_rule_list:
-                plan_tree = apply_one_rule(plan_tree, rule)
+        for rule in full_physical_rule_list:
+            plan_tree = apply_one_rule(plan_tree, rule)
 
-        return plan_tree
+    return plan_tree

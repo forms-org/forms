@@ -15,9 +15,9 @@
 import pytest
 
 from forms.parser.parser import parse_formula
-from forms.planner.planrewriter import PlanRewriter
 from forms.planner.plannode import PlanNode, FunctionNode, RefNode
 from forms.core.config import DFConfig
+from forms.planner.planrewriter import rewrite_plan
 from forms.utils.functions import Function, FunctionExecutor
 from forms.utils.reference import DEFAULT_AXIS
 from forms.utils.validator import validate
@@ -29,8 +29,7 @@ def gen_one_test_case(formula: str) -> PlanNode:
     validate(FunctionExecutor.DF_EXECUTOR, 1000, 1000, root)
 
     df_config = DFConfig(True)
-    plan_rewriter = PlanRewriter(df_config)
-    root = plan_rewriter.rewrite_plan(root)
+    root = rewrite_plan(root, df_enable_rewriting=df_config.df_enable_rewriting)
     return root
 
 
