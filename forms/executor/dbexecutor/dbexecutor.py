@@ -51,7 +51,7 @@ class DBExecutor:
 
     def get_sql_strings(self, formula_plan: PlanNode) -> list:
         exec_tree = from_plan_to_execution_tree(formula_plan, self.exec_context.base_table)
-        scheduler = Scheduler(exec_tree)
+        scheduler = Scheduler(exec_tree, self.db_config.enable_pipelining)
         sql_strings = []
         exec_subtree = scheduler.next_subtree()
         is_root_subtree = not scheduler.has_next_subtree()

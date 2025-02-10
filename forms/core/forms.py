@@ -282,7 +282,7 @@ class DBWorkbook(Workbook):
         try:
             root = parse_formula_str(formula_str)
             validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_columns, root)
-            root = PlanRewriter(self.db_config).rewrite_plan(root)
+            root = rewrite_plan(root, db_enable_rewriting=self.db_config.db_enable_rewriting)
 
             if num_formulas <= 0:
                 num_formulas = self.num_rows
