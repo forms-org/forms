@@ -34,6 +34,8 @@ class Function(Enum):
     SUMIF = "sumif"
     COUNTIF = "countif"
     AVERAGEIF = "averageif"
+    MAXIF = "maxif"
+    MINIF = "minif"
 
     # Text Functions
     CONCAT = "concat"
@@ -234,9 +236,13 @@ DB_SUPPORTED_FUNCTIONS = {
     Function.DIVIDE,
     # Aggregation Functions
     Function.SUM,
+    Function.MAX,
+    Function.MIN,
     Function.COUNT,
     Function.AVG,
     Function.SUMIF,
+    Function.MAXIF,
+    Function.MINIF,
     Function.COUNTIF,
     Function.AVERAGEIF,
     # Control Function
@@ -253,8 +259,8 @@ DB_SUPPORTED_FUNCTIONS = {
     Function.INDEX,
 }
 
-DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.COUNT, Function.AVG}
-DB_AGGREGATE_IF_FUNCTIONS = {Function.SUMIF, Function.COUNTIF, Function.AVERAGEIF}
+DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.MAX, Function.MIN, Function.COUNT, Function.AVG}
+DB_AGGREGATE_IF_FUNCTIONS = {Function.SUMIF, Function.MAXIF, Function.MINIF, Function.COUNTIF, Function.AVERAGEIF}
 DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF} | COMPARISON_FUNCTIONS
 DB_LOOKUP_FUNCTIONS = {
     Function.VLOOKUP,

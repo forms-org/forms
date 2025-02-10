@@ -242,6 +242,18 @@ def translate_if_function(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     children = subtree.children
+    if isinstance(children[1], DBLitExecNode) and children[1].literal == '"NULL"':
+        return sql.SQL(
+            """CASE
+                WHEN {condition}
+                THEN NULL 
+                ELSE {false_result}
+           END"""
+           ).format(
+                condition=translate_window_clause(children[0], exec_context, base_table),
+                false_result=translate_window_clause(children[2], exec_context, base_table),
+           )       
+
     return sql.SQL(
         """CASE
                 WHEN {condition}
@@ -275,6 +287,14 @@ def translate_aggregate_functions(
             agg_sql = sql.SQL("""{function}({agg_column})""").format(
                 function=sql.SQL(subtree.function.value),
                 agg_column=sql.SQL("+").join(sql.Identifier(col) for col in child.cols),
+            )
+        elif subtree.function == Function.MAX or subtree.function == Function.MIN:
+            row_func = "MAX" if subtree.function == Function.MAX else "MIN"
+            col_func = "GREATEST" if subtree.function == Function.MAX else "LEAST"
+            agg_sql = sql.SQL("""{row_func}({col_func}({agg_column}))""").format(
+                row_func=sql.SQL(row_func),
+                col_func=sql.SQL(col_func),
+                agg_column=sql.SQL(",").join(sql.Identifier(col) for col in child.cols),
             )
         elif subtree.function == Function.COUNT:
             agg_sql = sql.SQL("""{num_columns} * {function}({agg_column})""").format(
@@ -326,7 +346,30 @@ def translate_aggregate_if_functions(
                     )
                     for i in range(len(input_child.cols))
                 )
-            )
+            ) 
+        elif subtree.function == Function.MAXIF or subtree.function == Function.MINIF:
+            row_func = "MAX" if subtree.function == Function.MAXIF else "MIN"
+            col_func = "GREATEST" if subtree.function == Function.MAXIF else "LEAST"
+            agg_sql = sql.SQL("""{row_func}({col_func}({agg_expression}))""").format(
+                row_func=sql.SQL(row_func),
+                col_func=sql.SQL(col_func),
+                agg_expression=sql.SQL(",").join(
+                    sql.SQL(
+                        """ 
+                            CASE
+                                WHEN {input_col}{condition}
+                                THEN {output_col}
+                                ELSE NULL
+                            END
+                        """
+                    ).format(
+                        input_col=sql.Identifier(input_cols[i]),
+                        condition=sql.SQL(condition),
+                        output_col=sql.Identifier(output_cols[i]),
+                    )
+                    for i in range(len(input_child.cols))
+                )
+            )            
         elif subtree.function == Function.COUNTIF:
             agg_sql = sql.SQL("""SUM({agg_expression})""").format(
                 agg_expression=sql.SQL("+").join(

@@ -278,6 +278,27 @@ class DBWorkbook(Workbook):
             print(f"An error occurred: {e}")
             traceback.print_exception(*sys.exc_info())
 
+    def print_sql_strings(self, formula_str: str, num_formulas: int = -1, **kwargs):
+        try:
+            root = parse_formula_str(formula_str)
+            validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_columns, root)
+            root = PlanRewriter(self.db_config).rewrite_plan(root)
+
+            if num_formulas <= 0:
+                num_formulas = self.num_rows
+            exec_context = DBExecContext(
+                self.connection, self.cursor, self.base_table, START_ROW_ID, START_ROW_ID + num_formulas
+            )
+            executor = DBExecutor(self.db_config, exec_context, self.metrics_tracker)
+            sql_strings = executor.get_sql_strings(root)
+            executor.clean_up()
+
+            for s in sql_strings:
+                print(s) 
+        except FormSException as e:
+            print(f"An error occurred: {e}")
+            traceback.print_exception(*sys.exc_info())
+
     def print_workbook(self, num_rows=10, keep_original_labels=False):
         order_by_clause = ", ".join(self.db_config.order_key)
         query = f"SELECT * FROM {self.db_config.table_name} ORDER BY {order_by_clause} LIMIT {num_rows}"

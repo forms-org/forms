@@ -49,6 +49,21 @@ class DBExecutor:
         self.exec_context = exec_context
         self.metrics_tracker = metrics_tracker
 
+    def get_sql_strings(self, formula_plan: PlanNode) -> list:
+        exec_tree = from_plan_to_execution_tree(formula_plan, self.exec_context.base_table)
+        scheduler = Scheduler(exec_tree)
+        sql_strings = []
+        exec_subtree = scheduler.next_subtree()
+        is_root_subtree = not scheduler.has_next_subtree()
+        intermediate_table_name = (
+                exec_tree.intermediate_table_name if isinstance(exec_tree, DBFuncExecNode) else ""
+                )
+        sql_str = translate(
+            exec_subtree, self.exec_context, intermediate_table_name, is_root_subtree
+        ).as_string(self.exec_context.conn)
+        sql_strings.append(sql_str)
+        return sql_strings
+
     def execute_formula_plan(self, formula_plan: PlanNode) -> pd.DataFrame:
         exec_tree = from_plan_to_execution_tree(formula_plan, self.exec_context.base_table)
         scheduler = Scheduler(exec_tree, self.db_config.enable_pipelining)
