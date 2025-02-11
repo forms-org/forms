@@ -31,7 +31,7 @@ def get_wb():
         table_name=os.getenv("POSTGRES_TEST_TABLE"),
         primary_key=[os.getenv("POSTGRES_PRIMARY_KEY")],
         order_key=[os.getenv("POSTGRES_ORDER_KEY")],
-        enable_rewriting=False,
+        enable_rewriting=True,
     )
 
     # Yield the object to be used in tests
@@ -42,4 +42,4 @@ def get_wb():
 # Check out the SQL strings 
 def test_get_sql_strings(get_wb):
     wb = get_wb
-    wb.print_sql_strings('=MAX(B1:C2)')
+    wb.print_sql_strings('=MAX(B1:C2, C1:D2)')

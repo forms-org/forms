@@ -15,7 +15,7 @@
 from abc import ABC, abstractmethod
 from openpyxl.formula.tokenizer import Token
 
-from forms.planner.plannode import PlanNode, RefNode, FunctionNode
+from forms.planner.plannode import PlanNode, RefNode, FunctionNode, LiteralNode
 from forms.utils.functions import (
     Function,
     DISTRIBUTIVE_FUNCTIONS,
@@ -75,20 +75,40 @@ class DBDistFactorOutRule(RewritingRule):
     @staticmethod
     def rewrite(plan_node: FunctionNode) -> FunctionNode:
         ret_plan_node = plan_node
-        if len(plan_node.children) > 1:
-            new_children = [factor_out(child, plan_node) for child in plan_node.children]
-            link_parent_to_children(plan_node, new_children)
-            if plan_node.function == Function.SUM:
-                ret_plan_node = DBDistFactorOutRule.convert_sum_to_plus(plan_node)
+        if len(plan_node.children) > 1 and plan_node.function in DISTRIBUTIVE_FUNCTIONS:
+            dist_func = plan_node.function
+            new_children = [DBDistFactorOutRule.add_dist_func(child, dist_func) for child in plan_node.children]
+            if dist_func == Function.MAX or dist_func == Function.MIN:
+                comb_func = Function.GREATEST if dist_func == Function.MAX else Function.LEAST
+                ret_plan_node = FunctionNode(comb_func)
+                link_parent_to_children(ret_plan_node, new_children)
+            else:
+                comb_func = Function.PLUS
+                while len(new_children) != 1:
+                    new_child_right = new_children.pop()
+                    new_child_left = new_children.pop()
+                    comb_func_node = FunctionNode(comb_func)
+                    link_parent_to_children(comb_func_node, [new_child_left, new_child_right])
+                    new_children.append(comb_func_node)
+                ret_plan_node = new_children[0]
+
         return ret_plan_node
+    
+    @staticmethod
+    def add_dist_func(child: PlanNode, dist_func: Function) -> PlanNode:
+        if isinstance(child, RefNode):
+            func_node = FunctionNode(dist_func)
+            link_parent_to_children(func_node, [child])
+            return func_node
+        return child
 
     @staticmethod
-    def convert_sum_to_plus(plan_node: FunctionNode) -> FunctionNode:
+    def factor_out_sum(plan_node: FunctionNode) -> FunctionNode:
         parent = plan_node.parent
         children = plan_node.children
         while len(children) > 1:
             plus_children = children[0:2]
-            plus_parent = FunctionNode(Function.PLUS, DEFAULT_AXIS)
+            plus_parent = FunctionNode(Function.PLUS)
             link_parent_to_children(plus_parent, plus_children)
             children = [plus_parent] + children[2:]
         if parent is not None:
@@ -136,26 +156,36 @@ def create_new_function_node(plan_node: FunctionNode, function: Function) -> Fun
     new_node.open_value = function.name.lower() + "("
     return new_node
 
+def df_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> FunctionNode:
+    sum_node = plan_node.replicate_node_recursive()
+    sum_node.function = Function.SUMIF if is_if_variant else Function.SUM
 
-def rewrite_average(plan_node: FunctionNode) -> FunctionNode:
-    sum_node = create_new_function_node(plan_node, Function.SUM)
-    sum_node.seps = []
-    sum_node_children = [child.replicate_node() for child in plan_node.children]
-    link_parent_to_children(sum_node, sum_node_children)
+    count_node = plan_node.replicate_node_recursive()
+    count_node.function = Function.COUNTIF if is_if_variant else Function.COUNT
 
-    count_node = create_new_function_node(plan_node, Function.COUNT)
-    sum_node.seps = []
-    count_node_children = [child.replicate_node() for child in plan_node.children]
-    link_parent_to_children(count_node, count_node_children)
-
-    divide = plan_node.replicate_node()
-    divide.function = Function.DIVIDE
-    divide.func_type = Token.OP_IN
-    divide.open_value = "/"
-    divide.close_value = None
-    divide.seps = []
+    divide = FunctionNode(Function.DIVIDE) 
 
     link_parent_to_children(divide, [sum_node, count_node])
+
+    return divide
+
+def db_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> FunctionNode:
+    sum_node = plan_node.replicate_node_recursive()
+    sum_node.function = Function.SUMIF if is_if_variant else Function.SUM
+
+    multiply = FunctionNode(Function.MULTIPLY)
+    multiply.function = Function.MULTIPLY
+
+    literal_node = LiteralNode(1.0, DEFAULT_AXIS)
+
+    count_node = plan_node.replicate_node_recursive()
+    count_node.function = Function.COUNTIF if is_if_variant else Function.COUNT
+
+    divide = FunctionNode(Function.DIVIDE) 
+
+    link_parent_to_children(multiply, [sum_node, literal_node])
+    link_parent_to_children(divide, [multiply, count_node])
+
     return divide
 
 
@@ -163,9 +193,47 @@ class AverageRule(RewritingRule):
     @staticmethod
     def rewrite(plan_node: FunctionNode) -> FunctionNode:
         if plan_node.function == Function.AVG:
-            return rewrite_average(plan_node)
+            return df_rewrite_average(plan_node, False)
+        return plan_node
+
+
+class DBAvgIfRule(RewritingRule):
+    @staticmethod
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        if plan_node.function == Function.AVERAGEIF:
+            return db_rewrite_average(plan_node, True)
+        elif plan_node.function == Function.AVG and len(plan_node.children) > 1:
+            return db_rewrite_average(plan_node, False)
+        return plan_node
+    
+
+def rewrite_sumif(plan_node: FunctionNode) -> FunctionNode:
+    plus_node = FunctionNode(Function.PLUS)
+    sumif_node = plan_node.replicate_node_recursive()
+    if_node = FunctionNode(Function.IF)
+
+    equal_node = FunctionNode(Function.EQUAL)
+    null_node = LiteralNode("NULL")
+    zero_node_a = LiteralNode(0)
+
+    countif_node = plan_node.replicate_node_recursive()
+    countif_node.function = Function.COUNTIF
+    zero_node_b = LiteralNode(0)
+
+    link_parent_to_children(equal_node, [countif_node, zero_node_b])
+    link_parent_to_children(if_node, [equal_node, null_node, zero_node_a])
+    link_parent_to_children(plus_node, [sumif_node, if_node])
+
+    return plus_node
+
+
+class DBSumIfRule(RewritingRule):
+    @staticmethod
+    def rewrite(plan_node: FunctionNode) -> FunctionNode:
+        if plan_node.function == Function.SUMIF:
+            return rewrite_sumif(plan_node)
         return plan_node
 
 
 df_full_rewrite_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
-db_full_rewrite_rule_list = [DBDistFactorOutRule]
+db_full_rewrite_rule_list = [DBAvgIfRule, DBDistFactorOutRule, DBSumIfRule]

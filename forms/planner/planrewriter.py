@@ -21,12 +21,12 @@ from forms.utils.treenode import link_parent_to_children
 def apply_one_rule(plan_tree: PlanNode, rule: RewritingRule) -> PlanNode:
     if not isinstance(plan_tree, FunctionNode):
         return plan_tree
-    new_plan_tree = rule.rewrite(plan_tree)
     new_children = [
         apply_one_rule(child, rule) if isinstance(child, FunctionNode) else child
-        for child in new_plan_tree.children
+        for child in plan_tree.children
     ]
-    link_parent_to_children(new_plan_tree, new_children)
+    link_parent_to_children(plan_tree, new_children)
+    new_plan_tree = rule.rewrite(plan_tree)
     return new_plan_tree
 
 

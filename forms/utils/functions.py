@@ -36,6 +36,8 @@ class Function(Enum):
     AVERAGEIF = "averageif"
     MAXIF = "maxif"
     MINIF = "minif"
+    GREATEST = "greatest"
+    LEAST = "least"
 
     # Text Functions
     CONCAT = "concat"
@@ -137,8 +139,9 @@ def from_function_str(function_str: str) -> Function:
 
 
 ARITHMETIC_FUNCTIONS = {Function.PLUS, Function.MINUS, Function.MULTIPLY, Function.DIVIDE}
-DISTRIBUTIVE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX}
+DISTRIBUTIVE_FUNCTIONS = {Function.SUM, Function.MIN, Function.MAX, Function.COUNT}
 COMPARISON_FUNCTIONS = {Function.LARGER_THAN, Function.EQUAL, Function.SMALLER_THAN}
+COLUMN_FUNCTIONS = {Function.GREATEST, Function.LEAST}
 
 PANDAS_SUPPORTED_FUNCTIONS = {
     # Basic functions
@@ -261,7 +264,7 @@ DB_SUPPORTED_FUNCTIONS = {
 
 DB_AGGREGATE_FUNCTIONS = {Function.SUM, Function.MAX, Function.MIN, Function.COUNT, Function.AVG}
 DB_AGGREGATE_IF_FUNCTIONS = {Function.SUMIF, Function.MAXIF, Function.MINIF, Function.COUNTIF, Function.AVERAGEIF}
-DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF} | COMPARISON_FUNCTIONS
+DB_CELL_REFERENCE_FUNCTIONS = ARITHMETIC_FUNCTIONS | {Function.IF} | COMPARISON_FUNCTIONS | COLUMN_FUNCTIONS
 DB_LOOKUP_FUNCTIONS = {
     Function.VLOOKUP,
     Function.HLOOKUP,

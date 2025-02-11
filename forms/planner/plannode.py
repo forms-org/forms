@@ -13,9 +13,9 @@
 #  limitations under the License.
 
 from abc import ABC, abstractmethod
-from forms.utils.reference import Ref, RefType, ORIGIN_REF
+from forms.utils.reference import Ref, RefType, ORIGIN_REF, DEFAULT_AXIS
 from forms.utils.functions import Function
-from forms.utils.treenode import TreeNode
+from forms.utils.treenode import TreeNode, link_parent_to_children
 
 
 class PlanNode(ABC, TreeNode):
@@ -30,9 +30,13 @@ class PlanNode(ABC, TreeNode):
     def replicate_node(self):
         pass
 
+    @abstractmethod
+    def replicate_node_recursive(self):
+        pass
+
 
 class RefNode(PlanNode):
-    def __init__(self, ref: Ref, ref_type: RefType, ref_axis):
+    def __init__(self, ref: Ref, ref_type: RefType, ref_axis = DEFAULT_AXIS):
         super().__init__()
         self.ref = ref
         self.out_ref_type = ref_type
@@ -45,10 +49,13 @@ class RefNode(PlanNode):
         ref_node = RefNode(self.ref, self.out_ref_type, self.out_ref_axis)
         ref_node.open_value = self.open_value
         return ref_node
+    
+    def replicate_node_recursive(self):
+        return self.replicate_node() 
 
 
 class LiteralNode(PlanNode):
-    def __init__(self, literal, ref_axis):
+    def __init__(self, literal, ref_axis = DEFAULT_AXIS):
         super().__init__()
         self.literal = literal
         self.out_ref_type = RefType.LIT
@@ -62,10 +69,13 @@ class LiteralNode(PlanNode):
         literal_node = LiteralNode(self.literal, self.out_ref_axis)
         literal_node.open_value = self.open_value
         return literal_node
+    
+    def replicate_node_recursive(self):
+        return self.replicate_node() 
 
 
 class FunctionNode(PlanNode):
-    def __init__(self, function: Function, ref_axis):
+    def __init__(self, function: Function, ref_axis = DEFAULT_AXIS):
         super().__init__()
         self.ref = ORIGIN_REF
         self.out_ref_axis = ref_axis
@@ -91,7 +101,12 @@ class FunctionNode(PlanNode):
         function_node.seps = self.seps
         function_node.close_value = self.close_value
         return function_node
-
+    
+    def replicate_node_recursive(self):
+        func_node = self.replicate_node()
+        children = [child.replicate_node_recursive() for child in self.children]
+        link_parent_to_children(func_node, children)
+        return func_node
 
 def is_reference_range(node: PlanNode) -> bool:
     if isinstance(node, RefNode):

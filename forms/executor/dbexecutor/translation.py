@@ -22,6 +22,7 @@ from psycopg2.sql import Composable
 from forms.utils.functions import (
     ARITHMETIC_FUNCTIONS,
     COMPARISON_FUNCTIONS,
+    COLUMN_FUNCTIONS,
     DB_AGGREGATE_FUNCTIONS,
     DB_AGGREGATE_IF_FUNCTIONS,
     Function,
@@ -222,6 +223,8 @@ def translate_window_clause(
             return translate_if_function(subtree, exec_context, base_table)
         elif subtree.function in COMPARISON_FUNCTIONS or subtree.function in ARITHMETIC_FUNCTIONS:
             return translate_comparison_and_arithmetic_functions(subtree, exec_context, base_table)
+        elif subtree.function in COLUMN_FUNCTIONS:
+            return translate_column_functions(subtree, exec_context, base_table)
         elif subtree.function in DB_AGGREGATE_FUNCTIONS:
             return translate_aggregate_functions(subtree, exec_context, base_table)
         elif subtree.function in DB_AGGREGATE_IF_FUNCTIONS:
@@ -242,7 +245,7 @@ def translate_if_function(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     children = subtree.children
-    if isinstance(children[1], DBLitExecNode) and children[1].literal == '"NULL"':
+    if isinstance(children[1], DBLitExecNode) and children[1].literal == 'NULL':
         return sql.SQL(
             """CASE
                 WHEN {condition}
@@ -271,10 +274,20 @@ def translate_comparison_and_arithmetic_functions(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     children = subtree.children
-    return sql.SQL("""{left_clause} {function} {right_clause}""").format(
+    return sql.SQL("""({left_clause} {function} {right_clause})""").format(
         left_clause=translate_window_clause(children[0], exec_context, base_table),
         function=sql.SQL(subtree.function.value),
         right_clause=translate_window_clause(children[1], exec_context, base_table),
+    )
+
+def translate_column_functions(
+    subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
+) -> Composable:
+    return sql.SQL("""{col_func}({agg_column})""").format(
+        col_func=sql.SQL(subtree.function.value),
+        agg_column=sql.SQL(",").join(
+            translate_window_clause(child, exec_context, base_table) 
+            for child in subtree.children),
     )
 
 
@@ -287,6 +300,12 @@ def translate_aggregate_functions(
             agg_sql = sql.SQL("""{function}({agg_column})""").format(
                 function=sql.SQL(subtree.function.value),
                 agg_column=sql.SQL("+").join(sql.Identifier(col) for col in child.cols),
+            )
+        elif subtree.function == Function.AVG:
+            col_count = float(len(child.cols))
+            agg_sql = sql.SQL("""AVG(({agg_column})/{col_count})""").format(
+                agg_column=sql.SQL("+").join(sql.Identifier(col) for col in child.cols),
+                col_count=sql.Literal(col_count),
             )
         elif subtree.function == Function.MAX or subtree.function == Function.MIN:
             row_func = "MAX" if subtree.function == Function.MAX else "MIN"
