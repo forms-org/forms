@@ -245,17 +245,17 @@ def translate_if_function(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     children = subtree.children
-    if isinstance(children[1], DBLitExecNode) and children[1].literal == 'NULL':
+    if isinstance(children[1], DBLitExecNode) and children[1].literal == "NULL":
         return sql.SQL(
             """CASE
                 WHEN {condition}
                 THEN NULL 
                 ELSE {false_result}
            END"""
-           ).format(
-                condition=translate_window_clause(children[0], exec_context, base_table),
-                false_result=translate_window_clause(children[2], exec_context, base_table),
-           )       
+        ).format(
+            condition=translate_window_clause(children[0], exec_context, base_table),
+            false_result=translate_window_clause(children[2], exec_context, base_table),
+        )
 
     return sql.SQL(
         """CASE
@@ -280,14 +280,15 @@ def translate_comparison_and_arithmetic_functions(
         right_clause=translate_window_clause(children[1], exec_context, base_table),
     )
 
+
 def translate_column_functions(
     subtree: DBFuncExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     return sql.SQL("""{col_func}({agg_column})""").format(
         col_func=sql.SQL(subtree.function.value),
         agg_column=sql.SQL(",").join(
-            translate_window_clause(child, exec_context, base_table) 
-            for child in subtree.children),
+            translate_window_clause(child, exec_context, base_table) for child in subtree.children
+        ),
     )
 
 
@@ -365,7 +366,7 @@ def translate_aggregate_if_functions(
                     )
                     for i in range(len(input_child.cols))
                 )
-            ) 
+            )
         elif subtree.function == Function.MAXIF or subtree.function == Function.MINIF:
             row_func = "MAX" if subtree.function == Function.MAXIF else "MIN"
             col_func = "GREATEST" if subtree.function == Function.MAXIF else "LEAST"
@@ -387,8 +388,8 @@ def translate_aggregate_if_functions(
                         output_col=sql.Identifier(output_cols[i]),
                     )
                     for i in range(len(input_child.cols))
-                )
-            )            
+                ),
+            )
         elif subtree.function == Function.COUNTIF:
             agg_sql = sql.SQL("""SUM({agg_expression})""").format(
                 agg_expression=sql.SQL("+").join(

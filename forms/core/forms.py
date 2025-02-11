@@ -294,7 +294,7 @@ class DBWorkbook(Workbook):
             executor.clean_up()
 
             for s in sql_strings:
-                print(s) 
+                print(s)
         except FormSException as e:
             print(f"An error occurred: {e}")
             traceback.print_exception(*sys.exc_info())

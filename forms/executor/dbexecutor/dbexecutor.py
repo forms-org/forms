@@ -56,8 +56,8 @@ class DBExecutor:
         exec_subtree = scheduler.next_subtree()
         is_root_subtree = not scheduler.has_next_subtree()
         intermediate_table_name = (
-                exec_tree.intermediate_table_name if isinstance(exec_tree, DBFuncExecNode) else ""
-                )
+            exec_tree.intermediate_table_name if isinstance(exec_tree, DBFuncExecNode) else ""
+        )
         sql_str = translate(
             exec_subtree, self.exec_context, intermediate_table_name, is_root_subtree
         ).as_string(self.exec_context.conn)

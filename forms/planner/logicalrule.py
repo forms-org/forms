@@ -77,7 +77,9 @@ class DBDistFactorOutRule(RewritingRule):
         ret_plan_node = plan_node
         if len(plan_node.children) > 1 and plan_node.function in DISTRIBUTIVE_FUNCTIONS:
             dist_func = plan_node.function
-            new_children = [DBDistFactorOutRule.add_dist_func(child, dist_func) for child in plan_node.children]
+            new_children = [
+                DBDistFactorOutRule.add_dist_func(child, dist_func) for child in plan_node.children
+            ]
             if dist_func == Function.MAX or dist_func == Function.MIN:
                 comb_func = Function.GREATEST if dist_func == Function.MAX else Function.LEAST
                 ret_plan_node = FunctionNode(comb_func)
@@ -93,7 +95,7 @@ class DBDistFactorOutRule(RewritingRule):
                 ret_plan_node = new_children[0]
 
         return ret_plan_node
-    
+
     @staticmethod
     def add_dist_func(child: PlanNode, dist_func: Function) -> PlanNode:
         if isinstance(child, RefNode):
@@ -156,6 +158,7 @@ def create_new_function_node(plan_node: FunctionNode, function: Function) -> Fun
     new_node.open_value = function.name.lower() + "("
     return new_node
 
+
 def df_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> FunctionNode:
     sum_node = plan_node.replicate_node_recursive()
     sum_node.function = Function.SUMIF if is_if_variant else Function.SUM
@@ -163,11 +166,12 @@ def df_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> Function
     count_node = plan_node.replicate_node_recursive()
     count_node.function = Function.COUNTIF if is_if_variant else Function.COUNT
 
-    divide = FunctionNode(Function.DIVIDE) 
+    divide = FunctionNode(Function.DIVIDE)
 
     link_parent_to_children(divide, [sum_node, count_node])
 
     return divide
+
 
 def db_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> FunctionNode:
     sum_node = plan_node.replicate_node_recursive()
@@ -181,7 +185,7 @@ def db_rewrite_average(plan_node: FunctionNode, is_if_variant: bool) -> Function
     count_node = plan_node.replicate_node_recursive()
     count_node.function = Function.COUNTIF if is_if_variant else Function.COUNT
 
-    divide = FunctionNode(Function.DIVIDE) 
+    divide = FunctionNode(Function.DIVIDE)
 
     link_parent_to_children(multiply, [sum_node, literal_node])
     link_parent_to_children(divide, [multiply, count_node])
@@ -205,7 +209,7 @@ class DBAvgIfRule(RewritingRule):
         elif plan_node.function == Function.AVG and len(plan_node.children) > 1:
             return db_rewrite_average(plan_node, False)
         return plan_node
-    
+
 
 def rewrite_sumif(plan_node: FunctionNode) -> FunctionNode:
     plus_node = FunctionNode(Function.PLUS)

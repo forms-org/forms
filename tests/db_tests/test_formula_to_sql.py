@@ -148,6 +148,3 @@ def test_if_function(get_wb):
     computed_df = wb.compute_formula("=IF(A1 < 3, B1, C1)")
     expected_df = pd.DataFrame({"row_id": [1, 2, 3, 4], "A": [2, 2, 4, 5]})
     assert np.array_equal(computed_df.values, expected_df.values, equal_nan=True)
-
-
-    

@@ -39,7 +39,8 @@ def get_wb():
     # Close the DBWorkbook
     wb.close()
 
-# Check out the SQL strings 
+
+# Check out the SQL strings
 def test_get_sql_strings(get_wb):
     wb = get_wb
-    wb.print_sql_strings('=MAX(B1:C2, C1:D2)')
+    wb.print_sql_strings("=MAX(B1:C2, C1:D2)")
