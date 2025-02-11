@@ -235,5 +235,6 @@ class DBSumIfRule(RewritingRule):
         return plan_node
 
 
-df_full_rewrite_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
+# df_full_rewrite_rule_list = [AverageRule, PlusToSumRule, DistFactorOutRule, DistFactorInRule]
+df_full_rewrite_rule_list = []
 db_full_rewrite_rule_list = [DBAvgIfRule, DBDistFactorOutRule, DBSumIfRule]
