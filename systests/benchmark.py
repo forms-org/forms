@@ -24,6 +24,7 @@ from docker.models.containers import Container
 
 from forms.core.forms import from_db
 
+
 def wait_for_postgres(host, port, user, password, dbname, timeout=15):
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -35,10 +36,8 @@ def wait_for_postgres(host, port, user, password, dbname, timeout=15):
             time.sleep(1)
     raise Exception("PostgreSQL did not start within the given timeout")
 
-def start_postgres_container(postgres_user: str,
-                             dbname: str,
-                             password: str,
-                             port: int) -> Container:
+
+def start_postgres_container(postgres_user: str, dbname: str, password: str, port: int) -> Container:
     docker_client = docker.from_env()
 
     # Start the PostgreSQL container
@@ -55,23 +54,27 @@ def start_postgres_container(postgres_user: str,
         )
     except DockerException as e:
         raise Exception(f"Failed to start PostgreSQL container: {e}")
-    
+
     return container
 
-def load_table(postgres_user: str,
-               password: str, dbname: str,
-               host: str, port: str,
-               dataset_path: str,
-               schema_path: str, 
-               test_table: str):
+
+def load_table(
+    postgres_user: str,
+    password: str,
+    dbname: str,
+    host: str,
+    port: str,
+    dataset_path: str,
+    schema_path: str,
+    test_table: str,
+):
 
     # Wait for the PostgreSQL service to be ready
-    wait_for_postgres(host=host, port=port, user=postgres_user,
-                      password=password, dbname=dbname)
+    wait_for_postgres(host=host, port=port, user=postgres_user, password=password, dbname=dbname)
 
     # Load a DataFrame into the database
     engine = create_engine(f"postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}")
-    with open(schema_path, 'r') as schema_file:
+    with open(schema_path, "r") as schema_file:
         schema_sql = schema_file.read()
     with engine.connect() as connection:
         connection.execute(schema_sql)
@@ -80,9 +83,17 @@ def load_table(postgres_user: str,
     df.to_sql(test_table, engine, if_exists="append", index=False)
 
 
-def run(dataset_path, schema_path, table_name, primary_key, 
-        formula_file_path, run: int, pipeline_optimization: bool, output_folder):    
-    
+def run(
+    dataset_path,
+    schema_path,
+    table_name,
+    primary_key,
+    formula_file_path,
+    run: int,
+    pipeline_optimization: bool,
+    output_folder,
+):
+
     host = "localhost"
     port = "5432"
     postgres_user = "dt"
@@ -109,13 +120,13 @@ def run(dataset_path, schema_path, table_name, primary_key,
         )
 
         # Parse the formula file
-        formula_id = 'formula_id'
-        formula_string = 'formula_string'
+        formula_id = "formula_id"
+        formula_string = "formula_string"
         formulas = pd.read_csv(formula_file_path, header=None, names=[formula_id, formula_string])
 
         for _, row in formulas.iterrows():
-            formula_id = row['formula_id']
-            formula_string = row['formula_string']
+            formula_id = row["formula_id"]
+            formula_string = row["formula_string"]
             # Execute the formula string
             print(f"Running formula {formula_id}: {formula_string}")
             wb.compute_formula(formula_string)
@@ -127,19 +138,25 @@ def run(dataset_path, schema_path, table_name, primary_key,
         # Tear down the PostgreSQL container
         container.stop()
         container.remove()
- 
+
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Benchmarking script for FormS")
     parser.add_argument("--dataset_path", required=True, help="Path to the dataset folder")
-    parser.add_argument("--schema_path", required=True, help="Path to the sql query that creates the table")
+    parser.add_argument(
+        "--schema_path", required=True, help="Path to the sql query that creates the table"
+    )
     parser.add_argument("--table_name", required=True, help="Name of the table")
     parser.add_argument("--primary_key", required=True, help="Primary key of the table")
     parser.add_argument("--formula_file_path", required=True, help="Path of the formula file")
     parser.add_argument("--run", required=True, type=int, help="Test run identifier")
-    parser.add_argument("--pipeline_optimization", required=True, help="False: function-level translation; True: subtree-level translation")
+    parser.add_argument(
+        "--pipeline_optimization",
+        required=True,
+        help="False: function-level translation; True: subtree-level translation",
+    )
     parser.add_argument("--output_folder", required=True, help="Path to the output folder")
 
     args = parser.parse_args()
@@ -154,5 +171,5 @@ if __name__ == "__main__":
         formula_file_path=args.formula_file_path,
         run=args.run,
         pipeline_optimization=pipeline_optimization,
-        output_folder=args.output_folder
+        output_folder=args.output_folder,
     )
