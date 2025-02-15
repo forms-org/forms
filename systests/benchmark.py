@@ -81,7 +81,7 @@ def load_table(postgres_user: str,
 
 
 def run(dataset_path, schema_path, table_name, primary_key, 
-        formula_file_path, run, pipeline_optimization: bool, output_folder):    
+        formula_file_path, run: int, pipeline_optimization: bool, output_folder):    
     
     host = "localhost"
     port = "5432"
@@ -138,11 +138,13 @@ if __name__ == "__main__":
     parser.add_argument("--table_name", required=True, help="Name of the table")
     parser.add_argument("--primary_key", required=True, help="Primary key of the table")
     parser.add_argument("--formula_file_path", required=True, help="Path of the formula file")
-    parser.add_argument("--run", required=True, help="Test run identifier")
-    parser.add_argument("--pipeline_optimization", required=True, help="False: function-level transalation; True: subtree-level transalation)")
+    parser.add_argument("--run", required=True, type=int, help="Test run identifier")
+    parser.add_argument("--pipeline_optimization", required=True, help="False: function-level translation; True: subtree-level translation")
     parser.add_argument("--output_folder", required=True, help="Path to the output folder")
 
     args = parser.parse_args()
+
+    pipeline_optimization = args.pipeline_optimization.lower() == "true"
 
     run(
         dataset_path=args.dataset_path,
@@ -151,6 +153,6 @@ if __name__ == "__main__":
         primary_key=args.primary_key,
         formula_file_path=args.formula_file_path,
         run=args.run,
-        pipeline_optimization=args.pipeline_optimization,
+        pipeline_optimization=pipeline_optimization,
         output_folder=args.output_folder
     )
