@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import copy
+
 PARSING_TIME = "parsing_time"
 REWRITE_TIME = "rewrite_time"
 TRANSLATION_TIME = "translation_time"
@@ -29,7 +31,7 @@ class MetricsTracker:
         self.metrics[key] = value
 
     def get_metrics(self):
-        return self.metrics
+        return copy.deepcopy(self.metrics)
 
     def reset_metrics(self):
         self.metrics = {}

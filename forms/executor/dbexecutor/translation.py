@@ -113,9 +113,18 @@ def create_temp_table(sel_query: Composable, subtree_temp_table_name: str) -> Co
 
 
 def find_or_generate_base_table(subtree: DBExecNode) -> Composable:
-    ref_node_list = subtree.collect_ref_nodes_in_order()
-    if all(ref_node.table.table_name == BASE_TABLE for ref_node in ref_node_list):
-        return sql.SQL("""{}""").format(sql.Identifier(BASE_TABLE))
+    collected_ref_node_list = subtree.collect_ref_nodes_in_order()
+    # deduplicate
+    seen = False
+    ref_node_list = []
+    for ref_node in collected_ref_node_list:
+        if ref_node.table.table_name == BASE_TABLE and not seen:
+            seen = True
+            ref_node_list.append(ref_node)
+        elif ref_node.table.table_name != BASE_TABLE:
+            ref_node_list.append(ref_node)
+    if len(ref_node_list) == 1:
+        return sql.SQL("""{}""").format(sql.Identifier(ref_node_list[0].table.table_name))
     else:
         table_list = [sql.Identifier(ref_node.table.table_name) for ref_node in ref_node_list]
         join_condition_list = [
@@ -127,7 +136,7 @@ def find_or_generate_base_table(subtree: DBExecNode) -> Composable:
             for i in range(1, len(ref_node_list))
         ]
         column_list = []
-        for ref_node in ref_node_list:
+        for ref_node in collected_ref_node_list:
             for column_str in ref_node.cols:
                 if column_str != ROW_ID:
                     column_list.append(sql.Identifier(column_str))
@@ -440,7 +449,10 @@ def translate_reference(
     ref_node: DBRefExecNode, exec_context: DBExecContext, base_table: Composable
 ) -> Composable:
     ref_col = ref_node.cols[0]
-    if ref_node.out_ref_type == RefType.RR:
+    ref_col_type = ref_node.table.get_column_type(0)
+    if ref_node.out_ref_type == RefType.RR and ref_col_type == "boolean":
+        return sql.SQL("""{ref_col}""").format(ref_col=sql.Identifier(ref_col))
+    elif ref_node.out_ref_type == RefType.RR:
         agg_sql = sql.SQL("""SUM({ref_col})""").format(ref_col=sql.Identifier(ref_col))
         window_size_sql = compute_window_size_expression(ref_node, exec_context)
         return agg_sql + window_size_sql

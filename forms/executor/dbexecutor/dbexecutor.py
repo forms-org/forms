@@ -84,7 +84,7 @@ class DBExecutor:
                 exec_subtree = scheduler.next_subtree()
                 is_root_subtree = not scheduler.has_next_subtree()
                 intermediate_table_name = (
-                    exec_tree.intermediate_table_name if isinstance(exec_tree, DBFuncExecNode) else ""
+                    exec_subtree.intermediate_table_name if isinstance(exec_subtree, DBFuncExecNode) else ""
                 )
                 start_time = time.time()
                 sql_composable = translate(

@@ -25,7 +25,7 @@ from forms.utils.functions import (
 )
 from forms.utils.reference import RefType
 from forms.core.catalog import TEMP_TABLE_PREFIX
-
+temp_table_number: int = 0
 
 def break_down_into_subtrees(exec_tree: DBExecNode, enable_pipelining: bool) -> list:
     if isinstance(exec_tree, DBFuncExecNode):
@@ -80,9 +80,12 @@ class Scheduler:
     def __init__(self, exec_tree: DBExecNode, enable_pipelining: bool):
         self.exec_tree = exec_tree
         self.subtrees = break_down_into_subtrees(exec_tree, enable_pipelining)
-        for subtree_index, subtree in enumerate(self.subtrees):
+        for _, subtree in enumerate(self.subtrees):
             if isinstance(subtree, DBFuncExecNode):
-                subtree.set_intermediate_table_name(TEMP_TABLE_PREFIX + str(subtree_index))
+                global temp_table_number
+                intermediate_table_name = TEMP_TABLE_PREFIX + str(temp_table_number)
+                subtree.set_intermediate_table_name(intermediate_table_name)
+                temp_table_number += 1
 
     def next_subtree(self) -> DBExecNode:
         return self.subtrees.pop()

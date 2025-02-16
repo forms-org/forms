@@ -32,6 +32,7 @@ def get_wb():
         primary_key=[os.getenv("POSTGRES_PRIMARY_KEY")],
         order_key=[os.getenv("POSTGRES_ORDER_KEY")],
         enable_rewriting=True,
+        enable_pipelining=False
     )
 
     # Yield the object to be used in tests
@@ -43,4 +44,5 @@ def get_wb():
 # Check out the SQL strings
 def test_get_sql_strings(get_wb):
     wb = get_wb
-    wb.print_sql_strings("=MAX(B1:C2, C1:D2)")
+    wb.compute_formula('=SUMIF(C1:D2, ">15")')
+    # wb.print_sql_strings("=MAX(B1:C2, C1:D2)")
