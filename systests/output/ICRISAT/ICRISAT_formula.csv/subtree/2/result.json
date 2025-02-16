@@ -1,0 +1,15 @@
+{
+    "=C1+D2+E3": {
+        "formula_string": "=C1+D2+E3",
+        "run": 2,
+        "optimization": "subtree",
+        "metrics": {
+            "parsing_time": 222,
+            "rewrite_time": 57,
+            "num_subplans": 1,
+            "translation_time": 146,
+            "execution_time": 33027,
+            "total_time": 33977
+        }
+    }
+}

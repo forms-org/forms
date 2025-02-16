@@ -14,6 +14,7 @@
 
 import pandas as pd
 import psycopg2
+import time
 
 from forms.core.catalog import TableCatalog
 from forms.core.config import DBConfig, DBExecContext
@@ -27,7 +28,13 @@ from forms.executor.dbexecutor.translation import translate
 from forms.planner.plannode import PlanNode
 from forms.utils.exceptions import DBRuntimeException
 from forms.utils.generic import get_columns_and_types
-from forms.utils.metrics import MetricsTracker
+from forms.utils.metrics import (
+    MetricsTracker,
+    TRANSLATION_TIME,
+    EXECUTION_TIME,
+    NUM_SUBPLANS,
+    MICROS_PER_SEC,
+)
 from forms.utils.treenode import link_parent_to_children
 
 
@@ -68,6 +75,10 @@ class DBExecutor:
         exec_tree = from_plan_to_execution_tree(formula_plan, self.exec_context.base_table)
         scheduler = Scheduler(exec_tree, self.db_config.enable_pipelining)
         df = None
+
+        self.metrics_tracker.put_one_metric(NUM_SUBPLANS, scheduler.get_num_subtrees())
+        translation_time = 0.0
+        execution_time = 0.0
         try:
             while scheduler.has_next_subtree():
                 exec_subtree = scheduler.next_subtree()
@@ -75,9 +86,14 @@ class DBExecutor:
                 intermediate_table_name = (
                     exec_tree.intermediate_table_name if isinstance(exec_tree, DBFuncExecNode) else ""
                 )
+                start_time = time.time()
                 sql_composable = translate(
                     exec_subtree, self.exec_context, intermediate_table_name, is_root_subtree
                 )
+                end_time = time.time()
+                translation_time += end_time - start_time
+
+                start_time = end_time
                 if scheduler.has_next_subtree():
                     sql_str = sql_composable.as_string(self.exec_context.conn)
                     self.exec_context.cursor.execute(sql_composable)
@@ -91,11 +107,14 @@ class DBExecutor:
                 else:
                     sql_str = sql_composable.as_string(self.exec_context.conn)
                     df = pd.read_sql_query(sql_str, self.exec_context.conn)
+                execution_time += time.time() - start_time
             self.exec_context.conn.commit()
         except psycopg2.Error as e:
             self.exec_context.conn.rollback()
             raise DBRuntimeException(e)
 
+        self.metrics_tracker.put_one_metric(TRANSLATION_TIME, int(translation_time * MICROS_PER_SEC))
+        self.metrics_tracker.put_one_metric(EXECUTION_TIME, int(execution_time * MICROS_PER_SEC))
         return df
 
     def clean_up(self):

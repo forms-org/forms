@@ -12,6 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+PARSING_TIME = "parsing_time"
+REWRITE_TIME = "rewrite_time"
+TRANSLATION_TIME = "translation_time"
+EXECUTION_TIME = "execution_time"
+TOTAL_TIME = "total_time"
+NUM_SUBPLANS = "num_subplans"
+MICROS_PER_SEC = 1000000
+
 
 class MetricsTracker:
     def __init__(self):
@@ -22,3 +30,6 @@ class MetricsTracker:
 
     def get_metrics(self):
         return self.metrics
+
+    def reset_metrics(self):
+        self.metrics = {}

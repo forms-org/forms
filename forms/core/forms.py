@@ -16,6 +16,7 @@ import pandas as pd
 import traceback
 import sys
 import psycopg2
+import time
 
 from psycopg2 import sql
 from forms.core.catalog import START_ROW_ID, TableCatalog, BASE_TABLE, AUX_TABLE, ROW_ID
@@ -29,7 +30,7 @@ from forms.planner.plannode import PlanNode
 from forms.planner.planrewriter import rewrite_plan
 from forms.utils.functions import FunctionExecutor
 from forms.utils.generic import get_columns_and_types
-from forms.utils.metrics import MetricsTracker
+from forms.utils.metrics import MetricsTracker, PARSING_TIME, REWRITE_TIME, MICROS_PER_SEC, TOTAL_TIME
 from forms.utils.validator import validate
 
 from forms.utils.exceptions import DBConfigException, DBRuntimeException, FormSException
@@ -51,6 +52,9 @@ class Workbook(ABC):
 
     def get_metrics(self):
         return self.metrics_tracker.get_metrics()
+
+    def reset_metrics(self):
+        self.metrics_tracker.reset_metrics()
 
     @abstractmethod
     def close(self):
@@ -260,9 +264,19 @@ class DBWorkbook(Workbook):
 
     def compute_formula(self, formula_str: str, num_formulas: int = -1, **kwargs) -> pd.DataFrame:
         try:
+            init_time = time.time()
+            start_time = init_time
             root = parse_formula_str(formula_str)
+            end_time = time.time()
+            parse_time = int((end_time - start_time) * MICROS_PER_SEC)
+            self.metrics_tracker.put_one_metric(PARSING_TIME, parse_time)
             validate(FunctionExecutor.DB_EXECUTOR, self.num_rows, self.num_columns, root)
+
+            start_time = end_time
             root = rewrite_plan(root, db_enable_rewriting=self.db_config.db_enable_rewriting)
+            end_time = time.time()
+            rewrite_time = int((end_time - start_time) * MICROS_PER_SEC)
+            self.metrics_tracker.put_one_metric(REWRITE_TIME, rewrite_time)
 
             if num_formulas <= 0:
                 num_formulas = self.num_rows
@@ -272,6 +286,10 @@ class DBWorkbook(Workbook):
             executor = DBExecutor(self.db_config, exec_context, self.metrics_tracker)
             res = executor.execute_formula_plan(root)
             executor.clean_up()
+
+            self.metrics_tracker.put_one_metric(
+                TOTAL_TIME, int((time.time() - init_time) * MICROS_PER_SEC)
+            )
 
             return res
         except FormSException as e:
@@ -351,8 +369,8 @@ def from_db(
                 port,
                 username,
                 password,
-                db_name,
-                table_name,
+                db_name.lower(),
+                table_name.lower(),
                 primary_key,
                 order_key,
                 enable_rewriting,

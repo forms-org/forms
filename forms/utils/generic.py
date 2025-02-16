@@ -25,7 +25,8 @@ def get_columns_and_types(cursor, table_name):
     query = f"""
     SELECT column_name, data_type
     FROM information_schema.columns
-    WHERE table_name = '{table_name}';
+    WHERE table_name = '{table_name}'
+    ORDER BY ordinal_position;
     """
     cursor.execute(query)
     columns = cursor.fetchall()

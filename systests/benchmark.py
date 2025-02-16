@@ -14,27 +14,17 @@
 
 import os
 import time
+import json
 import docker
 import pandas as pd
 import psycopg2
+from psycopg2 import sql
 from psycopg2 import Error
 from sqlalchemy import create_engine
 from docker.errors import DockerException
 from docker.models.containers import Container
 
 from forms.core.forms import from_db
-
-
-def wait_for_postgres(host, port, user, password, dbname, timeout=15):
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-            conn.close()
-            return True
-        except Error:
-            time.sleep(1)
-    raise Exception("PostgreSQL did not start within the given timeout")
 
 
 def start_postgres_container(postgres_user: str, dbname: str, password: str, port: int) -> Container:
@@ -68,19 +58,31 @@ def load_table(
     schema_path: str,
     test_table: str,
 ):
-
-    # Wait for the PostgreSQL service to be ready
-    wait_for_postgres(host=host, port=port, user=postgres_user, password=password, dbname=dbname)
-
-    # Load a DataFrame into the database
-    engine = create_engine(f"postgresql://{postgres_user}:{password}@{host}:{port}/{dbname}")
-    with open(schema_path, "r") as schema_file:
-        schema_sql = schema_file.read()
-    with engine.connect() as connection:
-        connection.execute(schema_sql)
-
-    df = pd.read_csv(dataset_path)
-    df.to_sql(test_table, engine, if_exists="append", index=False)
+    timeout = 15
+    start_time = time.time()
+    conn = None
+    cursor = None
+    while time.time() - start_time < timeout:
+        try:
+            conn = psycopg2.connect(
+                dbname=dbname, user=postgres_user, password=password, host=host, port=port
+            )
+            with open(schema_path, "r") as schema_file:
+                schema_sql = schema_file.read()
+            cursor = conn.cursor()
+            cursor.execute(sql.SQL(schema_sql))
+            with open(dataset_path, "r", encoding="utf-8") as csv_file:
+                cursor.copy_expert(f"COPY {test_table} FROM STDIN WITH CSV", csv_file)
+            conn.commit()
+            return True
+        except Error:
+            time.sleep(1)
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+    raise Exception("PostgreSQL did not start within the given timeout")
 
 
 def run(
@@ -113,26 +115,44 @@ def run(
             password=password,
             db_name=dbname,
             table_name=table_name,
-            primary_key=primary_key,
-            order_key=order_key,
+            primary_key=[primary_key],
+            order_key=[order_key],
             enable_rewriting=True,
             enable_pipelining=pipeline_optimization,
         )
 
         # Parse the formula file
-        formula_id = "formula_id"
         formula_string = "formula_string"
-        formulas = pd.read_csv(formula_file_path, header=None, names=[formula_id, formula_string])
+        formulas = pd.read_csv(formula_file_path, header=None, names=[formula_string], delimiter="|")
+        optimization_str = "subtree" if pipeline_optimization else "function"
 
-        for _, row in formulas.iterrows():
-            formula_id = row["formula_id"]
+        output_data = {}
+        for index, row in formulas.iterrows():
             formula_string = row["formula_string"]
             # Execute the formula string
-            print(f"Running formula {formula_id}: {formula_string}")
+            print(f"Running formula {index+1}: {formula_string}")
             wb.compute_formula(formula_string)
+            metrics = wb.get_metrics()
+            output_payload = {
+                "formula_string": formula_string,
+                "run": run,
+                "optimization": optimization_str,
+                "metrics": metrics,
+            }
+            output_data[formula_string] = output_payload
 
         # Close the DBWorkbook
         wb.close()
+
+        # Save the statistics
+        formula_file_name = os.path.basename(formula_file_path)
+
+        output_file = os.path.join(
+            output_folder, table_name, formula_file_name, optimization_str, str(run), "result.json"
+        )
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        with open(output_file, "w") as f:
+            json.dump(output_data, f, indent=4)
 
     finally:
         # Tear down the PostgreSQL container

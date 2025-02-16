@@ -89,3 +89,6 @@ class Scheduler:
 
     def has_next_subtree(self) -> bool:
         return len(self.subtrees) > 0
+
+    def get_num_subtrees(self) -> int:
+        return len(self.subtrees)
