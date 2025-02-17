@@ -95,6 +95,8 @@ class DBExecutor:
                 end_time = time.time()
                 translation_time += end_time - start_time
 
+                print(sql_composable.as_string(self.exec_context.conn))
+
                 start_time = end_time
                 if scheduler.has_next_subtree():
                     sql_str = sql_composable.as_string(self.exec_context.conn)

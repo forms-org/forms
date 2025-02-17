@@ -9,5 +9,5 @@ if [ "$#" -ne 1 ]; then
 fi
 
 
-$TEST_HOME/run.sh ICRISAT ICRISAT.csv ICRISAT_formula.csv obvdate $1
-# $TEST_HOME/run.sh ICRISAT ICRISAT.csv test_formula.csv obvdate $1
+# $TEST_HOME/run.sh ICRISAT ICRISAT.csv ICRISAT_formula.csv obvdate $1
+$TEST_HOME/run.sh ICRISAT ICRISAT.csv test_formula.csv obvdate $1
