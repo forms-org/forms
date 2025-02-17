@@ -32,7 +32,7 @@ def get_wb():
         primary_key=[os.getenv("POSTGRES_PRIMARY_KEY")],
         order_key=[os.getenv("POSTGRES_ORDER_KEY")],
         enable_rewriting=True,
-        enable_pipelining=False
+        enable_pipelining=False,
     )
 
     # Yield the object to be used in tests

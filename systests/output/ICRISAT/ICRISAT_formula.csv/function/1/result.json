@@ -1,262 +1,422 @@
 {
     "=C1+D1": {
+        "formula_id": 1,
         "formula_string": "=C1+D1",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 202,
-            "rewrite_time": 49,
+            "parsing_time": 203,
+            "rewrite_time": 54,
             "num_subplans": 1,
-            "translation_time": 114,
-            "execution_time": 23044,
-            "total_time": 23862
+            "translation_time": 118,
+            "execution_time": 23064,
+            "total_time": 23944
         }
     },
     "=C1+D2": {
+        "formula_id": 2,
         "formula_string": "=C1+D2",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 65,
-            "rewrite_time": 16,
+            "parsing_time": 71,
+            "rewrite_time": 15,
             "num_subplans": 1,
-            "translation_time": 41,
-            "execution_time": 15236,
-            "total_time": 15735
+            "translation_time": 37,
+            "execution_time": 17125,
+            "total_time": 17733
         }
     },
     "=SUM(C1:D2)": {
+        "formula_id": 3,
         "formula_string": "=SUM(C1:D2)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 108,
+            "parsing_time": 122,
             "rewrite_time": 6,
             "num_subplans": 1,
-            "translation_time": 29,
-            "execution_time": 14172,
-            "total_time": 14799
+            "translation_time": 27,
+            "execution_time": 14193,
+            "total_time": 14751
         }
     },
     "=SUM($C$1:D1)": {
+        "formula_id": 4,
         "formula_string": "=SUM($C$1:D1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 53,
-            "rewrite_time": 10,
+            "parsing_time": 50,
+            "rewrite_time": 8,
             "num_subplans": 1,
-            "translation_time": 26,
-            "execution_time": 13819,
-            "total_time": 14259
+            "translation_time": 28,
+            "execution_time": 15027,
+            "total_time": 15509
         }
     },
     "=SUMIF(C1:D2, \">15\")": {
+        "formula_id": 5,
         "formula_string": "=SUMIF(C1:D2, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 70,
-            "rewrite_time": 23,
+            "parsing_time": 71,
+            "rewrite_time": 24,
             "num_subplans": 5,
-            "translation_time": 192,
-            "execution_time": 43420,
-            "total_time": 44663
+            "translation_time": 200,
+            "execution_time": 43426,
+            "total_time": 44553
         }
     },
     "=SUMIF($C$1:D1, \">15\")": {
+        "formula_id": 6,
         "formula_string": "=SUMIF($C$1:D1, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 81,
+            "parsing_time": 66,
             "rewrite_time": 19,
             "num_subplans": 5,
-            "translation_time": 168,
-            "execution_time": 40102,
-            "total_time": 41110
+            "translation_time": 152,
+            "execution_time": 41285,
+            "total_time": 42237
         }
     },
     "=AVERAGE(C1:D2)": {
+        "formula_id": 7,
         "formula_string": "=AVERAGE(C1:D2)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 55,
-            "rewrite_time": 8,
+            "parsing_time": 51,
+            "rewrite_time": 7,
             "num_subplans": 1,
             "translation_time": 23,
-            "execution_time": 15673,
-            "total_time": 16156
+            "execution_time": 15764,
+            "total_time": 16186
         }
     },
     "=AVERAGE($C$1:D1)": {
+        "formula_id": 8,
         "formula_string": "=AVERAGE($C$1:D1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
             "parsing_time": 45,
-            "rewrite_time": 7,
+            "rewrite_time": 8,
             "num_subplans": 1,
             "translation_time": 21,
-            "execution_time": 15365,
-            "total_time": 15865
+            "execution_time": 14816,
+            "total_time": 15256
         }
     },
     "=AVERAGEIF(C1:D2, \">15\")": {
+        "formula_id": 9,
         "formula_string": "=AVERAGEIF(C1:D2, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 74,
-            "rewrite_time": 27,
+            "parsing_time": 61,
+            "rewrite_time": 30,
             "num_subplans": 8,
-            "translation_time": 285,
-            "execution_time": 72928,
-            "total_time": 74023
+            "translation_time": 293,
+            "execution_time": 68458,
+            "total_time": 69578
         }
     },
     "=AVERAGEIF($C$1:D1, \">15\")": {
+        "formula_id": 10,
         "formula_string": "=AVERAGEIF($C$1:D1, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 65,
-            "rewrite_time": 27,
+            "parsing_time": 70,
+            "rewrite_time": 26,
             "num_subplans": 8,
-            "translation_time": 278,
-            "execution_time": 67299,
-            "total_time": 68638
+            "translation_time": 279,
+            "execution_time": 66702,
+            "total_time": 68077
         }
     },
     "=COUNTIF(C1:D2, \">15\")": {
+        "formula_id": 11,
         "formula_string": "=COUNTIF(C1:D2, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 66,
-            "rewrite_time": 10,
+            "parsing_time": 70,
+            "rewrite_time": 8,
             "num_subplans": 1,
-            "translation_time": 23,
-            "execution_time": 13358,
-            "total_time": 13777
+            "translation_time": 25,
+            "execution_time": 13695,
+            "total_time": 14192
         }
     },
     "=COUNTIF($C$1:D1, \">15\")": {
+        "formula_id": 12,
         "formula_string": "=COUNTIF($C$1:D1, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 57,
-            "rewrite_time": 8,
+            "parsing_time": 60,
+            "rewrite_time": 10,
             "num_subplans": 1,
-            "translation_time": 21,
-            "execution_time": 11900,
-            "total_time": 12345
+            "translation_time": 24,
+            "execution_time": 12427,
+            "total_time": 12867
         }
     },
     "=MAX(C1:D2)": {
+        "formula_id": 13,
         "formula_string": "=MAX(C1:D2)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 44,
-            "rewrite_time": 8,
+            "parsing_time": 40,
+            "rewrite_time": 6,
             "num_subplans": 1,
-            "translation_time": 24,
-            "execution_time": 13683,
-            "total_time": 14137
+            "translation_time": 25,
+            "execution_time": 14495,
+            "total_time": 14985
         }
     },
     "=MAX($C$1:D1)": {
+        "formula_id": 14,
         "formula_string": "=MAX($C$1:D1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 53,
-            "rewrite_time": 7,
+            "parsing_time": 47,
+            "rewrite_time": 6,
             "num_subplans": 1,
-            "translation_time": 22,
-            "execution_time": 11914,
-            "total_time": 12327
+            "translation_time": 20,
+            "execution_time": 12633,
+            "total_time": 13038
         }
     },
     "=MAXIF(C1:D2, \">15\")": {
+        "formula_id": 15,
         "formula_string": "=MAXIF(C1:D2, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 55,
+            "parsing_time": 58,
             "rewrite_time": 6,
             "num_subplans": 1,
-            "translation_time": 29,
-            "execution_time": 13365,
-            "total_time": 13823
+            "translation_time": 31,
+            "execution_time": 13369,
+            "total_time": 13808
         }
     },
     "=MAXIF($C$1:D1, \">15\")": {
+        "formula_id": 16,
         "formula_string": "=MAXIF($C$1:D1, \">15\")",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 61,
-            "rewrite_time": 10,
+            "parsing_time": 52,
+            "rewrite_time": 8,
             "num_subplans": 1,
-            "translation_time": 30,
-            "execution_time": 12177,
-            "total_time": 12667
+            "translation_time": 31,
+            "execution_time": 12526,
+            "total_time": 12997
         }
     },
     "=IF(E1>F1, G1, H1)": {
+        "formula_id": 17,
         "formula_string": "=IF(E1>F1, G1, H1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 111,
-            "rewrite_time": 8,
+            "parsing_time": 100,
+            "rewrite_time": 10,
             "num_subplans": 2,
-            "translation_time": 85,
-            "execution_time": 22774,
-            "total_time": 23905
+            "translation_time": 82,
+            "execution_time": 23244,
+            "total_time": 24328
         }
     },
     "=LOOKUP(F1, E$1:E$14853, D$1:D$14853, 0)": {
+        "formula_id": 18,
         "formula_string": "=LOOKUP(F1, E$1:E$14853, D$1:D$14853, 0)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 113,
+            "parsing_time": 97,
             "rewrite_time": 9,
             "num_subplans": 1,
-            "translation_time": 24,
-            "execution_time": 112862,
-            "total_time": 113430
+            "translation_time": 26,
+            "execution_time": 113441,
+            "total_time": 113982
         }
     },
     "=LOOKUP(F1, E$1:E$14853, D$1:D$14853, 1)": {
+        "formula_id": 19,
         "formula_string": "=LOOKUP(F1, E$1:E$14853, D$1:D$14853, 1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 93,
-            "rewrite_time": 8,
+            "parsing_time": 91,
+            "rewrite_time": 7,
             "num_subplans": 1,
             "translation_time": 24,
-            "execution_time": 3070096,
-            "total_time": 3070772
+            "execution_time": 3058435,
+            "total_time": 3059047
         }
     },
     "=INDEX(E$1:E$14853,F1)": {
+        "formula_id": 20,
         "formula_string": "=INDEX(E$1:E$14853,F1)",
         "run": 1,
         "optimization": "function",
         "metrics": {
-            "parsing_time": 178,
-            "rewrite_time": 23,
+            "parsing_time": 91,
+            "rewrite_time": 8,
             "num_subplans": 1,
-            "translation_time": 61,
-            "execution_time": 30956,
-            "total_time": 31687
+            "translation_time": 26,
+            "execution_time": 33366,
+            "total_time": 33825
+        }
+    },
+    "=SUM(C1:D2, E1:F3)": {
+        "formula_id": 21,
+        "formula_string": "=SUM(C1:D2, E1:F3)",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 61,
+            "rewrite_time": 13,
+            "num_subplans": 3,
+            "translation_time": 119,
+            "execution_time": 32802,
+            "total_time": 33831
+        }
+    },
+    "=SUM(C1:D2, $E$1:F1)": {
+        "formula_id": 22,
+        "formula_string": "=SUM(C1:D2, $E$1:F1)",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 60,
+            "rewrite_time": 15,
+            "num_subplans": 3,
+            "translation_time": 108,
+            "execution_time": 31011,
+            "total_time": 31827
+        }
+    },
+    "=AVERAGE(C1:D2, $E$1:F1)": {
+        "formula_id": 23,
+        "formula_string": "=AVERAGE(C1:D2, $E$1:F1)",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 59,
+            "rewrite_time": 29,
+            "num_subplans": 8,
+            "translation_time": 525,
+            "execution_time": 81311,
+            "total_time": 82746
+        }
+    },
+    "=MAX(C1:D2, $E$1:F1)": {
+        "formula_id": 24,
+        "formula_string": "=MAX(C1:D2, $E$1:F1)",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 68,
+            "rewrite_time": 16,
+            "num_subplans": 3,
+            "translation_time": 112,
+            "execution_time": 30875,
+            "total_time": 31764
+        }
+    },
+    "=C1+D2-E3": {
+        "formula_id": 25,
+        "formula_string": "=C1+D2-E3",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 61,
+            "rewrite_time": 14,
+            "num_subplans": 2,
+            "translation_time": 76,
+            "execution_time": 27397,
+            "total_time": 28173
+        }
+    },
+    "=SUM(C1:D2)+E1": {
+        "formula_id": 26,
+        "formula_string": "=SUM(C1:D2)+E1",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 69,
+            "rewrite_time": 12,
+            "num_subplans": 2,
+            "translation_time": 67,
+            "execution_time": 24445,
+            "total_time": 25235
+        }
+    },
+    "=SUMIF(C1:D2, \">15\") + E1": {
+        "formula_id": 27,
+        "formula_string": "=SUMIF(C1:D2, \">15\") + E1",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 80,
+            "rewrite_time": 19,
+            "num_subplans": 6,
+            "translation_time": 276,
+            "execution_time": 53338,
+            "total_time": 54426
+        }
+    },
+    "=IF(E1>F1, SUM(C1:D2), AVERAGE(E1:F2))": {
+        "formula_id": 28,
+        "formula_string": "=IF(E1>F1, SUM(C1:D2), AVERAGE(E1:F2))",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 124,
+            "rewrite_time": 12,
+            "num_subplans": 4,
+            "translation_time": 138,
+            "execution_time": 120724,
+            "total_time": 121564
+        }
+    },
+    "=IF(E1>F1, SUM(C1:D2), LOOKUP(F1, E$1:E$14853, D$1:D$14853, 0))": {
+        "formula_id": 29,
+        "formula_string": "=IF(E1>F1, SUM(C1:D2), LOOKUP(F1, E$1:E$14853, D$1:D$14853, 0))",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 162,
+            "rewrite_time": 18,
+            "num_subplans": 4,
+            "translation_time": 485,
+            "execution_time": 215587,
+            "total_time": 216902
+        }
+    },
+    "=IF(F1> 5, C1, IF(F1 < 5, D1, E1))": {
+        "formula_id": 30,
+        "formula_string": "=IF(F1> 5, C1, IF(F1 < 5, D1, E1))",
+        "run": 1,
+        "optimization": "function",
+        "metrics": {
+            "parsing_time": 350,
+            "rewrite_time": 41,
+            "num_subplans": 4,
+            "translation_time": 391,
+            "execution_time": 51352,
+            "total_time": 53117
         }
     }
 }

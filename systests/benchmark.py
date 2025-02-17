@@ -134,6 +134,7 @@ def run(
             wb.compute_formula(formula_string)
             metrics = wb.get_metrics()
             output_payload = {
+                "formula_id": index + 1,
                 "formula_string": formula_string,
                 "run": run,
                 "optimization": optimization_str,
